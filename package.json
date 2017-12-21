@@ -1,0 +1,31 @@
+{
+  "name": "thefarma",
+  "version": "0.0.2",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "axios": "^0.17.1",
+    "native-base": "2.3.5",
+    "react": "16.0.0",
+    "react-native": "0.51.0",
+    "react-native-animatable": "^1.1.0",
+    "react-native-navigation": "latest",
+    "react-native-vector-icons": "^4.4.3"
+  },
+  "devDependencies": {
+    "babel-jest": "21.2.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react-native": "4.0.0",
+    "eslint": "^4.12.1",
+    "eslint-config-rallycoding": "^3.2.0",
+    "eslint-plugin-react": "^7.5.1",
+    "jest": "21.2.1",
+    "react-test-renderer": "16.0.0"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
