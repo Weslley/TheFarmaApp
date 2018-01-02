@@ -2,14 +2,26 @@ import React, { Component } from 'react';
 import {
 	StyleSheet,
 	View,
-	Text
+	Text,
+	TextInput,
+	Image,
+	ScrollView
 } from 'react-native';
+
+import colors from '../values/colors';
+import dimens from '../values/dimens';
+
+const ic_cart = require('../images/ic_shopping_cart.png');
 
 export default class CartScreen extends Component<{}> {
 
+	static navigationOptions = {
+		tabBarLabel: 'Home',
+		tabBarIcon: ({ tintColor }) => (<Image source={ic_cart} style={[styles.icon, {tintColor: tintColor}]} />)
+	};
+
 	constructor(props) {
 		super(props);		
-		//this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 	}
 
 	componentWillMount(){
@@ -32,8 +44,14 @@ export default class CartScreen extends Component<{}> {
 
 const styles = StyleSheet.create({
 	container: {
+		backgroundColor: colors.white,
 		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center'
-	}	
+		justifyContent: 'center',
+		paddingLeft: dimens.marginMedium,
+		paddingRight: dimens.marginMedium
+	},
+	icon: {
+		width: 26,
+		height: 26,
+	},
 });

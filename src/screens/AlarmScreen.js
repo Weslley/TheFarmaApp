@@ -2,14 +2,26 @@ import React, { Component } from 'react';
 import {
 	StyleSheet,
 	View,
-	Text
+	Text,
+	TextInput,
+	Image,
+	ScrollView
 } from 'react-native';
+
+import colors from '../values/colors';
+import dimens from '../values/dimens';
+
+const ic_alarm = require('../images/ic_alarm.png');
 
 export default class AlarmScreen extends Component<{}> {
 
+	static navigationOptions = {
+		tabBarLabel: 'Alarmes',
+		tabBarIcon: ({ tintColor }) => (<Image source={ic_alarm} style={[styles.icon, {tintColor: tintColor}]} />)
+	}
+
 	constructor(props) {
 		super(props);		
-		//this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 	}
 
 	componentWillMount(){
@@ -32,8 +44,14 @@ export default class AlarmScreen extends Component<{}> {
 
 const styles = StyleSheet.create({
 	container: {
+		backgroundColor: colors.white,
 		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center'
-	}	
+		justifyContent: 'center',
+		paddingLeft: dimens.marginMedium,
+		paddingRight: dimens.marginMedium
+	},
+	icon: {
+		width: 26,
+		height: 26,
+	},
 });

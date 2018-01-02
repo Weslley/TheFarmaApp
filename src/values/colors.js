@@ -6,7 +6,7 @@ const colors = {
 	white: '#FFFFFF',
 	gray: '#EFEFEF',
 	red: '#FF001F',
-	purple: '#E91E63',
+	purple: '#FF1967',
 	message_error: '#CD0000',
 	primary: '#1EACA3',
 	primaryDark: '#0E9C93',

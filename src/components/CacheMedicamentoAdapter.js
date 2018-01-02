@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {StyleSheet, View, Text, Image} from 'react-native';
-import Divider from './Divider';
+
 import colors from '../values/colors';
 
 const ic_clock = require('../images/ic_recents.png');
@@ -22,7 +22,8 @@ export default class CacheMedicamentoAdapter extends Component<{}> {
 					<Image style={styles.Icon} source={ic_clock} />
 					<Text style={styles.Text}>{this.props.text}</Text>
 				</View>
-				<Divider/>
+
+				<View style={{backgroundColor: "#CCCCCC", height: 1 }} />
 			</View>
 		);
 	}

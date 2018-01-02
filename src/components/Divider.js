@@ -12,15 +12,18 @@ export default class Divider extends Component<{}> {
 	componentDidMount(){}
 
 	render(){
-		return (
-			<View style={styles.divider} />
-		);
+		const { background, heightSize } = this.props;
+		
+		let backgroundColor = background==='undefined'? "#CCCCCC" : background;
+		let height = heightSize === 'undefined'? 1 : height; 
+
+		const styles = {
+			divider: { 
+				backgroundColor: backgroundColor,
+				height: height,
+			}
+		};
+
+		return (<View style={styles.divider} />);
 	}
 }
-
-const styles = StyleSheet.create({
-	divider: { 
-		backgroundColor: "#CCCCCC", 
-		height: 1
-	}
-});

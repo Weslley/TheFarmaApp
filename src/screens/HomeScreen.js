@@ -1,70 +1,108 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import {StyleSheet,View, Image, Alert} from 'react-native';
 import {
-	StyleSheet,
-	View,
-	Text,
-	TextInput,
-	ScrollView
-} from 'react-native';
+	Container,
+	Header,
+	Title,
+	Content,
+	Button,
+	Input,
+	Icon,
+	Item,
+	Left,
+	Right,
+	Body,
+	Text
+} from "native-base";
+import ApresentationCardItem from '../components/ApresentationCardItem';
 
-import SearchBar from '../components/SearchBar'
-import CacheMedicamentoAdapter from '../components/CacheMedicamentoAdapter'
 import colors from '../values/colors';
 import dimens from '../values/dimens';
+import routes from '../config/router'
+
+const ic_home = require('../images/ic_home.png');
+const logo = require('../images/ic_logo.png');
 
 export default class HomeScreen extends Component<{}> {
 
+	static navigationOptions = {
+		header: null,
+		tabBarLabel: 'Home',
+		tabBarIcon: ({ tintColor }) => (<Image source={ic_home} style={[styles.icon, {tintColor: tintColor}]} />)
+	}
+
 	constructor(props) {
 		super(props);
-		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 	}
 
-	onNavigatorEvent(event) {
-		if (event.id === 'contextualMenuDismissed') {
-			this._contextualMenu = false;
-		}
-	}
+	componentWillMount(){}
 
-	hiddenNavBar = () => {
-		const to = this._toggleNavBar === 'hidden';
-		this.props.navigator.toggleNavBar({to,animated: false,});
-		this._toggleNavBar = to;
-	};
+	componentDidMount(){}
 
-	componentWillMount(){
+	_onPressButton() {
 
-	}
-
-	componentDidMount(){
-		this.hiddenNavBar();
 	}
 
 	render() {
+		const { navigate } = this.props.navigation;
+
 		return (
-			<View style={styles.container}>
-				<View>
-					<SearchBar />
-				</View>
-				<ScrollView>
-					<CacheMedicamentoAdapter text="Tyflen" />
-					<CacheMedicamentoAdapter text="Tyflen" />
-					<CacheMedicamentoAdapter text="Tyflen" />
-					<CacheMedicamentoAdapter text="Tyflen" />
-					<CacheMedicamentoAdapter text="Tyflen" />
-					<CacheMedicamentoAdapter text="Tyflen" />
-					<CacheMedicamentoAdapter text="Tyflen" />
-				</ScrollView>
-			</View>
+			<Container style={styles.main_container}>
+				<Header style={styles.header} />
+				<Content style={styles.container} >
+					<View style={{marginBottom: dimens.marginMedium}}>
+						<Item>
+							<Text style={styles.text1}>Bom dia, Cliente</Text>
+							<Right>
+								<View style={{backgroundColor: colors.textColorSecundary}}>
+									<Image source={logo} style={{ width: 30, height: 40, marginBottom: dimens.marginSmall }}/>
+								</View>
+							</Right>
+						</Item>
+						<View style={{backgroundColor: colors.textColorDark, height: 1 }} />
+					</View>
+					
+					<View style={{padding: 2}}>
+						<Button style={{backgroundColor: colors.gray, padding: dimens.marginSmall, borderRadius: 100, elevation: 0, shadowOpacity: 0}} 
+								onPress={() => navigate('SearchMedicineScreen')} >
+							<Text uppercase={false} style={{fontFamily: "Roboto", fontSize: 16, color: colors.textColorDark}}>Qual medicamento você deseja?</Text>
+							<Right style={{marginRight: 10}}>
+								<Icon active name='ios-search' size={24} />
+							</Right>
+						</Button>
+					</View>
+
+					<ApresentationCardItem />
+					<ApresentationCardItem />
+					<ApresentationCardItem />
+					<ApresentationCardItem />
+
+				</Content>
+			</Container>
 		);
 	}
 }
 
 const styles = StyleSheet.create({
-	container: {
+	icon: {
+		width: 26,
+		height: 26,
+	},
+	main_container:{
 		backgroundColor: colors.white,
-		flex: 1,
-		justifyContent: 'center',
-		paddingLeft: dimens.marginMedium,
-		paddingRight: dimens.marginMedium
-	}	
+	},
+	header: {
+		backgroundColor: colors.white,
+		elevation: 0, //remove shadow on Android
+		shadowOpacity: 0, //remove shadow on iOS
+	},
+	container: {
+		marginLeft: dimens.marginMedium,
+		marginRight: dimens.marginMedium
+	},
+	text1: {
+		fontFamily: "Roboto-Bold",
+		fontSize: 32,
+		color: colors.textColorDark
+	}
 });
