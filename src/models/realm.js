@@ -2,6 +2,20 @@
 
 import Realm from 'realm';
 
+class Configuracao extends Realm.Object {}
+Configuracao.schema = {
+    name: 'Configuracao',
+    primaryKey: 'id',
+    properties: {
+        id: 'int',
+        latitude: 'double',
+        longitude: 'double',
+        state: 'string',
+        token: 'string',
+        data: 'int'
+    }
+}
+
 class CacheMedicamento extends Realm.Object {}
 CacheMedicamento.schema = {
     name: 'CacheMedicamento',
@@ -383,4 +397,4 @@ PropostaItem.schema = {
     }
 }
 
-export default new Realm({schema: [UsuarioPost, Post, Usuario, Cliente, UF, Cidade, Bairro, PrincipioAtivo, Laboratorio, Medicamento, Apresentacao, Endereco, Pagamento, HorarioFuncionamento, Farmacia, Carrinho, CarrinhoItem, Pedido, PedidoItem, Proposta, PropostaItem]});
+export default new Realm({schema: [Configuracao, UsuarioPost, Post, Usuario, Cliente, UF, Cidade, Bairro, PrincipioAtivo, Laboratorio, Medicamento, Apresentacao, Endereco, Pagamento, HorarioFuncionamento, Farmacia, Carrinho, CarrinhoItem, Pedido, PedidoItem, Proposta, PropostaItem]});

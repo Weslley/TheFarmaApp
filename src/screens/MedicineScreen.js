@@ -21,12 +21,20 @@ import {
 	Body,
 	Text
 } from "native-base";
+import ApresentationCardItem from '../components/ApresentationCardItem';
 
 import colors from '../values/colors';
 import dimens from '../values/dimens';
 
+const ic_home = require('../images/ic_home.png');
 
 export default class MedicineScreen extends Component<{}> {
+
+	static navigationOptions = {
+		header: null,
+		tabBarLabel: 'Home',
+		tabBarIcon: ({ tintColor }) => (<Image source={ic_home} style={[styles.icon, {tintColor: tintColor}]} />)
+	}
 
 	constructor(props) {
 		super(props);		
@@ -46,7 +54,7 @@ export default class MedicineScreen extends Component<{}> {
 			<Container style={{backgroundColor: colors.white,}}>
 				<Header style={styles.header}>
 		        	<Left>
-			            <Button transparent onPress={() => this.props.navigation.goBack()} style={{paddingLeft: 0, marginLeft: 16}}>
+			            <Button transparent onPress={() => this.props.navigation.goBack()} style={{paddingLeft: 0, marginLeft: 8}}>
 			            	<Icon name="arrow-back" style={{color: colors.black}}/>
 			            </Button>
 		        	</Left>
@@ -57,23 +65,16 @@ export default class MedicineScreen extends Component<{}> {
 		        </Header>
 
 		        <View style={styles.container}>
-			        <Item>
-	            		<Input placeholder="Nome do medicamento " style={{fontFamily: "Roboto-Bold", fontSize: 24}} placeholderTextColor="#CCC" />
-	            		<Icon name="ios-close" style={{color: colors.black}}/>
-	          		</Item>
-
-	          		<Text uppercase style={{fontFamily: "Roboto-Bold", fontSize: 12, marginTop: 32, marginBottom: 8,}}>Resultado da busca</Text>
+		        	<Text style={styles.title}>Losartana Potássica</Text>
+		        	<View style={{backgroundColor: colors.black, height: 1, marginBottom: dimens.marginNormal}}/>
           		</View>
 
 				<ScrollView style={{paddingLeft: 24, paddingRight: 24}}>
 					<View>
-						<CacheMedicamentoAdapter text="Tyflen" />
-						<CacheMedicamentoAdapter text="Tyflen" />
-						<CacheMedicamentoAdapter text="Tyflen" />
-						<CacheMedicamentoAdapter text="Tyflen" />
-						<CacheMedicamentoAdapter text="Tyflen" />
-						<CacheMedicamentoAdapter text="Tyflen" />
-						<CacheMedicamentoAdapter text="Tyflen" />
+						<ApresentationCardItem />
+						<ApresentationCardItem />
+						<ApresentationCardItem />
+						<ApresentationCardItem />
 					</View>
 				</ScrollView>
 			</Container>
@@ -92,8 +93,9 @@ const styles = StyleSheet.create({
 		marginLeft: dimens.marginMedium,
 		marginRight: dimens.marginMedium
 	},
-	icon: {
-		width: 26,
-		height: 26,
-	},
+	title:{
+		fontFamily: "Roboto-Bold",
+		fontSize: 32,
+		marginBottom: dimens.marginSmall
+	}
 });

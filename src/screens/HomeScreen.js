@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {StyleSheet,View, Image, Alert} from 'react-native';
+import {StyleSheet,View, Image, Alert, Picker} from 'react-native';
 import {
 	Container,
 	Header,
@@ -14,11 +14,15 @@ import {
 	Body,
 	Text
 } from "native-base";
-import ApresentationCardItem from '../components/ApresentationCardItem';
+
+import Permissions from 'react-native-permissions'
 
 import colors from '../values/colors';
 import dimens from '../values/dimens';
 import routes from '../config/router'
+
+import realm from '../models/realm';
+import Estados from '../models/Estados';
 
 const ic_home = require('../images/ic_home.png');
 const logo = require('../images/ic_logo.png');
@@ -31,16 +35,68 @@ export default class HomeScreen extends Component<{}> {
 		tabBarIcon: ({ tintColor }) => (<Image source={ic_home} style={[styles.icon, {tintColor: tintColor}]} />)
 	}
 
+	watchID = null
+
 	constructor(props) {
 		super(props);
+		this.state = {
+			latitude: 0.0,
+			longitude: 0.0,
+			uf: null,
+		}
 	}
 
-	componentWillMount(){}
+	componentWillMount(){
+		Permissions.checkMultiple(['camera', 'photo', 'location']).then(response => {
+			this.setState({
+	        	cameraPermission: response.camera,
+	        	photoPermission: response.photo,
+	        	locationPermission: response.location
+	    	})
+	    })
+	}
 
-	componentDidMount(){}
+	componentWillUnmount() {
+        navigator.geolocation.clearWatch(this.watchID);
+    }
 
-	_onPressButton() {
+	componentDidMount(){
+		
+		if(this.state.locationPermission==='authorized'){
+			this._getLocation();
+		}else{
+			Permissions.request('location').then(response => {
+				this.setState({ locationPermission: response })
 
+				if(response==='authorized'){
+					this._getLocation();
+				}
+			})
+		}
+	}
+
+	_getLocation(){
+		this.watchID = navigator.geolocation.watchPosition((position) => {
+			this.setState({latitude: position.coords.latitude,longitude: position.coords.longitude,})
+	    })
+	}
+
+	_dialogChooseState(){
+		<Picker
+  			selectedValue={this.state.uf}
+  			onValueChange={(itemValue, itemIndex) => this.setState({uf: itemValue})}>
+			{Estados.getListaEstados().forEach((estado) => {
+				<Picker.Item label={estado.nome} value={estado.sigla} />
+			})}
+		</Picker>
+	}
+
+	_syncCidades(){
+		
+	}
+
+	_syncBairros(){
+		
 	}
 
 	render() {
@@ -72,11 +128,12 @@ export default class HomeScreen extends Component<{}> {
 						</Button>
 					</View>
 
-					<ApresentationCardItem />
-					<ApresentationCardItem />
-					<ApresentationCardItem />
-					<ApresentationCardItem />
-
+					<View>
+						<Button onPress={ () => {this.showCoordenadas()} }>
+							<Text>Exibir coordenadas</Text>
+						</Button>
+					</View>
+				
 				</Content>
 			</Container>
 		);

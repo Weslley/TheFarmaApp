@@ -1,3 +1,5 @@
-var IP_SERVER = "infoseguro.infog2.com.br";
-var PORT = "80";
+export default const Config = {
+	IP_SERVER: "https://api.thefarma.com.br",
+	PORT: "80"
+}
 

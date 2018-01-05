@@ -47,8 +47,8 @@ export default class ApresentationCardItem extends Component<{}> {
 
 						<View style={styles.FooterContainer}>
 							<Text style={styles.Price}>R$ 999,99</Text>
-							<View style={styles.ActionsContainer}>
 
+							<View style={styles.ActionsContainer}>
 								<Button transparent 
 										style={{width: 24, height: 24, marginRight: dimens.marginSmall}} 
 										onPress={() => true} >
@@ -62,8 +62,8 @@ export default class ApresentationCardItem extends Component<{}> {
 			            				onPress={() => true} >
 			            			<Image source={ic_add} />
 			            		</Button>
-
 							</View>
+							
 						</View>
 					</View>
 				</View>
