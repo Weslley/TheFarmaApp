@@ -54,7 +54,7 @@ Post.schema = {
         like: 'bool',
         usuarioPost: 'UsuarioPost',
         curtidas: 'int',
-        data: 'int'
+        data: 'int',
         dataAtualizacao: 'int',
         tipo: 'int'
     }
@@ -250,7 +250,6 @@ Farmacia.schema = {
         bairro: 'Bairro',
         latitude: 'double',
         longitude: 'double',
-        complemento: 'string',
         tempoEntrega: 'string',
         horarioFuncionamento: 'string',
         distancia: 'string',
@@ -279,7 +278,6 @@ Carrinho.schema = {
         bairro: 'string',
         latitude: 'double',
         longitude: 'double',
-        complemento: 'string',
         delivery: 'bool',
         troco: 'double',
         valorFrete: 'double',
@@ -287,7 +285,7 @@ Carrinho.schema = {
         numeroParcelas: 'int',
         farmacia: 'Farmacia',
         itens: 'PedidoItem[]',
-        pagamentos: 'Pagamento[]'
+        pagamentos: 'Pagamento[]',
         proposta: 'Proposta',
         propostas: 'Proposta[]',
         dataCriacao: 'date',
@@ -332,7 +330,6 @@ Pedido.schema = {
         bairro: 'string',
         latitude: 'double',
         longitude: 'double',
-        complemento: 'string',
         delivery: 'bool',
         troco: 'double',
         valorFrete: 'double',
@@ -340,7 +337,7 @@ Pedido.schema = {
         numeroParcelas: 'int',
         farmacia: 'Farmacia',
         itens: 'PedidoItem[]',
-        pagamentos: 'Pagamento[]'
+        pagamentos: 'Pagamento[]',
         proposta: 'Proposta',
         propostas: 'Proposta[]',
         dataCriacao: 'date',
@@ -367,7 +364,7 @@ PedidoItem.schema = {
 
 class Proposta extends Realm.Object {}
 Proposta.schema = {
-    name: 'PedidoItem',
+    name: 'Proposta',
     primaryKey: 'id',
     properties: {
         id: 'int',
@@ -381,7 +378,7 @@ Proposta.schema = {
     }
 }
 
-class PropostaItem extends RealmObject {}
+class PropostaItem extends Realm.Object {}
 PropostaItem.schema = {
     name: 'PropostaItem',
     primaryKey: 'id',

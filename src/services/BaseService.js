@@ -1,9 +1,9 @@
-import Config from '../utils/Config';
+import configuracao from '../utils/config';
 
-class BaseService {
+export default class BaseService {
 
 	static getBaseURL(){
-		return Config.IP_SERVER + Config.PORT;
+		return configuracao.IP_SERVER; // + ":" + configuracao.PORT;
 	}
 
 }

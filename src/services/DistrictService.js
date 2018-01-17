@@ -2,7 +2,7 @@ import BaseService from './BaseService';
 
 class DistrictService extends BaseService {
 
-	static async function getDistricts(url) {
+	static async getDistricts(url) {
 		try {
 			let response = await fetch(this.getBaseURL() + url);
 			let responseJson = await response.json();

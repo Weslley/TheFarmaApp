@@ -1,15 +1,16 @@
+import axios from 'axios';
+
 import BaseService from './BaseService';
 
-class CityService extends BaseService {
-
-	static async function getCities(url) {
-		try {
-			let response = await fetch(this.getBaseURL() + url);
-			let responseJson = await response.json();
-			return responseJson;
-		} catch (error) {
-			console.error(error);
-		}
-	}
+export default class CityService extends BaseService {	
+	static getCities(url) {
+		let requestURL = this.getBaseURL() + url;
+		console.log(requestURL);
 	
+		axios.get(requestURL).then((response) => {
+			return response;
+		}).catch((error) => {
+			return error;
+		});
+	}
 }

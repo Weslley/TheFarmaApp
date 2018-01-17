@@ -5,7 +5,8 @@ import {
 	Image,
 	ScrollView,
 	TextInput,
-	Alert
+	Alert,
+	ListView
 } from 'react-native';
 
 import {
@@ -22,75 +23,68 @@ import {
 	Body,
 	Text,
 	Spinner
-} from "native-base";
+} from 'native-base';
 
 import TimerMixin from 'react-timer-mixin';
 
-import CacheMedicamentoAdapter from '../components/CacheMedicamentoAdapter'
+import CacheMedicamentoAdapter from '../components/CacheMedicamentoAdapter';
 import colors from '../values/colors';
 import dimens from '../values/dimens';
 
 import renderIf from '../utils/renderIf';
 
-const ic_home = require('../images/ic_home.png');
+const ichome = require('../images/ic_home.png');
 
 export default class SearchMedicineScreen extends Component<{}> {
-
 	static navigationOptions = {
 		header: null,
 		tabBarLabel: 'Home',
-		tabBarIcon: ({ tintColor }) => (<Image source={ic_home} style={[styles.icon, {tintColor: tintColor}]} />)
+		tabBarIcon: ({ tintColor }) => (<Image source={ichome} style={[styles.icon, { tintColor }]} />)
 	}
 
 	mixins: [TimerMixin]
 
 	constructor(props) {
 		super(props);
-		const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});       
+		const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 		this.state = {
 			isSearching: false,
 			isLoading: false,
 			searchType: 0,			
 			dataSource: ds.cloneWithRows(['row 1', 'row 2']),
-		}
+		};
 		timer = 0;
 	}
 
-	componentWillMount(){
-
+	componentWillMount() {
 	}
 
-	componentDidMount(){
-
+	componentDidMount() {
 	}
 
-	_onSearchChange(query){
+	_onSearchChange(query) {
 
 		if (timer !== 0) {
-			this.setState({isLoading: false});
-          	clearTimeout(timer);
+			this.setState({ isLoading: false });
+			clearTimeout(timer);
         }
 
-		if(query.trim().length > 2){
+		if (query.trim().length > 2) {
 			timer = 0;
-        	timer = setTimeout(() => {
-        		this._loadResuts(query)
-        	},500);
-		}else{
-			this._loadSuggestions();
+			timer = setTimeout(() => {
+				this.loadResuts(query);
+			}, 500);
+		} else {
+			this.loadSuggestions();
 		}
 	}
 
-	_loadCacheMedicines(){
+	loadCacheMedicines() {}
 
-	}
+	loadSuggestions() {}
 
-	_loadSuggestions(){
-
-	}
-
-	_loadResuts(query){
-		this.setState({isLoading: true})
+	loadResuts(query) {
+		this.setState({ isLoading: true });
 		Alert.alert(query);
 	}
 
@@ -98,15 +92,15 @@ export default class SearchMedicineScreen extends Component<{}> {
 		const { navigate } = this.props.navigation;
 
 		return (
-			<Container style={{backgroundColor: colors.white,}}>
+			<Container style={{ backgroundColor: colors.white }}>
 				<Header style={styles.header}>
-		        	<Left>
-			            <Button transparent onPress={() => this.props.navigation.goBack()} style={{paddingLeft: 0, marginLeft: 16}}>
-			            	<Icon name="arrow-back" style={{color: colors.black}}/>
+					<Left>
+						<Button transparent onPress={() => this.props.navigation.goBack()} style={{ paddingLeft: 0, marginLeft: 16 }}>
+			            	<Icon name="arrow-back" style={{ color: colors.black }} />
 			            </Button>
 		        	</Left>
 			        <Body>
-			        	<Title></Title>
+			        	<Title />
 			        </Body>
 		        	<Right />
 		        </Header>
@@ -114,43 +108,40 @@ export default class SearchMedicineScreen extends Component<{}> {
 		        <View style={styles.container}>
 			        <Item>
 	            		<Input 
-	            			style={{fontFamily: "Roboto-Bold", fontSize: 24}} 
+	            			style={{ fontFamily: 'Roboto-Bold', fontSize: 24 }} 
 		            		placeholder="Nome do medicamento " 
 		            		placeholderTextColor="#CCC" multiline={false}
-		            		onChangeText={(text) => {this._onSearchChange(text)}} />
+							onChangeText={(text) => { this.onSearchChange(text); }} />
 
 	            		<Icon 
-	            			style={{color: colors.black, fontSize: 30}}
-	            			name="ios-close" />	
+	            			style={{ color: colors.black, fontSize: 30 }}
+	            			name='ios-close' />
 	          		</Item>
 
 	          		{renderIf(this.state.isLoading,
-	          			<Text uppercase style={{fontFamily: "Roboto-Bold", fontSize: 12, marginTop: 32, marginBottom: 8,}}>Resultado da busca</Text>
+	          			<Text uppercase style={{ fontFamily: 'Roboto-Bold', fontSize: 12, marginTop: 32, marginBottom: 8 }}>Resultado da busca</Text>
 	          		)}
 	          		
           		</View>
 
-          		{renderIf(this.state.isLoading,
-					<Spinner color="#CCC"/>
-          		)}
+				{renderIf(this.state.isLoading,
+					<Spinner color="#CCC" />
+				)}
 
-          		<ListView
-			    	style={{paddingLeft: 24, paddingRight: 24}}
-        			dataSource={this.state.dataSource}
-        			renderRow={
-        				(apresentacao) => { 
-        					<CacheMedicamentoAdapter text="Tyflen" onPress={() => navigate('MedicineScreen')} />
-        				}
-        			}
-        		/>
-        		
+				<ScrollView style={{ paddingLeft: 24, paddingRight: 24 }}>
+					<View>
+						<CacheMedicamentoAdapter text="Tyflen" onPress={() => navigate('MedicineScreen')} />
+						<CacheMedicamentoAdapter text="Tyflen" onPress={() => navigate('MedicineScreen')} />
+						<CacheMedicamentoAdapter text="Tyflen" onPress={() => navigate('MedicineScreen')} />
+					</View>
+				</ScrollView>    		
 			</Container>
 			);
 	}
 }
 
 const styles = StyleSheet.create({
-	header:{
+	header: {
 		backgroundColor: colors.white,
 		elevation: 0,
 		shadowOpacity: 0,
