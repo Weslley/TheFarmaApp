@@ -56,7 +56,6 @@ class MedicineScreen extends Component {
         quantity: this.getProductQuantity(apresentation)
       }));
     this.setState({ apresentations });
-    this.props.navigation.setParams({ badgeCount: this.state.apresentations.length });
   }
   getProductQuantity(product) {
     const cItem = this.props.cartItems.find(item => item.id === product.id);
@@ -96,7 +95,7 @@ class MedicineScreen extends Component {
                     <Button transparent onPress={() => this.props.dispatch(removeItemToCart(apresentation))}>
                       <Icon name="remove" />
                     </Button>
-                    <Text>{apresentation.quantity}</Text>
+                    <Text>{apresentation.quantity || 0}</Text>
                     <Button transparent onPress={() => this.props.dispatch(addItemToCart(apresentation))}>
                       <Icon name="add" />
                     </Button>

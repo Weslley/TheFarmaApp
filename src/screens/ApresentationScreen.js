@@ -27,7 +27,7 @@ import dimens from "../values/dimens";
 const icHome = require("../images/ic_home.png");
 const imgDefault = require("../images/ic_default_medicine.png");
 
-export default class ApresentationScreen extends Component {
+class ApresentationScreen extends Component {
 	static navigationOptions = {
 		header: null,
 		tabBarLabel: "Home",

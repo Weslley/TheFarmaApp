@@ -29,36 +29,38 @@ export const SearchStack = StackNavigator({
 	},	
 });
 
-const  Tabs = TabNavigator({
-	Home: { 
-		screen: SearchStack, 
-	},
-	Alarm: { 
-		screen: AlarmScreen, 
-	},
-	Cart: { 
-		screen: CartScreen, 
-	},
-	Perfil: { 
-		screen: PerfilScreen, 
-	},
-}, 
-{
-	swipeEnabled: false,
-	animationEnabled: true,
-	tabBarPosition: 'bottom',
-	tabBarOptions: {
-		showLabel: false,
-		activeTintColor: '#000000',
-		activeBackgroundColor: '#ffffff',
-		inactiveTintColor: '#cccccc',
-		inactiveBackgroundColor:'#FFFFFF',
-		showIcon: true,
-		style: {
-			backgroundColor: '#FFFFFF',
-		}
-	}
-});
+const Tabs = TabNavigator(
+  {
+    Home: {
+      screen: SearchStack
+    },
+    Alarm: {
+      screen: AlarmScreen
+    },
+    Cart: {
+      screen: CartScreen
+    },
+    Perfil: {
+      screen: PerfilScreen
+    }
+  },
+  {
+    swipeEnabled: false,
+    animationEnabled: true,
+    tabBarPosition: "bottom",
+    tabBarOptions: {
+      showLabel: false,
+      activeTintColor: "#000000",
+      activeBackgroundColor: "#ffffff",
+      inactiveTintColor: "#cccccc",
+      inactiveBackgroundColor: "#FFFFFF",
+      showIcon: true,
+      style: {
+        backgroundColor: "#FFFFFF"
+      }
+    }
+  }
+);
 
 export const Root = StackNavigator({
 	Tabs: { 
@@ -82,3 +84,4 @@ export const Root = StackNavigator({
 	mode: 'modal',
 	headerMode: 'none'
 });
+

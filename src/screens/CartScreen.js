@@ -1,19 +1,14 @@
-import React, { Component } from 'react';
-import {
-	StyleSheet,
-	View,
-	Text
-} from 'react-native';
-import { Icon } from 'native-base';
+import React, { Component } from "react";
+import { StyleSheet, View, Text } from "react-native";
+import { Icon } from "native-base";
 import { IconBadge } from "react-native-icon-badge";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-import { TabIcon } from '../components/Icon';
+import { TabIcon } from "../components/Icon";
 
-import colors from '../values/colors';
-import dimens from '../values/dimens';
+import colors from "../values/colors";
+import dimens from "../values/dimens";
 
-//const ic_cart = require('../images/ic_shopping_cart.png');
 class CartScreen extends Component {
   constructor(props) {
     super(props);
@@ -22,22 +17,23 @@ class CartScreen extends Component {
     };
   }
 
-  static navigationOptions = ({ navigation }) => ({
-    tabBarIcon: ({ tintColor }) => (
-      <View>
-        {console.log("Props ---", navigation)}
-        <Text>{0}</Text>
-      </View>
-    )
-  });
-
   componentWillMount() {
-    //this.props.navigation.setParams({ badgeCount: 0 });
+    console.log('will mount cartScreen');
   }
 
+  static navigationOptions = ({ navigation }) => {
+    console.log(navigation)
+    let { state: {params} } = navigation;
+    return {
+      tabBarLabel: 'Home',
+      tabBarIcon: ({tintColor}) => <TabIcon name='cart' size={(params ? params.cartSize : 0)} />
+    }
+  };
+
   componentWillReceiveProps() {
-    this.setState({ cartSize: this.props.cartItems.length });
-    this.props.navigation.setParams({ badgeCount: this.state.cartSize });
+    this.props.navigation.setParams({
+      cartSize: this.props.cartItems.length
+    });
   }
   render() {
     return (
@@ -49,23 +45,23 @@ class CartScreen extends Component {
 }
 
 function mapStateToProp(state) {
-	return {
-		cartItems: state.carrinho.cartItems
-	};
+  return {
+    cartItems: state.carrinho.cartItems
+  };
 }
 
 export default connect(mapStateToProp)(CartScreen);
 
 const styles = StyleSheet.create({
-	container: {
-		backgroundColor: colors.white,
-		flex: 1,
-		justifyContent: 'center',
-		paddingLeft: dimens.marginMedium,
-		paddingRight: dimens.marginMedium
-	},
-	icon: {
-		width: 26,
-		height: 26,
-	},
+  container: {
+    backgroundColor: colors.white,
+    flex: 1,
+    justifyContent: "center",
+    paddingLeft: dimens.marginMedium,
+    paddingRight: dimens.marginMedium
+  },
+  icon: {
+    width: 26,
+    height: 26
+  }
 });

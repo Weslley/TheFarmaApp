@@ -19,7 +19,7 @@ export default (state = INITIAL_STATE, action) => {
       if (cartItem) {
         cartItem.quantidade += 1;
       } else {
-        cartItem = action.apresentation;
+        cartItem = { ...action.apresentation };
         cartItem.quantidade = 1;
         cItems.push(cartItem);
       }
