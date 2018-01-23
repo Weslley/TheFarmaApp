@@ -12,18 +12,13 @@ import {
 } from 'native-base';
 
 import axios from 'axios';
-
 import Permissions from 'react-native-permissions';
-
-import colors from '../values/colors';
-import dimens from '../values/dimens';
-//import routes from '../config/router';
 
 //import realm from '../models/realm';
 import Estados from '../models/Estados';
-//import CityService from '../services/CityService';
-
-import configuracao from '../utils/config';
+import configuracao from "../utils/config";
+import colors from "../values/colors";
+import dimens from "../values/dimens";
 
 const ichome = require('../images/ic_home.png');
 const logo = require('../images/ic_logo.png');
@@ -114,7 +109,6 @@ export default class HomeScreen extends Component {
 
 	render() {
 		const { navigate } = this.props.navigation;
-
 		return (
 			<Container style={styles.main_container}>
 				<Header style={styles.header} />

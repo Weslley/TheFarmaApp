@@ -18,6 +18,8 @@ import {
   Thumbnail
 } from 'native-base';
 
+import { addItemToCart, removeItemToCart } from '../actions/carrinho';
+
 import CONFIG from '../utils/config';
 import colors from '../values/colors';
 import dimens from '../values/dimens';
@@ -37,28 +39,36 @@ class MedicineScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: []
+      apresentations: []
     };
   }
-
   componentDidMount() {
+    this.setState({ cartItems: this.props.cartItems });
     axios
-      .get(
-        `${CONFIG.IP_SERVER}/apresentacoes/${this.props.uf}?nome=${
-          this.props.productName
-        }`
-      )
-      .then(res => this.setState({ products: res.data.results }))
+      .get(`${CONFIG.IP_SERVER}/apresentacoes/${this.props.uf}?nome=${this.props.productName}`)
+      .then(res => this.setState({ apresentations: res.data.results }))
       .catch(err => console.error('ERROR ---', err));
   }
 
+  componentWillReceiveProps() {
+    const apresentations = this.state.apresentations.map(apresentation => ({
+        ...apresentation,
+        quantity: this.getProductQuantity(apresentation)
+      }));
+    this.setState({ apresentations });
+    this.props.navigation.setParams({ badgeCount: this.state.apresentations.length });
+  }
+  getProductQuantity(product) {
+    const cItem = this.props.cartItems.find(item => item.id === product.id);
+    return cItem ? cItem.quantidade : 0;
+  }
+
   render() {
-    return (
-    <Container style={{ backgroundColor: colors.white }}>
+    return (<Container style={{ backgroundColor: colors.white }}>
         <Header style={styles.header}>
           <Left>
             <Button transparent onPress={() => this.props.navigation.goBack()} style={{ paddingLeft: 0, marginLeft: 8 }}>
-              <Icon name='arrow-back' style={{ color: colors.black }} />
+              <Icon name="arrow-back" style={{ color: colors.black }} />
             </Button>
           </Left>
           <Right />
@@ -69,28 +79,32 @@ class MedicineScreen extends Component {
           <View style={{ backgroundColor: colors.black, height: 1, marginBottom: dimens.marginNormal }} />
         </View>
 
-        <List 
-        style={{ marginRight: 24 }}
-        dataArray={this.state.products} renderRow={item => (<ListItem style={{ paddingVertical: 20 }} >
-              {item.imagem ? <Thumbnail square size={80} source={{ uri: item.imagem }} /> : <Image style={{ width: 80, height: 80 }} source={imgDefault} />}
+        <List style={{ marginRight: 24 }} dataArray={this.state.apresentations} renderRow={apresentation => (<ListItem style={{ paddingVertical: 20 }}>
+              {apresentation.imagem ? <Thumbnail square size={80} source={{ uri: apresentation.imagem }} /> : <Image style={{ width: 80, height: 80 }} source={imgDefault} />}
               <Body>
-                <Text style={styles.ApresentationName} >{item.nome}</Text>
-                <Text style={styles.Maker} uppercase>{item.produto.fabricante}</Text>
-                <Body style={{ paddingHorizontal: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Text style={{ flex: 1, fontFamily: 'Roboto-Medium', fontSize: 18, color: colors.purple }}>{item.preco}</Text>
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Button transparent>
-                      <Icon name='remove' />
+                <Text style={styles.ApresentationName}>
+                  {apresentation.nome}
+                </Text>
+                <Text style={styles.Maker} uppercase>
+                  {apresentation.produto.fabricante}
+                </Text>
+                <Body style={{ paddingHorizontal: 15, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                  <Text style={{ flex: 1, fontFamily: "Roboto-Medium", fontSize: 18, color: colors.purple }}>
+                    {apresentation.preco}
+                  </Text>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Button transparent onPress={() => this.props.dispatch(removeItemToCart(apresentation))}>
+                      <Icon name="remove" />
                     </Button>
-                    <Text>0</Text>
-                    <Button transparent>
-                      <Icon name='add' />
+                    <Text>{apresentation.quantity}</Text>
+                    <Button transparent onPress={() => this.props.dispatch(addItemToCart(apresentation))}>
+                      <Icon name="add" />
                     </Button>
                   </View>
                 </Body>
               </Body>
             </ListItem>)} />
-        </Container>);
+    </Container>);
   }
 }
 
@@ -125,7 +139,8 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
   return {
     uf: state.localizacao.uf,
-    productName: state.produto.productName
+    productName: state.produto.productName,
+    cartItems: state.carrinho.cartItems
   };
 }
 
