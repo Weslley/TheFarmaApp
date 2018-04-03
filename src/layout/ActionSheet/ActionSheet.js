@@ -1,0 +1,87 @@
+import React, { Component } from "react";
+import { View, Modal, Platform, ActionSheetIOS, TouchableOpacity } from "react-native";
+
+import { Text } from "native-base";
+import { Components } from "../../helpers";
+
+import styles from "./styles";
+
+class ActionSheet extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { modalVisible: true };
+  }
+
+  static actionsheetInstance;
+
+  static setView(view) {
+    this.actionsheetInstance._root.setState({
+      content: view
+    })
+  }
+  static show(config, callback) {
+    this.actionsheetInstance._root.showActionSheet(config, callback);
+  }
+  showActionSheet(config, callback) {
+    if (Platform.OS === "ios") {
+      if (typeof config.options[0] == "object") {
+        let options = config.options;
+        let filtered = options.map(item => { return item.text; });
+        config.options = filtered;
+        ActionSheetIOS.showActionSheetWithOptions(config, callback);
+      } else {
+        ActionSheetIOS.showActionSheetWithOptions(config, callback);
+      }
+    } else {
+      this.setState({
+        items: config.options,
+        title: config.title,
+        message: config.message,
+        destructiveButtonIndex: config.destructiveButtonIndex,
+        cancelButtonIndex: config.cancelButtonIndex,
+        modalVisible: true,
+        callback: callback
+      });
+    }
+  }
+  componentDidMount() {
+    if (this.props.callback) {
+      this.setState({ callback: this.props.callback });
+    }
+
+    if (!this.props.autoHide && this.props.duration) {
+      console.warn(`It's not recommended to set autoHide false with duration`);
+    }
+  }
+
+  render() {
+    return (
+      <Modal
+        animationType={"fade"}
+        transparent={true}
+        visible={this.state.modalVisible}
+        onRequestClose={() => {
+          this.state.callback(this.state.cancelButtonIndex);
+          this.setState({ modalVisible: false });
+        }}>
+
+        <View style={{ flex: 1 }}>
+          <TouchableOpacity
+            activeOpacity={1}
+            style={{ backgroundColor: "rgba(0,0,0,0.4)", flex: 1, justifyContent: "flex-end" }}
+            onPress={() => {
+              this.state.callback(this.state.cancelButtonIndex);
+              this.setState({ modalVisible: false });
+            }}>
+
+            <TouchableOpacity activeOpacity={1} style={{ backgroundColor: "#fff", height: this.state.length * 80, elevation: 4 }}>
+              {this.props.content}
+            </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    );
+  }
+}
+
+export default ActionSheet;
