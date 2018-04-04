@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { View, ScrollView, Image } from "react-native";
+import Snackbar from 'react-native-snackbar';
 import { Container, Text, Form, Item, Label, Input, Button, Icon } from "native-base";
 import { TextInputMask, MaskService } from "react-native-masked-text";
 
@@ -40,7 +41,7 @@ class RegisterScreen extends Component {
 
     componentWillReceiveProps = nextProps => {
         try {
-            if (nextProps && nextProps.error && nextProps.error.response && nextProps.error.response.status == 400) {
+            if (nextProps && nextProps.error && nextProps.error.response && (nextProps.error.response.status == 400 || nextProps.error.response.status == 401)) {
 
                 if (nextProps.error.response.data.email) {
                     this.setState({ emailError: nextProps.error.response.data.email[0] })
@@ -50,8 +51,18 @@ class RegisterScreen extends Component {
                     this.setState({ celularError: nextProps.error.response.data.celular[0] })
                 }
 
+                if (nextProps.error.response.data.non_field_errors) {
+                    Snackbar.show({
+                        title: nextProps.error.response.data.non_field_errors[0],
+                        duration: Snackbar.LENGTH_SHORT,
+                    });
+                }
+
                 if (nextProps.error.response.data.detail) {
-                    this.setState({ error: nextProps.error.response.data.detail })
+                    Snackbar.show({
+                        title: nextProps.error.response.data.detail,
+                        duration: Snackbar.LENGTH_SHORT,
+                    });
                 }
             }
         } catch (e) {
@@ -210,15 +221,9 @@ class RegisterScreen extends Component {
                             {Components.renderIf(this.state.passwordError,
                                 <Text style={styles.inputError} uppercase={false}>{this.state.passwordError}</Text>
                             )}
-
                         </Form>
-
                     </ScrollView>
 
-                    {(this.props.error && this.props.error != null && this.props.error.message) ?
-                        <Text style={styles.inputError} uppercase={false}>{this.props.error.message}</Text>
-                        : null
-                    }
                     <Button style={[styles.button]} bordered dark onPress={() => this.submit()}>
                         <Text style={styles.buttonText} uppercase={false}>{"Cadastrar"}</Text>
                         <Icon name="ios-arrow-round-forward-outline" style={styles.buttonIcon} />

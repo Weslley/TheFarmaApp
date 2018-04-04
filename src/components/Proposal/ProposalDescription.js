@@ -17,47 +17,40 @@ class ProposalDescription extends Component {
 
   render() {
     return (
-      <TouchableOpacity style={{ width: '100%' }} onPress={this.props.onPress}>
-        <View style={styles.Container}>
-          <View style={styles.Header}>
-            <View>
-              <Text style={styles.PharmaName}>Farmácia Mel</Text>
-              {Components.renderIfElse(this.props.complete,
-                <View style={styles.TagContainer}>
-                  <Text style={styles.TagText}>{"Estoque completo"}</Text>
-                </View>,
-                <View style={styles.TagContainerImcomplete}>
-                  <Text style={styles.TagTextImcomplete}>{"Estoque imcompleto"}</Text>
-                </View>
-              )}
-            </View>
-            <TextMask style={styles.Price} value="9,00" type={"money"} options={{}} />
-          </View>
-
+      <View style={styles.Container}>
+        <View style={styles.Header}>
           <View>
-            <View style={styles.InfoContainer}>
-              <Icon name="place" size={30} color={"#000"}/>
-              <Text style={styles.InfoTextBold}>
-                100m
-                <Text style={styles.InfoText}>
-                  {" do endereço indicado"}
-                </Text>
-              </Text>
-            </View>
+            <Text style={styles.PharmaName}>{this.props.proposal.farmacia.nome_fantasia}</Text>
+            {Components.renderIfElse(this.props.proposal.possui_todos_itens,
+              <View style={styles.TagContainer}>
+                <Text style={styles.TagText}>{"Estoque completo"}</Text>
+              </View>,
+              <View style={styles.TagContainerImcomplete}>
+                <Text style={styles.TagTextImcomplete}>{"Estoque imcompleto"}</Text>
+              </View>
+            )}
+          </View>
+          <TextMask style={styles.Price} value={`${parseFloat(this.props.proposal.valor_total).toFixed(2)}`} type={"money"} options={{}} />
+        </View>
 
-            <View style={styles.InfoContainer}>
-              <Icon name="clock" size={30} color={"#000"}/>
-              <Text style={styles.InfoTextBold}>
-                30 min
-                <Text style={[styles.InfoText, { marginBottom: 0 }]}>
-                  {" em média para entregar"}
-                </Text>
-              </Text>
-            </View>
+        <View>
+          <View style={styles.InfoContainer}>
+            <Icon name="place" size={18} color={"#000"} style={{marginRight: 8}} />
+            <Text style={styles.InfoTextBold}>
+              {this.props.proposal.farmacia.distancia}
+              <Text style={styles.InfoText}>{" do endereço indicado"}</Text>
+            </Text>
           </View>
 
+          <View style={[styles.InfoContainer, { marginBottom: 8 }]}>
+            <Icon name="clock-o" size={18} color={"#000"} style={{marginRight: 8}} />
+            <Text style={styles.InfoTextBold}>
+              {this.props.proposal.farmacia.tempo_entrega}
+              <Text style={[styles.InfoText, { marginBottom: 0 }]}>{" em média para entregar"}</Text>
+            </Text>
+          </View>
         </View>
-      </TouchableOpacity>
+      </View>
     );
   }
 }

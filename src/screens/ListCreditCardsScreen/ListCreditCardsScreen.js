@@ -6,22 +6,26 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 
 import { connect } from "react-redux";
 import { logout } from "../../actions/clients";
-import { getCreditCards, clearCreditCards, clearError } from "../../actions/creditCards"
+import { selectCreditCard, getCreditCards, clearCreditCards, clearError } from "../../actions/creditCards"
 
 import { Header } from "../../layout/Header";
+import { BottomBar } from "../../layout/Bar";
 import { Container } from '../../layout/Container';
 
 import { Icon } from "../../components/Icon";
 import { MenuItem } from "../../components/MenuItem";
 import { CreditCardAdapter } from "../../components/CreditCard";
 
+import { Components } from "../../helpers";
 import styles from "./styles";
 
 
 class ListCreditCardsScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      showBottomBar: false
+    };
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -48,7 +52,7 @@ class ListCreditCardsScreen extends Component {
     };
   };
 
-  
+
   componentWillReceiveProps = nextProps => {
     try {
       if (nextProps && nextProps.error && nextProps.error.response && (nextProps.error.response.status == 400 || nextProps.error.response.status == 401)) {
@@ -67,7 +71,12 @@ class ListCreditCardsScreen extends Component {
 
   componentWillMount() {
     this.props.dispatch(clearError());
-    this.props.dispatch(getCreditCards({client: this.props.client}));
+    this.props.dispatch(getCreditCards({ client: this.props.client }));
+  }
+
+  componentDidMount() {
+    let { state: { params } } = this.props.navigation;
+    if (params && params.showBottomBar) this.setState({ showBottomBar: true })
   }
 
   componentWillUnmount() {
@@ -75,42 +84,58 @@ class ListCreditCardsScreen extends Component {
   }
 
   /** Private functions */
-  _removeCreditCard(creditCard){
-    let params = {client: this.props.client, creditCard}
+  _removeCreditCard(creditCard) {
+    let params = { client: this.props.client, creditCard }
     this.props.dispatch(removeCreditCard(params));
   }
 
-  _showUpdateCreditCard(creditCard){
+  _showUpdateCreditCard(creditCard) {
     this.props.navigation.navigate("NewCreditCard", { creditCard });
   }
 
   _renderItem = ({ item }) => (
-    <TouchableHighlight onPress={() => { }} style={styles.rowFront} underlayColor={'#F6F6F6'}>
-      <CreditCardAdapter creditCard={item} checked={true} />
+    <TouchableHighlight onPress={() => { this._selectCreditCard(item) }} style={styles.rowFront} underlayColor={'#F6F6F6'}>
+      <CreditCardAdapter creditCard={item} checked={(this.props.creditCard && item.id === this.props.creditCard.id)} />
     </TouchableHighlight>
   );
 
+  _selectCreditCard(creditCard) {
+    this.props.dispatch(selectCreditCard(creditCard))
+  }
+
   _renderActions = (data) => (
     <View style={styles.rowBack}>
-      <TouchableOpacity 
+      <TouchableOpacity
         style={[styles.backRightBtn, styles.backRightBtnRight]}
-        onPress={() => {this._removeCreditCard(data)}} >
+        onPress={() => { this._removeCreditCard(data) }} >
         <Icon name="trash" size={24} style={{ color: "#FFF" }} />
       </TouchableOpacity>
     </View>
   );
 
+  _showConfirmation() {
+    this.props.navigation.navigate("Confirmation");
+  }
+
   render() {
     return (
-      <View style={{ backgroundColor: "#FFFFFF" }}>
-        <SwipeListView
-          useFlatList
-          data={this.props.creditCards}
-          keyExtractor={item => item.id.toString()}
-          renderItem={this._renderItem}
-          renderHiddenItem={this._renderActions}
-          rightOpenValue={-75}
-        />
+      <View style={{ flex: 1 }}>
+        <View style={{ backgroundColor: "#FFFFFF" }}>
+          <ScrollView>
+            <SwipeListView
+              useFlatList
+              data={this.props.creditCards}
+              keyExtractor={item => item.id.toString()}
+              renderItem={this._renderItem}
+              renderHiddenItem={this._renderActions}
+              rightOpenValue={-75}
+            />
+          </ScrollView>
+        </View>
+
+        {Components.renderIf(this.state.showBottomBar,
+          <BottomBar buttonTitle="Continuar" onButtonPress={() => { this._showConfirmation() }} />
+        )}
       </View>
     );
   }

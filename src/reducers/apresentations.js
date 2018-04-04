@@ -1,12 +1,9 @@
+import { uniqBy, union } from 'lodash';
+
 import {
-  CLEAR_ERROR,
-  CLEAR_APRESENTATIONS,
-  GET_APRESENTATIONS,
-  GET_APRESENTATIONS_ERROR,
-  GET_APRESENTATIONS_SUCCESS,
-  GET_APRESENTATIONS_NEXT_PAGE,
-  GET_APRESENTATIONS_NEXT_PAGE_ERROR,
-  GET_APRESENTATIONS_NEXT_PAGE_SUCCESS
+  CLEAR_ERROR, CLEAR_APRESENTATIONS,
+  GET_APRESENTATIONS, GET_APRESENTATIONS_ERROR, GET_APRESENTATIONS_SUCCESS,
+  GET_APRESENTATIONS_NEXT_PAGE, GET_APRESENTATIONS_NEXT_PAGE_ERROR, GET_APRESENTATIONS_NEXT_PAGE_SUCCESS
 } from '../actions/apresentations';
 
 const INITIAL_STATE = {
@@ -29,8 +26,7 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, isLoading: true };
     case GET_APRESENTATIONS_SUCCESS:
     case GET_APRESENTATIONS_NEXT_PAGE_SUCCESS:
-      list = [...state.apresentations];
-      list.push(...action.data.results)
+      list = uniqBy(union(action.data.results, state.apresentations), "id");
       return { 
         ...state, 
         isLoading: false, 
@@ -38,7 +34,7 @@ export default (state = INITIAL_STATE, action) => {
         num_pages: action.data.num_pages,
         next: action.data.next,
         previous: action.data.previous,
-        apresentations:  [...list]
+        apresentations:  list
       };
     case GET_APRESENTATIONS_ERROR:
       return { ...state, isLoading: false, error: action.error };

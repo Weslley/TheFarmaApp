@@ -1,7 +1,6 @@
 import EStyleSheet from "react-native-extended-stylesheet";
-
 export default EStyleSheet.create({
-  Container: { paddingTop: 16, paddingBottom: 16 },
+  Container: { paddingVertical: 16 },
   Header: {
     flexDirection: "row",
     alignItems: "center",

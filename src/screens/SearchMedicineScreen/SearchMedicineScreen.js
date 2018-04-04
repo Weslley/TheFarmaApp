@@ -64,7 +64,7 @@ class SearchMedicineScreen extends Component {
     onSelect = product => {
         this.props.dispatch(selectProduct(product));
         this.props.dispatch(clearApresentations());
-        this.props.navigation.navigate("MedicineApresentations", { title: product.nome, selected: product });
+        this.props.navigation.navigate({ key: 'MedicineApresentations1', routeName: 'MedicineApresentations', params: { title: product.nome, selected: product } });
     }
 
     render() {

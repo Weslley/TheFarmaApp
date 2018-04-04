@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import { View, ScrollView, ActivityIndicator, Image, TouchableOpacity } from "react-native";
 import { Button, Icon, Text, List, ListItem } from "native-base";
-
 import { TextMask } from "react-native-masked-text";
+
 import { connect } from "react-redux";
+
 import { createOrder } from "../../actions/orders";
+import { getApresentations, clearError } from "../../actions/apresentations";
+import { addItemToCart, removeItemToCart } from "../../actions/carts";
 
 import { Container } from "../../layout/Container";
 import { Header } from "../../layout/Header";
@@ -17,10 +20,6 @@ import { ButtonCustom } from "../../components/ButtonCustom";
 import { ApresentationDescription } from "../../components/Product";
 
 import { Components, CartUtils } from "../../helpers";
-
-import { getApresentations, clearError } from "../../actions/apresentations";
-import { addItemToCart, removeItemToCart } from "../../actions/carts";
-
 import styles from "./styles";
 
 class MedicineApresentationScreen extends Component {
@@ -123,13 +122,13 @@ class MedicineApresentationScreen extends Component {
                 image={require("../../assets/images/ic_walking.png")}
                 title="Buscar"
                 description="Opta em ir buscar seu medicamento em uma farmácia mais próxima."
-                onPress={() => {this._showListProposals();}}
+                onPress={() => { this._showListProposals(); }}
               />
               <ButtonCustom
                 image={require("../../assets/images/ic_delivery.png")}
                 title="Entregar"
                 description="Seu medicamento é entregue em um local de sua escolha."
-                onPress={() => {this._showListAddress();}}
+                onPress={() => { this._showListAddress(); }}
               />
             </View>
           </View>
@@ -142,11 +141,11 @@ class MedicineApresentationScreen extends Component {
     if (this.props.client) {
       let order = this.props.order;
       let itens = []
-      this.props.cartItems.map((item) => { itens.push({ apresentacao: item.id, quantidade: item.quantidade })})
+      this.props.cartItems.map((item) => { itens.push({ apresentacao: item.id, quantidade: item.quantidade }) })
       order.itens = itens
       order.latitude = this.props.latitude;
       order.longitude = this.props.longitude;
-      let params = {client: this.props.client, order: order}
+      let params = { client: this.props.client, order: order }
       this.props.dispatch(createOrder(params));
       this.props.navigation.navigate("ListProposals", { title: "Propostas" });
     } else {
@@ -156,7 +155,7 @@ class MedicineApresentationScreen extends Component {
   }
 
   _showListAddress() {
-    this.props.navigation.navigate("ListAddress", {create_order: true} );
+    this.props.navigation.navigate("ListAddress", { showBottomBar: true });
     this.setState({ showDeliveryDialog: false });
   }
 

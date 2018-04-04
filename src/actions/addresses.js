@@ -2,6 +2,10 @@ export const CLEAR_ERROR = "CLEAR_ERROR";
 export const CLEAR_ADDRESS = "CLEAR_ADDRESS";
 export const CLEAR_ADDRESSES = "CLEAR_ADDRESSES";
 
+export const SELECT_ADDRESS = "SELECT_ADDRESS";
+export const SELECT_ADDRESS_ERROR = "SELECT_ADDRESS_ERROR";
+export const SELECT_ADDRESS_SUCCESS = "SELECT_ADDRESS_SUCCESS";
+
 export const LIST_ADDRESS = "LIST_ADDRESS";
 export const LIST_ADDRESS_ERROR = "LIST_ADDRESS_ERROR";
 export const LIST_ADDRESS_SUCCESS = "LIST_ADDRESS_SUCCESS";
@@ -21,6 +25,10 @@ export const REMOVE_ADDRESS_SUCCESS = "REMOVE_ADDRESS_SUCCESS";
 export const LIST_ADDRESS_NEXT_PAGE = "LIST_ADDRESS_NEXT_PAGE";
 export const LIST_ADDRESS_NEXT_PAGE_ERROR = "LIST_ADDRESS_NEXT_PAGE_ERROR";
 export const LIST_ADDRESS_NEXT_PAGE_SUCCESS = "LIST_ADDRESS_NEXT_PAGE_SUCCESS";
+
+export const selectAddress = params => ({
+  type: SELECT_ADDRESS, params
+});
 
 export const getAddresses = params => ({
   type: LIST_ADDRESS, params

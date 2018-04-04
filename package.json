@@ -7,7 +7,7 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "android": "react-native run-android",
-    "clean": "watchman watch-del-all && rm -rf $TMPDIR/react-* && npm cache clean --force && watchman shutdown-server",
+    "clean": "watchman watch-del-all && rm -rf $TMPDIR/react-* && npm cache clean --force && watchman shutdown-server && cd android && ./gradlew clean",
     "clean:all": "watchman watch-del-all && rm -rf $TMPDIR/react-* && rm -rf node_modules/ && npm cache clean --force && npm install && npm start -- --reset-cache && rm node_modules/react-native/local-cli/core/__fixtures__/files/package.json",
     "bundle": "react-native bundle --platform android --dev false --entry-file index.android.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/",
     "release": "cd android && ./gradlew clean &&./gradlew assembleRelease &"
@@ -20,6 +20,7 @@
     "prop-types": "^15.6.1",
     "react": "16.3.0-alpha.2",
     "react-native": "0.54.2",
+    "react-native-communications": "^2.2.1",
     "react-native-extended-stylesheet": "^0.8.1",
     "react-native-fbsdk": "^0.7.0",
     "react-native-fbsdklogin": "0.0.8",
@@ -31,7 +32,7 @@
     "react-native-vector-icons": "^4.5.0",
     "react-navigation": "^1.5.7",
     "react-redux": "^5.0.7",
-    "realm": "^2.2.8",
+    "realm": "^2.3.3",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.16.0"

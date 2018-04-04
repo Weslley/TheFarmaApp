@@ -12,18 +12,12 @@ import {
     LIST_ORDER_NEXT_PAGE, LIST_ORDER_NEXT_PAGE_ERROR, LIST_ORDER_NEXT_PAGE_SUCCESS,
 } from '../actions/orders';
 
+const INITIAL_ORDER = { forma_pagamento: 0, latitude: 0, longitude: 0, delivery: false, troco: "0.00", itens: [] }
+
 const INITIAL_STATE = {
     isLoading: false,
     error: null,
-    order: {
-        forma_pagamento: 0,
-        latitude: 0,
-        longitude: 0,
-        delivery: false,
-        troco: "0.00",
-        itens: []
-    },
-
+    order: INITIAL_ORDER,
     count: 0,
     num_pages: 0,
     next: null,
@@ -62,7 +56,7 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, order: action.data };
         case CHECKOUT_SUCCESS:
         case CANCEL_ORDER_SUCCESS:
-            return { ...state, order: null, orders: [] };
+            return { ...state, order: INITIAL_ORDER, orders: [] };
         case CHECKOUT_ERROR:
         case GET_ORDER_ERROR:
         case LIST_ORDER_ERROR:
@@ -75,7 +69,7 @@ export default (state = INITIAL_STATE, action) => {
         case CLEAR_ERROR:
             return { ...state, error: null };
         case CLEAR_ORDER:
-            return { ...state, error: null, order: null };
+            return { ...state, error: null, order: INITIAL_ORDER};
         case CLEAR_ORDERS:
             return { ...state, error: null, orders: null };
         default:

@@ -37,7 +37,7 @@ class LoginScreen extends Component {
 
     componentWillReceiveProps = nextProps => {
         try {
-            if (nextProps && nextProps.error && nextProps.error.response && nextProps.error.response.status == 400) {
+            if (nextProps && nextProps.error && nextProps.error.response && (nextProps.error.response.status == 400 || nextProps.error.response.status == 401)) {
                 if (nextProps.error.response.data.email) {
                     this.setState({ emailError: nextProps.error.response.data.email[0] })
                 }
@@ -124,7 +124,6 @@ class LoginScreen extends Component {
                     const infoRequest = new GraphRequest('/me', {
                         parameters: { 'fields': { 'string': 'email, first_name, last_name, gender, birthday, picture.width(480)' }}
                     }, (err, res) => {
-                        console.log(err, res);
                         this.setState({facebook_user: res})
                         let params = {email: "", password: "", facebook_id: res.id}
                         this.props.dispatch(login(params));

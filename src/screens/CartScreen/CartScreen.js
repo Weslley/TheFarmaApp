@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { View, ScrollView, ActivityIndicator, Image, TouchableOpacity } from "react-native";
 import { Container, Button, Icon, Text, List, ListItem, Thumbnail } from "native-base";
-
 import { TextMask } from "react-native-masked-text";
+
 import { connect } from "react-redux";
 
 import { Header } from "../../layout/Header";

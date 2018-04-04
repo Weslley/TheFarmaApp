@@ -28,7 +28,7 @@ export const getOrders = function* (action) {
 export const getOrder = function* (action) {
     try {
         let config = {headers: {'Authorization': 'Token ' + action.params.client.token}}
-        const response = yield call(axios.put, `${SERVER_API}/pedidos/${action.params.order.id}/`, config);
+        const response = yield call(axios.get, `${SERVER_API}/pedidos/${action.params.order.id}/`, config);
         yield put(responseSuccess(GET_ORDER_SUCCESS, response.data));
     } catch(e) {
         yield put(responseError(GET_ORDER_ERROR, e));
@@ -58,7 +58,7 @@ export const checkoutOrder = function* (action) {
 export const cancelOrder = function* (action) {
     try {
         let config = {headers: {'Authorization': 'Token ' + action.params.client.token}}
-        const response = yield call(axios.post, `${SERVER_API}/pedidos/${action.params.order.id}/cancelamento_cliente/`, config);
+        const response = yield call(axios.post, `${SERVER_API}/pedidos/${action.params.order.id}/cancelamento_cliente/`,{}, config);
         yield put(responseSuccess(CANCEL_ORDER_SUCCESS, response.data));
     } catch(e) {
         yield put(responseError(CANCEL_ORDER_ERROR, e));

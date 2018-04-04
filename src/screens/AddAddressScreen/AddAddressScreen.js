@@ -264,6 +264,7 @@ class AddAddressScreen extends Component {
                   )
                 })}
               </Picker>
+              <View style={{ borderWidth: 1, borderColor: '#000' }} />
             </View>
 
             {Components.renderIf(this.state.cidadeError,
@@ -274,6 +275,7 @@ class AddAddressScreen extends Component {
               <Label style={styles.label}>Bairro</Label>
               <Picker
                 mode="dropdown"
+                textStyle={{ borderWidth: 1, borderColor: 'blue' }}
                 selectedValue={this.state.bairro}
                 onValueChange={(district) => { this.onDistrictChange(district) }}>
                 {this.state.bairros.map((bairro) => {
@@ -285,6 +287,7 @@ class AddAddressScreen extends Component {
                   )
                 })}
               </Picker>
+              <View style={{ borderWidth: 1, borderColor: '#000' }} />
             </View>
 
             {Components.renderIf(this.state.bairroError,

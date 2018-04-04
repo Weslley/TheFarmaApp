@@ -1,6 +1,5 @@
 import EStyleSheet from "react-native-extended-stylesheet";
-
-const styles = EStyleSheet.create({
+export default EStyleSheet.create({
     icon: {
         width: 24,
         height: 24

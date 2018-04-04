@@ -1,15 +1,17 @@
 import React, { Component } from "react";
-import { View, ScrollView, Image, TouchableOpacity } from "react-native";
-import { Container, Text, List, ListItem, Button, Item, Input } from "native-base";
+import { View, ScrollView, Image, TouchableOpacity, FlatList } from "react-native";
+import { Container, Text, Button, Item, Input } from "native-base";
 import { TextInputMask, MaskService } from "react-native-masked-text";
+import LinearGradient from "react-native-linear-gradient";
 
 import { connect } from "react-redux";
 
-import { Header } from "../../layout/Header";
+import { Header } from "../../layout/Header"
 import { BottomBar } from "../../layout/Bar";
 import { ActionSheet } from "../../layout/ActionSheet";
 
 import { Icon } from "../../components/Icon";
+import { MenuItem } from "../../components/MenuItem"
 import { ButtonCustom } from "../../components/ButtonCustom";
 import { ProposalApresentation } from "../../components/Product/";
 
@@ -19,7 +21,13 @@ import styles from "./styles";
 class ProposalScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      onScrollList: false,
+      showPaymentDialog: false,
+      showTrocoDialog: false,
+      troco: 0,
+      proposal: {}
+    };
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -27,12 +35,17 @@ class ProposalScreen extends Component {
   };
 
   componentWillMount() {
-    const { state: { params } } = this.props.navigation;
+    let params = this.props.navigation.state.params;
     let proposal = params ? params.proposal : null;
-    if (proposal) this.setState({ proposal });
+    this.setState({ proposal });
   }
 
   /** Private functions */
+  onChangeTroco = value => {
+    let valueMask = MaskService.toMask('money', value);
+    this.setState({ troco: valueMask })
+  }
+
   onBack() {
     this.props.navigation.goBack(null);
   }
@@ -41,19 +54,23 @@ class ProposalScreen extends Component {
     this.setState({ showPaymentDialog: true });
   }
 
+  _showTrocoDialog() {
+    this.setState({ showTrocoDialog: true, showPaymentDialog: false });
+  }
+
+  _showDrugstore() {
+    this.props.navigation.navigate('Drugstore', { drugstore: this.state.proposal.farmacia })
+    this.setState({ showPaymentDialog: false, showTrocoDialog: false });
+  }
+
   _showConfirmation() {
     this.props.navigation.navigate("Confirmation");
-    this.setState({ showPaymentDialog: false });
+    this.setState({ showPaymentDialog: false, showTrocoDialog: false });
   }
 
   _showListCreditCards() {
     this.props.navigation.navigate("ListCreditCards");
-    this.setState({ showPaymentDialog: false });
-  }
-
-  onChangeTroco = value => {
-    let valueMask = MaskService.toMask('money', value);
-    this.setState({ troco: valueMask })
+    this.setState({ showPaymentDialog: false, showTrocoDialog: false });
   }
 
   _renderPaymentDialog() {
@@ -71,7 +88,7 @@ class ProposalScreen extends Component {
                 image={require("../../assets/images/ic_money.png")}
                 title="Dinheiro"
                 description="Indique o valor para que possamos separar o troco."
-                onPress={() => { this._showConfirmation(); }}
+                onPress={() => { this._showTrocoDialog() }}
               />
 
               <ButtonCustom
@@ -90,12 +107,11 @@ class ProposalScreen extends Component {
   _renderTrocoDialog() {
     return (
       <ActionSheet
-        callback={buttonIndex => { this.setState({ showPaymentDialog: false }); }}
+        callback={buttonIndex => { this.setState({ showTrocoDialog: false }); }}
         content={
           <View style={{ paddingHorizontal: 24, paddingTop: 24, paddingBottom: 32 }} >
             <Text style={{ fontFamily: "Roboto-Bold", fontSize: 22, color: "rgba(0,0,0,0.87)", marginLeft: 8, marginBottom: 24 }} >Quanto em espécie?</Text>
             <View>
-
               <Item>
                 <Input
                   style={{ fontFamily: "Roboto-Regular", fontSize: 16, paddingLeft: 0, marginLeft: 0 }}
@@ -114,7 +130,7 @@ class ProposalScreen extends Component {
                   <Text style={styles.buttonText} uppercase={false}>{"cancelar"}</Text>
                 </Button>
 
-                <TouchableOpacity onPress={this.props.onButtonPress}>
+                <TouchableOpacity onPress={() => { }}>
                   <LinearGradient colors={["#00C7BD", "#009999"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ borderRadius: 8, paddingHorizontal: 28, paddingVertical: 14 }}>
                     <Text style={styles.buttonText}>{"Okay"}</Text>
                   </LinearGradient>
@@ -128,76 +144,78 @@ class ProposalScreen extends Component {
     );
   }
 
+  _renderHeaderFooter() {
+    if (!this.state.onScrollList) {
+      return (
+        <View style={{ marginTop: 16 }}>
+          <View style={styles.InfoContainer}>
+            <Icon name="place" size={18} color={"#000"} style={{ marginRight: 8 }} />
+            <Text style={styles.InfoTextBold}>
+              {this.state.proposal.farmacia.distancia}
+              <Text style={styles.InfoText}>{" do endereço indicado"}</Text>
+            </Text>
+          </View>
+
+          <View style={styles.InfoContainer}>
+            <Icon name="clock-o" size={18} color={"#000"} style={{ marginRight: 8 }} />
+            <Text style={styles.InfoTextBold}>
+              {this.state.proposal.farmacia.tempo_entrega}
+              <Text style={[styles.InfoText, { marginBottom: 0 }]}>{" em média para entregar"}</Text>
+            </Text>
+          </View>
+
+          <TouchableOpacity style={styles.InfoContainer} onPress={() => { this._showDrugstore() }}>
+            <Icon name="info" size={18} color={"#000"} style={{ marginRight: 8 }} />
+            <Text style={styles.InfoTextBold}>{"Sobre nós"}</Text>
+          </TouchableOpacity>
+        </View>
+      )
+    } else {
+      return null;
+    }
+  }
+
+  _renderItem = ({ item }) => (<ProposalApresentation proposalItem={item} />);
+
   render() {
     return (
       <Container style={{ backgroundColor: "#FFFFFF" }}>
         <ScrollView>
           <Header
-            title={"Farmácia Mel"}
-            subtitle={"Fazemos entrega até 20:00"}
+            title={this.state.proposal.farmacia.nome_fantasia}
+            subtitle={`Fazemos entrega até ${this.state.proposal.farmacia.horario_funcionamento}`}
             menuLeft={<MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }} />}
             menuRight={
               <View style={{ flexDirection: "row" }}>
                 <MenuItem icon="call" onPress={() => { this.onBack() }} />
-                <MenuItem icon="location" onPress={() => { this.onBack() }} />
+                <MenuItem icon="marker" onPress={() => { this.onBack() }} />
               </View>
             }
-            footer={
-              <View style={{ marginTop: 16 }}>
-                <View style={styles.InfoContainer}>
-                  <Icon name="place" size={30} color={"#000"} />
-                  <Text style={styles.InfoTextBold}>
-                    100m
-                    <Text style={styles.InfoText}>
-                      {" do endereço indicado"}
-                    </Text>
-                  </Text>
-                </View>
-
-                <View style={styles.InfoContainer}>
-                  <Icon name="location" size={30} color={"#000"} />
-                  <Text style={styles.InfoTextBold}>
-                    30 min
-                    <Text style={[styles.InfoText, { marginBottom: 0 }]}>
-                      {" em média para entregar"}
-                    </Text>
-                  </Text>
-                </View>
-
-                <TouchableOpacity style={styles.InfoContainer} onPress={() => { this.props.navigation.navigate('Drugstore') }}>
-                  <Image style={styles.InfoIcon} source={require("../../assets/images/ic_info.png")} />
-                  <Text style={styles.InfoTextBold}>{"Sobre nós"}</Text>
-                </TouchableOpacity>
-              </View>
-            }
+            footer={this._renderHeaderFooter()}
           />
 
-          <View style={{ backgroundColor: "#FF1967", marginTop: 4, paddingVertical: 14, paddingHorizontal: 24 }}>
-            <Text style={{ fontFamily: "Roboto-Regular", fontSize: 16, color: "#FFFFFF" }}>
-              Essa farmacia não tem todos os itens
-            </Text>
-          </View>
+          {Components.renderIf((!this.state.proposal.possui_todos_itens && !this.state.onScrollList),
+            <View style={{ backgroundColor: "#FF1967", marginTop: 4, paddingVertical: 14, paddingHorizontal: 24 }}>
+              <Text style={{ fontFamily: "Roboto-Regular", fontSize: 16, color: "#FFFFFF" }}>{"Essa farmacia não tem todos os itens"}</Text>
+            </View>
+          )}
 
-          <List
-            style={{ marginRight: 24 }}
-            dataArray={this.props.cartItems}
-            renderRow={apresentation => (
-              <ListItem style={styles.ListItem}>
-                <ProposalApresentation apresentation={apresentation} />
-              </ListItem>
-            )}
+          <FlatList
+            style={{ paddingHorizontal: 24 }}
+            data={this.state.proposal.itens}
+            keyExtractor={item => item.apresentacao.toString()}
+            renderItem={this._renderItem}
           />
-
         </ScrollView>
 
         <BottomBar
           buttonTitle="comprar"
-          price={CartUtils.getValueTotal(this.props.cartItems)}
+          price={this.state.proposal.valor_total}
           onButtonPress={() => { this._showPaymentDialog(); }}
         />
 
         {Components.renderIf(this.state.showPaymentDialog,
-          this._renderDeliveryDialog()
+          this._renderPaymentDialog()
         )}
 
         {Components.renderIf(this.state.showTrocoDialog,

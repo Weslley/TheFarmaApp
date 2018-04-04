@@ -1,5 +1,6 @@
 import {
   CLEAR_ERROR, CLEAR_ADDRESS, CLEAR_ADDRESSES,
+  SELECT_ADDRESS, SELECT_ADDRESS_ERROR, SELECT_ADDRESS_SUCCESS,
   LIST_ADDRESS, LIST_ADDRESS_ERROR, LIST_ADDRESS_SUCCESS,
   SAVE_ADDRESS, SAVE_ADDRESS_ERROR, SAVE_ADDRESS_SUCCESS,
   UPDATE_ADDRESS, UPDATE_ADDRESS_ERROR, UPDATE_ADDRESS_SUCCESS,
@@ -19,6 +20,8 @@ export default (state = INITIAL_STATE, action) => {
   let list = [];
   let index = null;
   switch (action.type) {
+    case SELECT_ADDRESS:
+      return {...state, address: action.params};
     case LIST_ADDRESS:
     case SAVE_ADDRESS:
     case UPDATE_ADDRESS:
@@ -41,7 +44,7 @@ export default (state = INITIAL_STATE, action) => {
       index = list.findIndex(item => item.id === action.data.id);
       address = list.find(item => item.id === action.data.id);
       if (address) list.splice(index, 1);
-      return { ...state, addresses: [...list]};
+      return { ...state, addresses: [...list] };
     case LIST_ADDRESS_ERROR:
     case SAVE_ADDRESS_ERROR:
     case UPDATE_ADDRESS_ERROR:
