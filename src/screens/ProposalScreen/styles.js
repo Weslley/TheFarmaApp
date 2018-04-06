@@ -1,38 +1,33 @@
 import EStyleSheet from "react-native-extended-stylesheet";
 export default EStyleSheet.create({
-    tabIcon: {
-        width: 24,
-        height: 24
-    },
-    ListItem: {
-        marginTop: 0,
-        paddingTop: 0,
-        marginLeft: 16,
-        marginBottom: 0,
-        paddingBottom: 0,
-        paddingLeft: 0,
-        paddingRight: 0,
-        paddingVertical: 0,
-        marginRight: 0
-    },
-    InfoContainer: {
+    infoContainer: {
         flexDirection: "row",
         alignItems: "center",
         marginBottom: 16
     },
-    InfoTextBold: {
+    infoTextBold: {
         fontFamily: "Roboto-Medium",
         fontSize: 14,
         color: "rgba(0,0,0,0.80)"
     },
-    InfoText: {
+    infoText: {
         fontSize: 14,
         color: "rgba(0,0,0,0.80)",
         fontFamily: "Roboto-Light"
     },
-    InfoIcon: {
-        width: 16,
-        height: 16,
-        marginRight: 8
+    button: { width: '45%' },
+    buttonDisabled: { opacity: 0.32 },
+    buttonEnabled: {},
+    buttonText: {
+        fontFamily: "Roboto-Bold",
+        fontSize: 16,
+        color: "rgba(0,0,0,0.80)",
+    },
+    linearGradient: {
+        justifyContent: "center",
+        alignItems: 'center',
+        flex: 1,
+        paddingVertical: 14,
+        borderRadius: 4
     }
 });

@@ -1,21 +1,19 @@
 import EStyleSheet from "react-native-extended-stylesheet";
 export default EStyleSheet.create({
-  icon: {
-    width: 24,
-    height: 24,
-  },
   background: {
     backgroundColor: "#FFFFFF"
   },
-  container: { 
+  container: {
     width: "100%",
     paddingVertical: 20,
   },
   header: {
+    width: '100%',
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 8
+    minHeight: 24,
+    marginBottom: 10
   },
   addressName: {
     fontFamily: "Roboto-Bold",

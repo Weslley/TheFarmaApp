@@ -22,7 +22,7 @@ class CreditCardAdapter extends Component {
           <View style={styles.header}>
             <Text style={styles.flag}>{this.props.creditCard.bandeira}</Text>
             {Components.renderIf(this.props.checked,
-              <Icon name="ios-checkmark-empty" color="#00C7BD" size={30} />
+              <Icon name="check" color="#00C7BD" size={24} />
             )}
           </View>
           <View>

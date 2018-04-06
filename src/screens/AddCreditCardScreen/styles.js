@@ -14,5 +14,23 @@ export default EStyleSheet.create({
         fontFamily: "Roboto-Bold",
         fontSize: 16,
         color: "#000000"
+    },
+    flagContainer: {
+        paddingHorizontal: 5,
+        paddingVertical: 5,
+        borderColor: "#000",
+        borderWidth: 1,
+        borderRadius: 4,
+        position: "absolute",
+        right: 1
+    },
+    flagText: {
+        fontFamily: 'Roboto-Bold',
+        fontSize: 8,
+    },
+    inputError: {
+        fontFamily: 'Roboto-Regular',
+        fontSize: 12,
+        color: '#E91E63'
     }
 });

@@ -4,7 +4,7 @@ import { Container, Text } from "native-base";
 import LinearGradient from "react-native-linear-gradient";
 
 import { connect } from "react-redux";
-import { getOrder, cancelOrder, clearError } from "../../actions/orders";
+import { getOrder, cancelOrder, clearError, updateOrder } from "../../actions/orders";
 
 import { Header } from "../../layout/Header"
 import { MenuItem } from "../../components/MenuItem"
@@ -58,7 +58,14 @@ class ListProposalsScreen extends Component {
 
   _showProposal(proposal) {
     clearInterval(this.loadPropostas);
-    this.props.navigation.navigate("Proposal", { proposal: proposal });
+    if (this.props.order.id) {
+      console.log(order);
+      let order = this.props.order;
+      order.proposta = proposal;
+      let params = { client: this.props.client, order }
+      this.props.dispatch(updateOrder(params));
+      this.props.navigation.navigate("Proposal", { proposal: proposal });
+    }
   }
 
   _renderItem = ({ item }) => (

@@ -5,6 +5,10 @@ import { TextMask } from "react-native-masked-text";
 
 import { connect } from "react-redux";
 
+import { createOrder } from "../../actions/orders";
+import { getApresentations, clearError } from "../../actions/apresentations";
+import { addItemToCart, removeItemToCart, cleanCart } from "../../actions/carts";
+
 import { Header } from "../../layout/Header";
 import { ShoppingBagIcon } from "../../layout/ShoppingBagIcon";
 import { BottomBar } from "../../layout/Bar";
@@ -15,9 +19,6 @@ import { ButtonCustom } from "../../components/ButtonCustom";
 import { ProductDescription } from "../../components/Product";
 
 import { Components, CartUtils } from "../../helpers";
-
-import { searchApresentations } from "../../actions/products";
-import { addItemToCart, removeItemToCart, cleanCart } from "../../actions/carts";
 
 import styles from "./styles";
 
@@ -77,23 +78,65 @@ class CartScreen extends Component {
     this.props.dispatch(removeItemToCart(apresentation));
   }
 
-  _showDeliveryDialog() {
-    this.setState({ showDeliveryDialog: true });
+  _showDeliveryDialog() { this.setState({ showDeliveryDialog: true }); }
+
+  _renderDeliveryDialog() {
+    return (
+      <ActionSheet
+        callback={buttonIndex => { this.setState({ showDeliveryDialog: false }); }}
+        content={
+          <View style={styles.containerDelivery}>
+            <Text style={styles.titleDialog}>Como deseja obter os seus medicamentos?</Text>
+            <View style={styles.row}>
+              <ButtonCustom
+                image={require("../../assets/images/ic_walking.png")}
+                title="Buscar"
+                description="Opta em ir buscar seu medicamento em uma farmácia mais próxima."
+                onPress={() => { this._showListProposals(); }}
+              />
+              <ButtonCustom
+                image={require("../../assets/images/ic_delivery.png")}
+                title="Entregar"
+                description="Seu medicamento é entregue em um local de sua escolha."
+                onPress={() => { this._showListAddress(); }}
+              />
+            </View>
+          </View>
+        }
+      />
+    )
   }
-  
+
+  _showListProposals() {
+    if (this.props.client) {
+      let order = this.props.order;
+      let itens = []
+      this.props.cartItems.map((item) => { itens.push({ apresentacao: item.id, quantidade: item.quantidade }) })
+      order.itens = itens
+      order.latitude = this.props.latitude;
+      order.longitude = this.props.longitude;
+      let params = { client: this.props.client, order: order }
+      this.props.dispatch(createOrder(params));
+      this.props.navigation.navigate("ListProposals", { title: "Propostas" });
+    } else {
+      this.props.navigation.navigate("Profile");
+    }
+    this.setState({ showDeliveryDialog: false });
+  }
+
+  _showListAddress() {
+    this.props.navigation.navigate("ListAddress", { showBottomBar: true });
+    this.setState({ showDeliveryDialog: false });
+  }
+
   render() {
     return (
       <Container style={{ backgroundColor: "#FFFFFF" }}>
 
         <Header
           title={"Cestinha"}
-          menuLeft={
-            <MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }} />
-          }
-          menuRight={
-            <MenuItem icon="trash-a" onPress={() => { this.onClearCart() }} />
-          }
-        />
+          menuLeft={<MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }} />}
+          menuRight={<MenuItem icon="trash" onPress={() => { this.onClearCart() }} />} />
 
         <ScrollView>
           <List
@@ -111,7 +154,7 @@ class CartScreen extends Component {
             )}
           />
         </ScrollView>
-        
+
         {Components.renderIf(
           this.props.cartItems.length > 0,
           <BottomBar
@@ -123,54 +166,10 @@ class CartScreen extends Component {
           />
         )}
 
-        {Components.renderIf(
-          this.state.showDeliveryDialog,
-          <ActionSheet
-            callback={buttonIndex => {
-              this.setState({ showDeliveryDialog: false });
-            }}
-            content={
-              <View
-                style={{
-                  paddingHorizontal: 24,
-                  paddingTop: 24,
-                  paddingBottom: 32
-                }}
-              >
-                <Text
-                  style={{
-                    fontFamily: "Roboto-Bold",
-                    fontSize: 22,
-                    color: "rgba(0,0,0,0.87)",
-                    marginLeft: 8,
-                    marginBottom: 24
-                  }}
-                >
-                  Como deseja obter os seus medicamentos?
-                </Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-around"
-                  }}
-                >
-                  <ButtonCustom
-                    image={require("../../assets/images/ic_walking.png")}
-                    title="Buscar"
-                    description="Opta em ir buscar seu medicamento em uma farmácia mais próxima."
-                    onPress={() => {}}
-                  />
-                  <ButtonCustom
-                    image={require("../../assets/images/ic_delivery.png")}
-                    title="Entregar"
-                    description="Seu medicamento é entregue em um local de sua escolha."
-                    onPress={() => {}}
-                  />
-                </View>
-              </View>
-            }
-          />
+        {Components.renderIf(this.state.showDeliveryDialog,
+          this._renderDeliveryDialog()
         )}
+
       </Container>
     );
   }
@@ -178,7 +177,17 @@ class CartScreen extends Component {
 
 function mapStateToProps(state) {
   return {
-    cartItems: state.carts.cartItems
+    uf: state.locations.uf,
+    latitude: state.locations.latitude,
+    longitude: state.locations.longitude,
+    selected: state.products.selected,
+    isLoading: state.products.isLoading,
+    apresentations: state.apresentations.apresentations,
+    cartItems: state.carts.cartItems,
+    error: state.apresentations.error,
+    client: state.clients.client,
+    order: state.orders.order,
+    errorOrder: state.orders.error
   };
 }
 

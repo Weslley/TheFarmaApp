@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { StatusBar, View, TouchableOpacity, Text, Image } from "react-native";
+import { StatusBar, View, TouchableOpacity, Image } from "react-native";
+import { Text, Button } from "native-base";
 import Permissions from 'react-native-permissions';
-import LinearGradient from "react-native-linear-gradient";
 
 import { connect } from "react-redux";
 import { getCurrentClient } from "../../actions/clients"
@@ -10,6 +10,9 @@ import { updateLocation } from "../../actions/locations"
 import { Header } from "../../layout/Header";
 import { Container } from "../../layout/Container";
 
+import { Icon } from "../../components/Icon";
+
+import { Components } from "../../helpers";
 import styles from "./styles";
 
 class WelcomeScreen extends Component {
@@ -118,6 +121,7 @@ class WelcomeScreen extends Component {
             <Text style={styles.text}>Qual medicamento você deseja?</Text>
             <Image source={require("../../assets/images/ic_barcode.png")} style={styles.icon} />
           </TouchableOpacity>
+
         </View>
       </View>
     );

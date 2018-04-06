@@ -1,40 +1,32 @@
-import Realm from "realm";
-import { Cliente, ProductHistory } from '../../models';
+import realm from './realm';
 
 export const first = () => {
-  return Realm.open({ schema: [Cliente, ProductHistory], deleteRealmIfMigrationNeeded: true }).then(realm => {
-    return realm.objects(Cliente.name)[0];
-  });
+  return realm.objects('Cliente')[0];
 }
 
 export const find = id => {
-  return Realm.open({ schema: [Cliente, ProductHistory], deleteRealmIfMigrationNeeded: true }).then(realm => {
-    let result = realm.objects(Cliente.name).filtered("id=$0", id);
-    return result;
-  });
+  return realm.objects('Cliente').filtered("id=$0", id);
 }
 
 export const save = async obj => {
-  const realm = await Realm.open({ schema: [Cliente, ProductHistory] , deleteRealmIfMigrationNeeded: true });
-  let cache = await realm.objects(Cliente.name).filtered("id=$0", obj.id);
+  let cache = realm.objects('Cliente').filtered("id=$0", obj.id);
   if (cache.length == 0) {
-    realm.write(() => realm.create(Cliente.name, obj));
+    realm.write(() => realm.create('Cliente', obj));
   } else {
-    realm.write(() => realm.create(Cliente.name, obj, true));
+    realm.write(() => realm.create('Cliente', obj, true));
   }
-  realm.close();
 };
 
 export const remove = obj => {
-  return Realm.open({ schema: [Cliente, ProductHistory], deleteRealmIfMigrationNeeded: true }).then(realm => {
+  realm.write(() => {
     realm.delete(obj);
     return obj;
   });
 };
 
 export const removeAll = () => {
-  return Realm.open({ schema: [Cliente, ProductHistory], deleteRealmIfMigrationNeeded: true }).then(realm => {
-    let all = realm.objects(Cliente.name);
+  realm.write(() => {
+    let all = realm.objects('Cliente');
     realm.delete(all);
   });
 };

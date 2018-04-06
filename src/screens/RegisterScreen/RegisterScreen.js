@@ -71,7 +71,6 @@ class RegisterScreen extends Component {
     }
 
     componentWillMount() {
-
         const { state: { params } } = this.props.navigation;
         if (params) {
             if (params.nome) this.setState({ nome: params.nome })
@@ -86,14 +85,7 @@ class RegisterScreen extends Component {
         this.props.dispatch(clearError());
     }
 
-    componentDidMount() {
-        this.setState({
-            nome: "Francisco Weslley",
-            email: "weslleyocara@hotmail.com",
-            celular: "86995676616",
-            password: "123456",
-        })
-    }
+    componentDidMount() {}
 
     /** Private functions */
     onBack(){

@@ -1,9 +1,5 @@
 import EStyleSheet from "react-native-extended-stylesheet";
 export default EStyleSheet.create({
-  icon: {
-    width: 24,
-    height: 24,
-  },
   background: {
     backgroundColor: "#FFFFFF"
   },
@@ -15,13 +11,13 @@ export default EStyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 8
+    minHeight: 24,
+    marginBottom: 10
   },
   flag: {
     fontFamily: "Roboto-Bold",
     fontSize: 16,
     color: "rgba(0,0,0,0.80)",
-    marginBottom: 4
   },
   text: {
     width: '100%',

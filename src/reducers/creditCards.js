@@ -13,6 +13,7 @@ const INITIAL_STATE = {
   error: null,
   creditCard: null,
   creditCards: [],
+  actionSuccess: null,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -37,7 +38,7 @@ export default (state = INITIAL_STATE, action) => {
       };
     case SAVE_CREDIT_CARD_SUCCESS:
     case UPDATE_CREDIT_CARD_SUCCESS:
-      return { ...state, creditCard: action.data };
+      return { ...state, creditCard: action.data, actionSuccess: 'back' };
     case REMOVE_CREDIT_CARD_SUCCESS:
       list = [...state.creditCards];
       index = list.findIndex(item => item.id === action.data.id);
@@ -51,11 +52,11 @@ export default (state = INITIAL_STATE, action) => {
     case LIST_CREDIT_CARD_NEXT_PAGE_ERROR:
       return { ...state, error: action.error };
     case CLEAR_ERROR:
-      return { ...state, error: null };
+      return { ...state, error: null, actionSuccess: null  };
     case CLEAR_CREDIT_CARD:
-      return { ...state, error: null, creditCard: null };
+      return { ...state, error: null, creditCard: null, actionSuccess: null  };
     case CLEAR_CREDIT_CARDS:
-      return { ...state, error: null, creditCards: null };
+      return { ...state, error: null, creditCards: null, actionSuccess: null  };
     default:
       return state;
   }

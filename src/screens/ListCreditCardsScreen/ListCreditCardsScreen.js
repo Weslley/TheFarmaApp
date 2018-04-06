@@ -6,7 +6,7 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 
 import { connect } from "react-redux";
 import { logout } from "../../actions/clients";
-import { selectCreditCard, getCreditCards, clearCreditCards, clearError } from "../../actions/creditCards"
+import { selectCreditCard, getCreditCards, removeCreditCard, clearCreditCards, clearError } from "../../actions/creditCards"
 
 import { Header } from "../../layout/Header";
 import { BottomBar } from "../../layout/Bar";
@@ -87,6 +87,7 @@ class ListCreditCardsScreen extends Component {
   _removeCreditCard(creditCard) {
     let params = { client: this.props.client, creditCard }
     this.props.dispatch(removeCreditCard(params));
+    this.props.dispatch(getCreditCards({ client: this.props.client }));
   }
 
   _showUpdateCreditCard(creditCard) {
@@ -107,7 +108,7 @@ class ListCreditCardsScreen extends Component {
     <View style={styles.rowBack}>
       <TouchableOpacity
         style={[styles.backRightBtn, styles.backRightBtnRight]}
-        onPress={() => { this._removeCreditCard(data) }} >
+        onPress={() => { this._removeCreditCard(data.item) }} >
         <Icon name="trash" size={24} style={{ color: "#FFF" }} />
       </TouchableOpacity>
     </View>

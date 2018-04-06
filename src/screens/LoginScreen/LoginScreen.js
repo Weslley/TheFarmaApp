@@ -141,7 +141,7 @@ class LoginScreen extends Component {
     }
 
     showRegisterScreen() {
-        this.props.navigation.navigate("Register");
+        this.props.navigation.navigate({ key: 'register1', routeName: 'Register', params: {} });
     }
 
     render() {

@@ -22,7 +22,7 @@ class AddressAdapter extends Component {
           <View style={styles.header}>
             <Text style={styles.addressName}>{this.props.address.nome_endereco}</Text>
             {Components.renderIf(this.props.checked,
-              <Icon name="ios-checkmark-empty" color="#00C7BD" size={30} />
+              <Icon name="check" color="#00C7BD" size={30} />
             )}
           </View>
           <View>

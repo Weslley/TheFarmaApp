@@ -48,7 +48,7 @@ export const updateCreditCard = params => ({
 });
 
 export const removeCreditCard = params => ({
-  type: REMOVE_CREDIT_CARD
+  type: REMOVE_CREDIT_CARD, params
 });
 
 export const clearCreditCard = () => ({

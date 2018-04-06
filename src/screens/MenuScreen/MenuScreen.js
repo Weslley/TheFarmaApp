@@ -4,6 +4,8 @@ import { Container, Button, Text, Icon } from "native-base";
 import { LoginButton } from "react-native-fbsdk";
 
 import { connect } from "react-redux";
+import { getCities } from "../../actions/cities";
+import { getDistricts } from "../../actions/districts";
 
 import { logout } from "../../actions/clients";
 
@@ -23,6 +25,10 @@ class MenuScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return { header: null };
   };
+
+  componentWillMount() {
+    this.props.dispatch(getCities());
+  }
 
   /** Private functions */
   logout() {

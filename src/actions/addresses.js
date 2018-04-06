@@ -48,7 +48,7 @@ export const updateAddress = params => ({
 });
 
 export const removeAddress = params => ({
-  type: REMOVE_ADDRESS
+  type: REMOVE_ADDRESS, params
 });
 
 export const clearAddress = () => ({

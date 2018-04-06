@@ -49,7 +49,7 @@ export default (state = INITIAL_STATE, action) => {
                 orders: list
             };
         case UPDATE_ORDER:
-            return { ...state, order: action.data };
+            return { ...state, order: action.params.order };
         case GET_ORDER_SUCCESS:
         case CREATE_ORDER_SUCCESS:
         case UPDATE_ORDER_SUCCESS:

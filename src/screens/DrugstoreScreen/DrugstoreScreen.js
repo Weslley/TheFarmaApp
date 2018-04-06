@@ -35,13 +35,15 @@ class DrugstoreScreen extends Component {
     this.props.navigation.goBack(null);
   }
 
-  _callPhone(){
+  _callPhone() {
     Communications.phonecall(this.state.drugstore.telefone, true);
   }
 
-  _callMap(){
+  _callMap() {
     Communications.web(`https://www.google.com/maps/dir/${this.state.drugstore.latitude},${this.state.drugstore.longitude}`)
   }
+
+  _renderItem = ({ item }) => (<BusinessHour label={item.dia_semana} value={item.horario} />);
 
   render() {
     return (
@@ -99,19 +101,26 @@ class DrugstoreScreen extends Component {
             style={{ marginHorizontal: 24, marginBottom: 90 }}
             data={this.state.drugstore.horarios}
             keyExtractor={item => item.dia_semana}
-            renderItem={(item) => { <BusinessHour label={item.dia_semana} value={item.horario} /> }}
-          />
+            renderItem={this._renderItem} />
+
         </ScrollView>
 
         <View style={[styles.footer]}>
-          <Button style={styles.button} onPress={() => {this._callPhone()}}>
-            <Text style={styles.buttonText}>{"Chamar"}</Text>
+          <Button style={[styles.button]} bordered dark onPress={() => { this._callPhone() }}>
+            <View style={{ flexDirection: 'row', alignItems: "center", paddingHorizontal: 16 }}>
+              <Icon name="call" size={24} color={"#000"} />
+              <Text style={styles.buttonText} uppercase={false}>{"Chamar"}</Text>
+            </View>
           </Button>
 
-          <Button style={[styles.button, styles.buttonDirection]} onPress={() => {this._callMap()}}>
-            <Text style={styles.buttonText}>{"Direção"}</Text>
+          <Button style={[styles.button, styles.buttonDirection]} bordered dark onPress={() => { this._callMap() }}>
+            <View style={{ flexDirection: 'row', alignItems: "center", paddingHorizontal: 16 }}>
+              <Icon name="navigate" size={24} color={"#000"} />
+              <Text style={styles.buttonText} uppercase={false}>{"Direção"}</Text>
+            </View>
           </Button>
         </View>
+
       </Container>
     );
   }

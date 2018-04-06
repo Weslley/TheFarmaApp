@@ -7,7 +7,7 @@ Input.defaultProps.selectionColor = "black";
 Input.defaultProps.underlineColorAndroid = 'black'
 
 import { connect } from "react-redux";
-import { saveAddress, updateAddress, clearError } from "../../actions/addresses";
+import { getAddresses, saveAddress, updateAddress, clearError } from "../../actions/addresses";
 import { getDistricts } from "../../actions/districts";
 
 import { Header } from "../../layout/Header"
@@ -47,13 +47,6 @@ class AddAddressScreen extends Component {
 
   componentWillReceiveProps = nextProps => {
     try {
-
-      if (nextProps && nextProps.districts) {
-        this.setState({ bairros: nextProps.districts });
-        //let bairros = nextProps.districts.filter(d => d.cidade.ibge === this.state.cidade);
-        //this.setState({ bairros });
-      }
-
       if (nextProps && nextProps.error && nextProps.error.response && (nextProps.error.response.status == 400 && nextProps.error.response.status == 401)) {
         if (nextProps.error.response.data.nome_endereco)
           this.setState({ nomeError: nextProps.error.response.data.nome_endereco[0] })
@@ -79,12 +72,32 @@ class AddAddressScreen extends Component {
         if (nextProps.error.response.data.detail)
           Snackbar.show({ title: nextProps.error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
       }
+
+      if (nextProps && nextProps.actionSuccess) {
+        this.onBack();
+        this.props.dispatch(getAddresses({ client: this.props.client }));
+      }
+
+      if (nextProps && nextProps.districts) {
+        this._loadBairros();
+      }
+
     } catch (e) {
       console.log(e);
     }
   }
 
   componentWillMount() {
+
+    if (this.props.cities.length > 0) {
+      this.setState({ cidade: this.props.cities[0].ibge.toString })
+    }
+
+    if (this.state.cidade && this.props.districts.length > 0) {
+      let bairros = this.props.districts.filter(d => d.cidade.ibge == this.state.cidade)
+      this.setState({ bairros, bairro: bairros[0].id.toString })
+    }
+
     const { state: { params } } = this.props.navigation;
     let address = params ? params.address : null;
     if (address) {
@@ -102,14 +115,6 @@ class AddAddressScreen extends Component {
     this.props.dispatch(clearError());
   }
 
-  componentDidMount() {
-    let bairros = []
-    if (this.state.cidade) {
-      bairros = this.props.districts.filter(d => d.cidade.ibge == this.state.cidade)
-      this.setState({ bairros })
-    }
-  }
-
   /** Private functions */
   onBack() {
     this.props.dispatch(clearError());
@@ -121,8 +126,21 @@ class AddAddressScreen extends Component {
   }
 
   onCityChange = (cidade) => {
-    this.props.dispatch(getDistricts(cidade))
-    this.setState({ cidade })
+    this.props.dispatch(getDistricts(cidade));
+    this.setState({ cidade, bairro: null })
+    this._loadBairros();
+  }
+
+  _loadBairros() {
+    let bairros = this.props.districts.filter(d => d.cidade.ibge === parseInt(this.state.cidade))
+    this.setState({ bairros })
+    if (bairros.length > 0) {
+      this.setState({ bairro: bairros[0].id.toString() })
+    }
+
+    console.log("Cidade: " + this.state.cidade);
+    console.log("Bairros ->");
+    console.log(bairros);
   }
 
   onDistrictChange = (bairro) => {
@@ -252,7 +270,6 @@ class AddAddressScreen extends Component {
                 mode="dropdown"
                 selectedValue={this.state.cidade}
                 onValueChange={(cidade) => { this.onCityChange(cidade) }}
-                style={{ borderBottomColor: "#000", borderBottomWidth: 1 }}
                 itemTextStyle={styles.input}
               >
                 {this.props.cities.map((city) => {
@@ -264,7 +281,7 @@ class AddAddressScreen extends Component {
                   )
                 })}
               </Picker>
-              <View style={{ borderWidth: 1, borderColor: '#000' }} />
+              <View style={{ borderBottomColor: "rgba(0,0,0,0.32)", borderBottomWidth: 1 }} />
             </View>
 
             {Components.renderIf(this.state.cidadeError,
@@ -282,12 +299,12 @@ class AddAddressScreen extends Component {
                   return (
                     <Picker.Item
                       label={bairro.nome}
-                      value={`${bairro.id}`}
-                      key={bairro.id} />
+                      key={bairro.id}
+                      value={`${bairro.id}`} />
                   )
                 })}
               </Picker>
-              <View style={{ borderWidth: 1, borderColor: '#000' }} />
+              <View style={{ borderBottomColor: "rgba(0,0,0,0.32)", borderBottomWidth: 1 }} />
             </View>
 
             {Components.renderIf(this.state.bairroError,
@@ -352,6 +369,7 @@ function mapStateToProps(state) {
     districts: state.districts.districts,
     client: state.clients.client,
     error: state.clients.error,
+    actionSuccess: state.addresses.actionSuccess,
   };
 }
 

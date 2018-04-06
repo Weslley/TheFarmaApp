@@ -81,17 +81,18 @@ class ListAddressScreen extends Component {
   componentWillMount() {
     this.props.dispatch(clearError());
     this.props.dispatch(getAddresses({ client: this.props.client }));
-    this.props.dispatch(getCities());
-  }
-
-  componentDidMount() {
-    let { state: { params } } = this.props.navigation;
-    if (params && params.showBottomBar) this.setState({ showBottomBar: true })
 
     if (this.props.cities.length > 0) {
       this.props.cities.map((c) => {
         return this.props.dispatch(getDistricts(c.ibge));
       })
+    }
+  }
+
+  componentDidMount() {
+    let { state: { params } } = this.props.navigation;
+    if (params && params.showBottomBar){
+      this.setState({ showBottomBar: true })
     }
   }
 
@@ -103,6 +104,7 @@ class ListAddressScreen extends Component {
   _removeAddress(address) {
     let params = { client: this.props.client, address }
     this.props.dispatch(removeAddress(params));
+    this.props.dispatch(getAddresses({ client: this.props.client }));
   }
 
   _showUpdateAddress(address) {

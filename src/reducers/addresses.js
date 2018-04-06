@@ -13,6 +13,7 @@ const INITIAL_STATE = {
   error: null,
   address: null,
   addresses: [],
+  actionSuccess: null,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -21,7 +22,7 @@ export default (state = INITIAL_STATE, action) => {
   let index = null;
   switch (action.type) {
     case SELECT_ADDRESS:
-      return {...state, address: action.params};
+      return { ...state, address: action.params };
     case LIST_ADDRESS:
     case SAVE_ADDRESS:
     case UPDATE_ADDRESS:
@@ -37,7 +38,7 @@ export default (state = INITIAL_STATE, action) => {
       };
     case SAVE_ADDRESS_SUCCESS:
     case UPDATE_ADDRESS_SUCCESS:
-      return { ...state, address: action.data };
+      return { ...state, address: action.data, actionSuccess: 'back' };
 
     case REMOVE_ADDRESS_SUCCESS:
       list = [...state.addresses];
@@ -52,11 +53,11 @@ export default (state = INITIAL_STATE, action) => {
     case LIST_ADDRESS_NEXT_PAGE_ERROR:
       return { ...state, error: action.error };
     case CLEAR_ERROR:
-      return { ...state, error: null };
+      return { ...state, error: null, actionSuccess: null };
     case CLEAR_ADDRESS:
-      return { ...state, error: null, address: null };
+      return { ...state, error: null, address: null, actionSuccess: null };
     case CLEAR_ADDRESSES:
-      return { ...state, error: null, addresses: null };
+      return { ...state, error: null, addresses: null, actionSuccess: null };
     default:
       return state;
   }

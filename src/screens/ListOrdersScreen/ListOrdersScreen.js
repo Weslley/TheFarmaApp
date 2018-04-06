@@ -29,13 +29,7 @@ class ListOrdersScreen extends Component {
             header: () => (
                 <Header
                     title={"Minhas compras"}
-                    menuLeft={
-                        <MenuItem
-                            icon="md-arrow-back"
-                            onPress={() => { navigation.goBack(null) }}
-                        />
-                    }
-                />
+                    menuLeft={<MenuItem icon="md-arrow-back" onPress={() => { navigation.goBack(null) }} />}/>
             )
         };
     };

@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { View, ScrollView, Image, TouchableOpacity, FlatList } from "react-native";
+import { View, ScrollView, Image, TouchableOpacity, FlatList, TextInput } from "react-native";
 import { Container, Text, Button, Item, Input } from "native-base";
 import { TextInputMask, MaskService } from "react-native-masked-text";
 import LinearGradient from "react-native-linear-gradient";
 
 import { connect } from "react-redux";
+import { updateOrder } from "../../actions/orders";
 
 import { Header } from "../../layout/Header"
 import { BottomBar } from "../../layout/Bar";
@@ -15,7 +16,7 @@ import { MenuItem } from "../../components/MenuItem"
 import { ButtonCustom } from "../../components/ButtonCustom";
 import { ProposalApresentation } from "../../components/Product/";
 
-import { Components, CartUtils } from "../../helpers";
+import { Components, CartUtils, CurrencyUtils } from "../../helpers";
 import styles from "./styles";
 
 class ProposalScreen extends Component {
@@ -26,6 +27,7 @@ class ProposalScreen extends Component {
       showPaymentDialog: false,
       showTrocoDialog: false,
       troco: 0,
+      buttonDisabled: true,
       proposal: {}
     };
   }
@@ -41,13 +43,26 @@ class ProposalScreen extends Component {
   }
 
   /** Private functions */
-  onChangeTroco = value => {
-    let valueMask = MaskService.toMask('money', value);
-    this.setState({ troco: valueMask })
-  }
 
   onBack() {
     this.props.navigation.goBack(null);
+  }
+
+  onChangeTroco = value => {
+    console.log(value);
+    this.setState({ troco: value });
+  }
+
+  _setTroco() {
+    let order = this.props.order;
+    order.troco = CurrencyUtils.parseFloat(this.state.troco);
+    order.forma_pagamento = 1;
+    if (this.props.order.id) {
+      let params = { client: this.props.client, order }
+      this.props.dispatch(updateOrder(params));
+      this.props.navigation.navigate({ key: 'confirmation1', routeName: 'Confirmation', params: { order } });
+      this.setState({ showPaymentDialog: false, showTrocoDialog: false });
+    }
   }
 
   _showPaymentDialog() {
@@ -69,7 +84,7 @@ class ProposalScreen extends Component {
   }
 
   _showListCreditCards() {
-    this.props.navigation.navigate("ListCreditCards");
+    this.props.navigation.navigate("ListCreditCards", { showBottomBar: true });
     this.setState({ showPaymentDialog: false, showTrocoDialog: false });
   }
 
@@ -110,29 +125,38 @@ class ProposalScreen extends Component {
         callback={buttonIndex => { this.setState({ showTrocoDialog: false }); }}
         content={
           <View style={{ paddingHorizontal: 24, paddingTop: 24, paddingBottom: 32 }} >
-            <Text style={{ fontFamily: "Roboto-Bold", fontSize: 22, color: "rgba(0,0,0,0.87)", marginLeft: 8, marginBottom: 24 }} >Quanto em espécie?</Text>
+            <Text style={{ fontFamily: "Roboto-Bold", fontSize: 22, color: "rgba(0,0,0,0.87)", marginBottom: 24 }} >Quanto em espécie?</Text>
             <View>
-              <Item>
-                <Input
-                  style={{ fontFamily: "Roboto-Regular", fontSize: 16, paddingLeft: 0, marginLeft: 0 }}
+              <View style={{ marginBottom: 24 }}>
+
+                <TextInputMask
+                  type={"money"}
+                  keyboardType={"numeric"}
+                  style={{ fontFamily: "Roboto-Regular", fontSize: 16, paddingHorizontal: 0, paddingBottom: 8 }}
                   multiline={false}
                   onChangeText={this.onChangeTroco}
                   value={this.state.troco}
-                  underlineColorAndroid="transparent" />
+                  underlineColorAndroid='#000' />
 
-                <TouchableOpacity onPress={() => { this.setState({ troco: 0 }) }}>
-                  <Icon style={{ color: "#000", fontSize: 30 }} name="ios-close-empty" />
+                <TouchableOpacity style={{ position: "absolute", right: 0, top: 5, bottom: 0 }} onPress={() => { this.setState({ troco: 0 }) }}>
+                  <Icon name="ios-close-empty" size={30} color={"#000"} />
                 </TouchableOpacity>
-              </Item>
+              </View>
 
-              <View style={{ flexDirection: "row", justifyContent: "space-around" }} >
-                <Button style={[styles.button]} bordered onPress={() => { this.setState({ showTrocoDialog: false }) }}>
-                  <Text style={styles.buttonText} uppercase={false}>{"cancelar"}</Text>
+              <View style={{ flexDirection: "row", justifyContent: "space-between" }} >
+
+                <Button
+                  style={[styles.button]}
+                  textStyle={{ flex: 1, textAlign: "center" }}
+                  bordered dark onPress={() => { this.setState({ showTrocoDialog: false }) }}>
+                  <Text
+                    style={[styles.buttonText, { flex: 1, textAlign: "center" }]}
+                    uppercase={false} >{"cancelar"}</Text>
                 </Button>
 
-                <TouchableOpacity onPress={() => { }}>
-                  <LinearGradient colors={["#00C7BD", "#009999"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ borderRadius: 8, paddingHorizontal: 28, paddingVertical: 14 }}>
-                    <Text style={styles.buttonText}>{"Okay"}</Text>
+                <TouchableOpacity style={[styles.button, { borderColor: 'transparent' }]} onPress={() => { this._setTroco() }}>
+                  <LinearGradient colors={["#00C7BD", "#009999"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.linearGradient}>
+                    <Text style={[styles.buttonText, { color: "#FFF" }]}>{"Okay"}</Text>
                   </LinearGradient>
                 </TouchableOpacity>
 
@@ -148,25 +172,25 @@ class ProposalScreen extends Component {
     if (!this.state.onScrollList) {
       return (
         <View style={{ marginTop: 16 }}>
-          <View style={styles.InfoContainer}>
+          <View style={styles.infoContainer}>
             <Icon name="place" size={18} color={"#000"} style={{ marginRight: 8 }} />
-            <Text style={styles.InfoTextBold}>
+            <Text style={styles.infoTextBold}>
               {this.state.proposal.farmacia.distancia}
-              <Text style={styles.InfoText}>{" do endereço indicado"}</Text>
+              <Text style={styles.infoText}>{" do endereço indicado"}</Text>
             </Text>
           </View>
 
-          <View style={styles.InfoContainer}>
+          <View style={styles.infoContainer}>
             <Icon name="clock-o" size={18} color={"#000"} style={{ marginRight: 8 }} />
-            <Text style={styles.InfoTextBold}>
+            <Text style={styles.infoTextBold}>
               {this.state.proposal.farmacia.tempo_entrega}
-              <Text style={[styles.InfoText, { marginBottom: 0 }]}>{" em média para entregar"}</Text>
+              <Text style={[styles.infoText, { marginBottom: 0 }]}>{" em média para entregar"}</Text>
             </Text>
           </View>
 
-          <TouchableOpacity style={styles.InfoContainer} onPress={() => { this._showDrugstore() }}>
+          <TouchableOpacity style={styles.infoContainer} onPress={() => { this._showDrugstore() }}>
             <Icon name="info" size={18} color={"#000"} style={{ marginRight: 8 }} />
-            <Text style={styles.InfoTextBold}>{"Sobre nós"}</Text>
+            <Text style={styles.infoTextBold}>{"Sobre nós"}</Text>
           </TouchableOpacity>
         </View>
       )
@@ -230,7 +254,10 @@ class ProposalScreen extends Component {
 function mapStateToProps(state) {
   return {
     uf: state.locations.uf,
-    cartItems: state.carts.cartItems
+    cartItems: state.carts.cartItems,
+    client: state.clients.client,
+    order: state.orders.order,
+    error: state.orders.error,
   };
 }
 

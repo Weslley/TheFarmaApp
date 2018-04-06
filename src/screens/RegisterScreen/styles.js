@@ -45,6 +45,8 @@ export default EStyleSheet.create({
         fontSize: 30
     },
     inputError: {
-        color: "red"
+        fontFamily: 'Roboto-Regular',
+        fontSize: 12,
+        color: '#E91E63'
     }
 });
