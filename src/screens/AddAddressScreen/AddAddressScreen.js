@@ -78,10 +78,6 @@ class AddAddressScreen extends Component {
         this.props.dispatch(getAddresses({ client: this.props.client }));
       }
 
-      if (nextProps && nextProps.districts) {
-        this._loadBairros();
-      }
-
     } catch (e) {
       console.log(e);
     }
@@ -90,12 +86,8 @@ class AddAddressScreen extends Component {
   componentWillMount() {
 
     if (this.props.cities.length > 0) {
-      this.setState({ cidade: this.props.cities[0].ibge.toString })
-    }
-
-    if (this.state.cidade && this.props.districts.length > 0) {
-      let bairros = this.props.districts.filter(d => d.cidade.ibge == this.state.cidade)
-      this.setState({ bairros, bairro: bairros[0].id.toString })
+      this._loadBairros(this.props.cities[0].ibge.toString);
+      this.setState({ cidade: this.props.cities[0].ibge.toString });
     }
 
     const { state: { params } } = this.props.navigation;
@@ -109,6 +101,7 @@ class AddAddressScreen extends Component {
       if (address.complemento) this.setState({ complemento: address.complemento })
       if (address.cidade) this.setState({ cidade: address.cidade.ibge.toString() })
       if (address.bairro) this.setState({ bairro: address.bairro.id.toString() })
+      this._loadBairros(this.state.cidade);
     }
 
     this.clearFormErrors();
@@ -126,17 +119,18 @@ class AddAddressScreen extends Component {
   }
 
   onCityChange = (cidade) => {
-    this.props.dispatch(getDistricts(cidade));
     this.setState({ cidade, bairro: null })
-    this._loadBairros();
+    this._loadBairros(cidade);
   }
 
-  _loadBairros() {
-    let bairros = this.props.districts.filter(d => d.cidade.ibge === parseInt(this.state.cidade))
-    this.setState({ bairros })
+  _loadBairros(cidade) {
+    let bairros = this.props.districts.filter(d => d.cidade.ibge.toString() === cidade)
+
     if (bairros.length > 0) {
       this.setState({ bairro: bairros[0].id.toString() })
     }
+
+    this.setState({ bairros })
 
     console.log("Cidade: " + this.state.cidade);
     console.log("Bairros ->");

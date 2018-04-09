@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Alert, View, ScrollView, TouchableOpacity, FlatList } from "react-native";
+import { Alert, View, ScrollView, TouchableOpacity, FlatList, BackHandler } from "react-native";
 import { Container, Text } from "native-base";
 import LinearGradient from "react-native-linear-gradient";
 
@@ -26,6 +26,14 @@ class ListProposalsScreen extends Component {
 
   componentDidMount() {
     this.loadPropostas = setInterval(() => this.getProposals(), 10000);
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      this.onBack()
+      return true;
+    });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.loadPropostas);
   }
 
   /** Private functions */

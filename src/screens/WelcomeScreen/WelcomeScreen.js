@@ -5,7 +5,7 @@ import Permissions from 'react-native-permissions';
 
 import { connect } from "react-redux";
 import { getCurrentClient } from "../../actions/clients"
-import { updateLocation } from "../../actions/locations"
+import { getLocation, updateLocation, getGeocodeAddress } from "../../actions/locations"
 
 import { Header } from "../../layout/Header";
 import { Container } from "../../layout/Container";
@@ -34,11 +34,7 @@ class WelcomeScreen extends Component {
     this.props.dispatch(getCurrentClient());
 
     Permissions.checkMultiple(['camera', 'photo', 'location']).then(response => {
-      this.setState({
-        cameraPermission: response.camera,
-        photoPermission: response.photo,
-        locationPermission: response.location
-      });
+      this.setState({ cameraPermission: response.camera, photoPermission: response.photo, locationPermission: response.location });
     });
   }
 
@@ -56,6 +52,7 @@ class WelcomeScreen extends Component {
         }
       });
     }
+    console.log(this.state);
   }
 
   componentWillUnmount() {
@@ -83,14 +80,16 @@ class WelcomeScreen extends Component {
   getLocation() {
     this.watchId = navigator.geolocation.watchPosition((position) => {
       this.props.dispatch(updateLocation(this.props.uf, position.coords.latitude, position.coords.longitude));
+      this.props.dispatch(getGeocodeAddress(position.coords.latitude, position.coords.longitude));
     },
       (error) => this.setState({ error: error.message }),
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000, distanceFilter: 10 },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter: 10 },
     );
   }
 
   onSearch = () => {
     if (this.state.locationPermission === 'authorized') {
+      this.getLocation();
       this.props.navigation.navigate("SearchMedicine");
     } else {
       Permissions.request('location').then(response => {

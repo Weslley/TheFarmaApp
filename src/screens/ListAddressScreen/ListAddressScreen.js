@@ -81,11 +81,8 @@ class ListAddressScreen extends Component {
   componentWillMount() {
     this.props.dispatch(clearError());
     this.props.dispatch(getAddresses({ client: this.props.client }));
-
     if (this.props.cities.length > 0) {
-      this.props.cities.map((c) => {
-        return this.props.dispatch(getDistricts(c.ibge));
-      })
+      this.props.cities.map((c) => { return this.props.dispatch(getDistricts(c.ibge))});
     }
   }
 

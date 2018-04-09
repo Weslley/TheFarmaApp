@@ -26,7 +26,8 @@ class ProposalScreen extends Component {
       onScrollList: false,
       showPaymentDialog: false,
       showTrocoDialog: false,
-      troco: 0,
+      troco: "0",
+      trocoError: null,
       buttonDisabled: true,
       proposal: {}
     };
@@ -54,14 +55,21 @@ class ProposalScreen extends Component {
   }
 
   _setTroco() {
-    let order = this.props.order;
-    order.troco = CurrencyUtils.parseFloat(this.state.troco);
-    order.forma_pagamento = 1;
-    if (this.props.order.id) {
-      let params = { client: this.props.client, order }
-      this.props.dispatch(updateOrder(params));
-      this.props.navigation.navigate({ key: 'confirmation1', routeName: 'Confirmation', params: { order } });
-      this.setState({ showPaymentDialog: false, showTrocoDialog: false });
+    this.setState({ trocoError: null })
+
+    let troco = parseFloat(this.state.troco.replace(/\D/g, "")) / 100
+    if (troco >= this.state.proposal.valor_total) {
+      let order = this.props.order;
+      order.troco =
+        order.forma_pagamento = 1;
+      if (this.props.order.id) {
+        let params = { client: this.props.client, order }
+        this.props.dispatch(updateOrder(params));
+        this.props.navigation.navigate({ key: 'confirmation1', routeName: 'Confirmation', params: { order } });
+        this.setState({ showPaymentDialog: false, showTrocoDialog: false });
+      }
+    } else {
+      this.setState({ trocoError: "Deve ser maior ou igual ao valor da proposta." })
     }
   }
 
@@ -127,8 +135,8 @@ class ProposalScreen extends Component {
           <View style={{ paddingHorizontal: 24, paddingTop: 24, paddingBottom: 32 }} >
             <Text style={{ fontFamily: "Roboto-Bold", fontSize: 22, color: "rgba(0,0,0,0.87)", marginBottom: 24 }} >Quanto em espécie?</Text>
             <View>
-              <View style={{ marginBottom: 24 }}>
 
+              <View style={{ marginBottom: 24 }}>
                 <TextInputMask
                   type={"money"}
                   keyboardType={"numeric"}
@@ -141,6 +149,10 @@ class ProposalScreen extends Component {
                 <TouchableOpacity style={{ position: "absolute", right: 0, top: 5, bottom: 0 }} onPress={() => { this.setState({ troco: 0 }) }}>
                   <Icon name="ios-close-empty" size={30} color={"#000"} />
                 </TouchableOpacity>
+
+                {Components.renderIf(this.state.trocoError,
+                  <Text style={styles.inputError} uppercase={false}>{this.state.trocoError}</Text>
+                )}
               </View>
 
               <View style={{ flexDirection: "row", justifyContent: "space-between" }} >

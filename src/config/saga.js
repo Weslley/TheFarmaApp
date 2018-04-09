@@ -1,7 +1,7 @@
 import { takeEvery, takeLatest } from 'redux-saga/effects';
 //LOCATIONS
-import { getGeocode } from '../services/saga/locations';
-import { REQUEST_GEOCODE } from '../actions/locations';
+import { getGeocode, getLocation } from '../services/saga/locations';
+import { REQUEST_GEOCODE, GET_LOCATION } from '../actions/locations';
 //PRODUCTS
 import { getByName, selectProduct, getHistory } from '../services/saga/products';
 import { SEARCH_PRODUCTS, SELECT_PRODUCT, GET_HISTORY } from '../actions/products';
@@ -31,6 +31,7 @@ import { getOrder, getOrders, createOrder, checkoutOrder, cancelOrder } from '..
 import { GET_ORDER, LIST_ORDER, CREATE_ORDER, CHECKOUT, CANCEL_ORDER } from '../actions/orders';
 
 const rootSaga = function* () {
+    yield takeLatest(GET_LOCATION, getLocation);
     yield takeLatest(REQUEST_GEOCODE, getGeocode);
     
     yield takeEvery(GET_CITIES, getCities);

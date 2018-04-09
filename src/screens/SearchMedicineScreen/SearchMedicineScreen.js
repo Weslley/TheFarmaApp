@@ -4,6 +4,7 @@ import { Text, List, ListItem } from "native-base";
 import Snackbar from 'react-native-snackbar';
 
 import { connect } from 'react-redux';
+import { getLocation, updateLocation, getGeocodeAddress } from "../../actions/locations"
 
 import { selectProduct, getHistory } from '../../actions/products';
 import { clearApresentations } from '../../actions/apresentations';
@@ -51,9 +52,7 @@ class SearchMedicineScreen extends Component {
     }
 
     componentWillMount() {
-        this.props.navigation.setParams({
-            onBack: () => { this.props.navigation.goBack(null); }
-        })
+        this.props.dispatch(getLocation());
     }
 
     componentDidMount() {

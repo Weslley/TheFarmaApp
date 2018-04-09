@@ -14,7 +14,7 @@ export default (state = INITIAL_STATE, action) => {
         case REQUEST_GEOCODE:
             return { ...state };
         case REQUEST_GEOCODE_SUCCESS:
-            return { ...state, uf: action.uf };
+            return { ...state, uf: action.data };
         case REQUEST_GEOCODE_ERROR:
             return { ...state, error: action.error };
         case CLEAR_ERROR:

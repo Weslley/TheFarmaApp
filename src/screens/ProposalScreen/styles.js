@@ -29,5 +29,10 @@ export default EStyleSheet.create({
         flex: 1,
         paddingVertical: 14,
         borderRadius: 4
+    },
+    inputError: {
+        fontFamily: 'Roboto-Regular',
+        fontSize: 12,
+        color: '#E91E63'
     }
 });

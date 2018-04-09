@@ -4,7 +4,7 @@ import { call, put } from 'redux-saga/effects';
 import { ClientLoginSerializable } from "../serializables";
 import { save, removeAll, first as firstClient } from '../realm/clients';
 
-import SERVER_API from '../../config/server';
+import { SERVER_API } from '../../config/server';
 
 import {
     responseError,

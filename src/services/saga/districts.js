@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { call, put } from 'redux-saga/effects';
-import SERVER_API from '../../config/server';
+import { SERVER_API } from '../../config/server';
 
 import {
     responseError,

@@ -1,3 +1,4 @@
+export const GET_LOCATION = 'GET_LOCATION';
 export const UPDATE_LOCATION = 'UPDATE_LOCATION';
 
 export const REQUEST_GEOCODE = 'REQUEST_GEOCODE';
@@ -5,6 +6,10 @@ export const REQUEST_GEOCODE_SUCCESS = 'REQUEST_GEOCODE_SUCCESS';
 export const REQUEST_GEOCODE_ERROR = 'REQUEST_GEOCODE_ERROR';
 
 export const CLEAR_ERROR = 'CLEAR_ERROR';
+
+export const getLocation = () => ({
+  type: GET_LOCATION
+});
 
 export const updateLocation = (uf, latitude, longitude) => ({
     type: UPDATE_LOCATION,
@@ -16,8 +21,8 @@ export const getGeocodeAddress = (latitude, longitude) => ({
 });
 
 /** Action results body */
-export const responseSuccess = (type, result) => ({
-    type, result
+export const responseSuccess = (type, data) => ({
+    type, data
   });
   
   export const responseError = (type, error) => ({
