@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, Image } from "react-native";
+import { View, ScrollView, Image, TextInput } from "react-native";
 import { Container, Text, Form, Item as FormItem, Label, Input, Button, Picker } from "native-base";
 import { TextInputMask, MaskService } from "react-native-masked-text";
 
@@ -221,138 +221,119 @@ class AddAddressScreen extends Component {
             <MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }} />
           }
           menuRight={
-            <MenuItem icon="ios-checkmark-empty" iconSize={40} onPress={() => { this.submit() }} />
+            <MenuItem icon="check" onPress={() => { this.submit() }} />
           }
         />
 
-        <ScrollView style={{ paddingHorizontal: 24 }}>
-          <Form style={styles.form}>
-            <FormItem floatingLabel style={styles.formitem}>
-              <Label>Nome</Label>
-              <Input
-                style={styles.input}
-                placeholderTextColor="#CCC"
-                multiline={false}
-                onChangeText={(nome_endereco) => this.setState({ nome_endereco })}
-                value={this.state.nome_endereco}
-              />
-            </FormItem>
+        <ScrollView style={{ paddingHorizontal: 24, paddingTop: 18}}>
 
-            {Components.renderIf(this.state.nomeError,
-              <Text style={styles.inputError} uppercase={false}>{this.state.nomeError}</Text>
+          <View floatingLabel style={styles.formitem}>
+            <Text style={styles.label}>Nome</Text>
+            <TextInput
+              style={styles.input}
+              placeholderTextColor="#CCC"
+              multiline={false}
+              onChangeText={(nome_endereco) => this.setState({ nome_endereco })}
+              value={this.state.nome_endereco}
+            />
+            {Components.renderIfElse(this.state.nomeError,
+              <Text style={styles.inputError} uppercase={false}>{this.state.nomeError}</Text>,
+              <Text style={styles.example} uppercase={false}>{"Ex: Casa, Trabalho..."}</Text>
             )}
+          </View>
 
-            <FormItem floatingLabel style={styles.formitem}>
-              <Label >CEP</Label>
-              <Input
-                keyboardType={"numeric"}
-                style={styles.input}
-                placeholderTextColor="#CCC"
-                multiline={false}
-                onChangeText={this.onChangeCep.bind(this)}
-                value={this.state.cep}
-              />
-            </FormItem>
-
+          <View floatingLabel style={styles.formitem}>
+            <Text style={styles.label} >CEP</Text>
+            <TextInput
+              keyboardType={"numeric"}
+              style={styles.input}
+              placeholderTextColor="#CCC"
+              multiline={false}
+              onChangeText={this.onChangeCep.bind(this)}
+              value={this.state.cep}
+            />
             {Components.renderIf(this.state.cepError,
               <Text style={styles.inputError} uppercase={false}>{this.state.cepError}</Text>
             )}
+          </View>
 
-            <View floatingLabel style={styles.formitem}>
-              <Label style={styles.label}>Cidade</Label>
-              <Picker
-                mode="dropdown"
-                selectedValue={this.state.cidade}
-                onValueChange={(cidade) => { this.onCityChange(cidade) }}
-                itemTextStyle={styles.input}
-              >
-                {this.props.cities.map((city) => {
-                  return (
-                    <Picker.Item
-                      label={`${city.nome}-${city.uf.sigla}`}
-                      key={city.ibge}
-                      value={`${city.ibge}`} />
-                  )
-                })}
-              </Picker>
-              <View style={{ borderBottomColor: "rgba(0,0,0,0.32)", borderBottomWidth: 1 }} />
-            </View>
-
+          <View floatingLabel style={styles.formitem}>
+            <Text style={styles.label} style={styles.label}>Cidade</Text>
+            <Picker
+              selectedValue={this.state.cidade}
+              onValueChange={(cidade) => { this.onCityChange(cidade) }}
+              itemTextStyle={styles.input}
+            >
+              {this.props.cities.map((city) => {
+                return (<Picker.Item label={`${city.nome}-${city.uf.sigla}`} key={city.ibge} value={`${city.ibge}`} />)
+              })}
+            </Picker>
+            <View style={{ borderBottomColor: '#000', borderWidth: 0.5, marginTop: -6 }} />
             {Components.renderIf(this.state.cidadeError,
               <Text style={styles.inputError} uppercase={false}>{this.state.cidadeError}</Text>
             )}
+          </View>
 
-            <View floatingLabel style={styles.formitem}>
-              <Label style={styles.label}>Bairro</Label>
-              <Picker
-                mode="dropdown"
-                textStyle={{ borderWidth: 1, borderColor: 'blue' }}
-                selectedValue={this.state.bairro}
-                onValueChange={(district) => { this.onDistrictChange(district) }}>
-                {this.state.bairros.map((bairro) => {
-                  return (
-                    <Picker.Item
-                      label={bairro.nome}
-                      key={bairro.id}
-                      value={`${bairro.id}`} />
-                  )
-                })}
-              </Picker>
-              <View style={{ borderBottomColor: "rgba(0,0,0,0.32)", borderBottomWidth: 1 }} />
-            </View>
-
+          <View floatingLabel style={styles.formitem}>
+            <Text style={styles.label} style={styles.label}>Bairro</Text>
+            <Picker
+              selectedValue={this.state.bairro}
+              onValueChange={(district) => { this.onDistrictChange(district) }}>
+              {this.state.bairros.map((bairro) => {
+                return (<Picker.Item label={bairro.nome} key={bairro.id} value={`${bairro.id}`} />)
+              })}
+            </Picker>
+            <View style={{ borderBottomColor: '#000', borderWidth: 0.5, marginTop: -6 }} />
             {Components.renderIf(this.state.bairroError,
               <Text style={styles.inputError} uppercase={false}>{this.state.bairroError}</Text>
             )}
+          </View>
 
-            <FormItem floatingLabel style={styles.formitem}>
-              <Label>Logradouro</Label>
-              <Input
-                style={styles.input}
-                placeholderTextColor="#CCC"
-                multiline={false}
-                onChangeText={(logradouro) => this.setState({ logradouro })}
-                value={this.state.logradouro}
-              />
-            </FormItem>
-
+          <View floatingLabel style={styles.formitem}>
+            <Text style={styles.label}>Logradouro</Text>
+            <TextInput
+              style={styles.input}
+              placeholderTextColor="#CCC"
+              multiline={false}
+              onChangeText={(logradouro) => this.setState({ logradouro })}
+              value={this.state.logradouro}
+            />
             {Components.renderIf(this.state.logradouroError,
               <Text style={styles.inputError} uppercase={false}>{this.state.logradouroError}</Text>
             )}
+          </View>
 
-            <FormItem floatingLabel style={styles.formitem}>
-              <Label>Número</Label>
-              <Input
-                keyboardType={"numeric"}
-                style={styles.input}
-                placeholderTextColor="#CCC"
-                multiline={false}
-                onChangeText={(numero) => this.setState({ numero })}
-                value={this.state.numero}
-              />
-            </FormItem>
-
+          <View floatingLabel style={styles.formitem}>
+            <Text style={styles.label}>Número</Text>
+            <TextInput
+              keyboardType={"numeric"}
+              style={styles.input}
+              placeholderTextColor="#CCC"
+              multiline={false}
+              onChangeText={(numero) => this.setState({ numero })}
+              value={this.state.numero}
+            />
             {Components.renderIf(this.state.numeroError,
               <Text style={styles.inputError} uppercase={false}>{this.state.numeroError}</Text>
             )}
+          </View>
 
-            <FormItem floatingLabel style={styles.formitem}>
-              <Label>Complemento</Label>
-              <Input
-                style={styles.input}
-                placeholderTextColor="#CCC"
-                multiline={false}
-                onChangeText={(complemento) => this.setState({ complemento })}
-                value={this.state.complemento}
-              />
-            </FormItem>
-
+          <View floatingLabel style={[styles.formitem, { marginBottom: 64 }]}>
+            <Text style={styles.label}>Complemento</Text>
+            <TextInput
+              style={styles.input}
+              placeholderTextColor="#CCC"
+              multiline={false}
+              onChangeText={(complemento) => this.setState({ complemento })}
+              value={this.state.complemento}
+            />
             {Components.renderIf(this.state.complementoError,
               <Text style={styles.inputError} uppercase={false}>{this.state.complementoError}</Text>
             )}
-          </Form>
+          </View>
+
         </ScrollView>
-      </View>
+      </View >
     );
   }
 }

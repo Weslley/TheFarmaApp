@@ -85,10 +85,10 @@ class RegisterScreen extends Component {
         this.props.dispatch(clearError());
     }
 
-    componentDidMount() {}
+    componentDidMount() { }
 
     /** Private functions */
-    onBack(){
+    onBack() {
         this.props.dispatch(clearError());
         this.props.navigation.goBack(null);
     }
@@ -106,9 +106,11 @@ class RegisterScreen extends Component {
             return false;
         }
 
-        if ((this.state.celular != null || this.state.celular == "") && StringUtils.removeMask(this.state.celular).length <= 10) {
-            this.setState({ celularError: "campo inválido" })
-            return false;
+        if (this.state.celular.length > 1) {
+            if (StringUtils.removeMask(this.state.celular).length <= 10) {
+                this.setState({ celularError: "campo inválido" })
+                return false;
+            }
         }
 
         if (this.state.password == null || this.state.password == "") {
@@ -126,7 +128,7 @@ class RegisterScreen extends Component {
             params["email"] = this.state.email;
             params["password"] = this.state.password;
 
-            if (this.state.celular) params["celular"] = this.state.celular;
+            if (this.state.celular) params["celular"] = StringUtils.removeMask(this.state.celular);
             if (this.state.facebook_id) params["facebook_id"] = this.state.facebook_id;
             this.props.dispatch(register(params));
         }
@@ -141,12 +143,14 @@ class RegisterScreen extends Component {
         return (
             <View style={{ flex: 1 }}>
                 <View style={{ flex: 1, paddingHorizontal: 24 }}>
+
                     <Image
                         resizeMode={"cover"}
                         style={styles.background}
                         source={require("../../assets/images/background-register.png")} />
+
                     <Header
-                        style={{ paddingHorizontal: 0, backgroundColor: "transparent" }}
+                        style={{ paddingHorizontal: 0, paddingTop: 24, backgroundColor: "transparent" }}
                         separator={false}
                         menuLeft={<MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }} />} />
 
@@ -185,6 +189,7 @@ class RegisterScreen extends Component {
                             <Item floatingLabel style={styles.formitem}>
                                 <Label >Telefone (opcional)</Label>
                                 <Input
+                                    maxLength={15}
                                     keyboardType="phone-pad"
                                     style={styles.input}
                                     placeholderTextColor="#CCC"

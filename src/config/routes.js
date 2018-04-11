@@ -75,6 +75,8 @@ export const TabsNavigator = TabNavigator(
 
 export const MainNavigator = StackNavigator(
   {
+    //NewAddress: { screen: AddAddressScreen},
+    
     TabsNavigator: {
       screen: TabsNavigator,
       navigationOptions: { header: null }

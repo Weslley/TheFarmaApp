@@ -1,15 +1,17 @@
 import React, { Component } from "react";
 import { View, Text, Image, TouchableOpacity, Platform } from "react-native";
+
 import { Icon } from "../../components/Icon";
+import { TextWithLetterSpacing } from "../../components/Text";
 
 import { Components } from "../../helpers";
-
 import styles from "./styles";
 
 class Header extends Component {
   static defaultProps = {
     separator: true,
-    style: { paddingHorizontal: 24 }
+    style: { paddingHorizontal: 24, paddingTop: 24 },
+    titleStyle: {letterSpacing: -1}
   }
 
   constructor(props) {
@@ -19,18 +21,11 @@ class Header extends Component {
 
   render() {
     return (
-      <View style={[styles.container, this.props.style ? this.props.style : {}]}>
+      <View style={[styles.container, this.props.style]}>
 
         <View style={styles.actions}>
-          {Components.renderIf(
-            this.props.menuLeft,
-            <View style={styles.menuLeft}>{this.props.menuLeft}</View>
-          )}
-
-          {Components.renderIf(
-            this.props.menuRight,
-            <View style={styles.menuRight}>{this.props.menuRight}</View>
-          )}
+          <View style={styles.menuLeft}>{this.props.menuLeft}</View>
+          <View style={styles.menuRight}>{this.props.menuRight}</View>
         </View>
 
         {Components.renderIf(this.props.image,
@@ -45,7 +40,7 @@ class Header extends Component {
           <View>
             {Components.renderIf(
               this.props.title,
-              <Text style={styles.title}>{this.props.title}</Text>
+              <Text style={[styles.title, this.props.titleStyle]}>{this.props.title}</Text>
             )}
 
             {Components.renderIf(
@@ -57,7 +52,7 @@ class Header extends Component {
           {Components.renderIf(this.props.avatar,
             <View style={styles.avatarContainer}>
               <Image style={styles.avatar} resizeMode="contain" source={this.props.avatar} />
-            </View>    
+            </View>
           )}
         </TouchableOpacity>
 

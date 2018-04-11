@@ -15,7 +15,7 @@ import styles from './styles';
 class SearchHeader extends Component {
     static defaultProps = {
         separator: true,
-        style: { paddingHorizontal: 24 }
+        style: { paddingHorizontal: 24, paddingTop: 24 }
     }
 
     constructor(props) {
@@ -35,7 +35,7 @@ class SearchHeader extends Component {
     }
     render() {
         return (
-            <View style={[styles.container, this.props.style ? this.props.style : {}]}>
+            <View style={[styles.container, this.props.style]}>
                 <View style={styles.actions}>
                     {Components.renderIf(
                         this.props.menuLeft,
@@ -55,9 +55,9 @@ class SearchHeader extends Component {
                         placeholderTextColor="#CCC"
                         multiline={false}
                         onChangeText={this.onSearch}
-                        value={this.state.query} 
-                        underlineColorAndroid="transparent"/>
-                        
+                        value={this.state.query}
+                        underlineColorAndroid="transparent" />
+
                     <TouchableOpacity onPress={this.onClearSearch}>
                         <Icon style={{ color: "#000", fontSize: 30 }} name="ios-close-empty" />
                     </TouchableOpacity>

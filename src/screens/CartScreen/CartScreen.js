@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, ActivityIndicator, Image, TouchableOpacity } from "react-native";
+import { Alert, View, ScrollView, ActivityIndicator, Image, TouchableOpacity } from "react-native";
 import { Container, Button, Icon, Text, List, ListItem, Thumbnail } from "native-base";
 import { TextMask } from "react-native-masked-text";
 
@@ -56,7 +56,15 @@ class CartScreen extends Component {
   }
 
   onClearCart = () => {
-    this.props.dispatch(cleanCart());
+    Alert.alert(
+      '',
+      'Você gostaria de limpar a cestinha?',
+      [
+        { text: 'NÃO', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+        { text: 'SIM', onPress: () => { this.props.dispatch(cleanCart()) } },
+      ],
+      { cancelable: false }
+    )
   }
 
   getApresentationQuantity(nextProps, apresentation) {
@@ -78,7 +86,9 @@ class CartScreen extends Component {
     this.props.dispatch(removeItemToCart(apresentation));
   }
 
-  _showDeliveryDialog() { this.setState({ showDeliveryDialog: true }); }
+  _showDeliveryDialog() {
+    this.setState({ showDeliveryDialog: true });
+  }
 
   _renderDeliveryDialog() {
     return (

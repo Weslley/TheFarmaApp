@@ -5,21 +5,19 @@ export default EStyleSheet.create({
     container: {
         justifyContent: "center",
         backgroundColor: "$background",
-        paddingVertical: 8
+        paddingBottom: 8
     },
     actions: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        minHeight: 48
+        minHeight: 48,
     },
     menuLeft: {
-        position: "absolute",
-        left: 0
+        
     },
     menuRight: {
-        position: "absolute",
-        right: 0
+        
     },
     image: {
         marginTop: -40,
@@ -32,7 +30,7 @@ export default EStyleSheet.create({
         justifyContent: "space-between"
     },
     title: {
-        paddingTop: 16,
+        paddingTop: 8,
         fontSize: 32,
         fontFamily: 'Roboto-Bold',
         color: '#030303',

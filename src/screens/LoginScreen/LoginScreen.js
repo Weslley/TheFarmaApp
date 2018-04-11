@@ -154,7 +154,7 @@ class LoginScreen extends Component {
                         source={require("../../assets/images/background-login.png")} />
 
                     <Header
-                        style={{ paddingHorizontal: 0, backgroundColor: "transparent" }}
+                        style={{ paddingHorizontal: 0, paddingTop: 24, backgroundColor: "transparent" }}
                         separator={false}
                         menuLeft={<MenuItem icon="md-arrow-back" iconColor="#FFF" onPress={() => { this.props.navigation.goBack(null) }} />} />
 

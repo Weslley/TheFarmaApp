@@ -36,28 +36,17 @@ class ApresentationDetailScreen extends Component {
   };
 
   componentWillReceiveProps = nextProps => {
-    //Atualiza badge
-    let { state: { params } } = this.props.navigation;
-    let cartSize = params ? params.cartSize : 0;
-    if (parseInt(cartSize) !== nextProps.cartItems.length) {
-      this.props.navigation.setParams({
-        cartSize: nextProps.cartItems.length
-      });
+    if (this.state.apresentation) {
+      let apresentation = this.state.apresentation;
+      apresentation.quantidade = this.getApresentationQuantity(nextProps, apresentation);
+      this.setState({ apresentation })
     }
   };
 
   componentWillMount() {
-    this.props.navigation.setParams({
-      onBack: () => {
-        this.props.navigation.goBack(null);
-      },
-      onPressCart: () => {
-        this.props.navigation.navigate("Cart", { title: "Cestinha" });
-      }
-    });
-    this.setState({
-      apresentation: this.props.navigation.state.params.apresentation
-    });
+    let apresentation = this.props.navigation.state.params.apresentation
+    apresentation.quantidade_rec = apresentation.quantidade
+    this.setState({ apresentation });
   }
 
   componentDidMount() {
@@ -70,6 +59,14 @@ class ApresentationDetailScreen extends Component {
   }
 
   /** Private functions */
+  onBack() {
+    this.props.navigation.goBack(null)
+  }
+
+  showCart() {
+    this.props.navigation.navigate("Cart", { title: "Cestinha" });
+  }
+
   _rankingView() {
     setTimeout(() => {
       this.props.dispatch(rankingView(this.state.apresentation.id));
@@ -78,9 +75,7 @@ class ApresentationDetailScreen extends Component {
 
   getApresentationQuantity(nextProps, apresentation) {
     try {
-      const cItem = nextProps.cartItems.find(
-        item => item.id === apresentation.id
-      );
+      const cItem = nextProps.cartItems.find(item => item.id === apresentation.id);
       return cItem ? cItem.quantidade : 0;
     } catch (error) {
       return 0;
@@ -89,48 +84,37 @@ class ApresentationDetailScreen extends Component {
 
   _addItemToCart(apresentation) {
     this.props.dispatch(addItemToCart(apresentation));
-    this.setState({ showBottomBar: true });
   }
 
   _removeItemToCart(apresentation) {
     this.props.dispatch(removeItemToCart(apresentation));
-    this.setState({ showBottomBar: true });
   }
 
   render() {
-    const { state: { params } } = this.props.navigation;
-    const apresentation = params ? params.apresentation : null;
+    console.log(this.state.apresentation);
     return (
       <Container style={{ backgroundColor: "#FFFFFF" }}>
         <ScrollView>
           <Header
-            title={apresentation.produto.nome}
+            title={this.state.apresentation.produto.nome}
             image={
-              apresentation && apresentation.imagem
-                ? { uri: apresentation.imagem }
+              this.state.apresentation && this.state.apresentation.imagem
+                ? { uri: this.state.apresentation.imagem }
                 : require("../../assets/images/ic_default_medicine.png")
             }
-            menuLeft={
-              <MenuItem
-                icon="md-arrow-back"
-                onPress={() => { this.props.navigation.goBack(null) }}
-              />
-            }
+            menuLeft={<MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }} />}
             menuRight={
-              <ShoppingBagIcon
-                value={params && params.cartSize ? params.cartSize : 0}
-                onPress={params ? params.onPressCart : null}
-              />
+              this.props.cartItems.length > 0 ? <ShoppingBagIcon value={this.props.cartItems.length} onPress={() => { this.showCart() }} /> : null
             }
           />
 
-          {Components.renderIf(apresentation,
+          {Components.renderIf(this.state.apresentation,
             <View style={{ paddingHorizontal: 24, marginTop: 8 }}>
               <ApresentationDetailDescription
-                apresentation={apresentation}
+                apresentation={this.state.apresentation}
                 showActions={true}
-                onPressMinus={() => this._removeItemToCart(apresentation)}
-                onPressPlus={() => this._addItemToCart(apresentation)}
+                onPressMinus={() => this._removeItemToCart(this.state.apresentation)}
+                onPressPlus={() => this._addItemToCart(this.state.apresentation)}
               />
             </View>
           )}
@@ -166,38 +150,29 @@ class ApresentationDetailScreen extends Component {
             <Text style={styles.tableLabel} uppercase>
               {"Princípio Ativo"}
             </Text>
-            <Text style={styles.tableValue}>{apresentation.produto.principio_ativo.nome}</Text>
+            <Text style={styles.tableValue}>{this.state.apresentation.produto.principio_ativo.nome}</Text>
           </View>
 
           <View style={[styles.table, { backgroundColor: "#FAFAFA" }]}>
             <Text style={styles.tableLabel} uppercase>
               {"TIPO"}
             </Text>
-            <Text style={styles.tableValue}>{TipoMedicamento[apresentation.produto.tipo][1]}</Text>
+            <Text style={styles.tableValue}>{TipoMedicamento[this.state.apresentation.produto.tipo][1]}</Text>
           </View>
 
           <View style={[styles.table]}>
             <Text style={styles.tableLabel} uppercase>
               {"Forma Farmacêutica"}
             </Text>
-            <Text style={styles.tableValue}>{apresentation.classe_terapeutica}</Text>
+            <Text style={styles.tableValue}>{this.state.apresentation.classe_terapeutica}</Text>
           </View>
 
           <View style={[styles.table, { backgroundColor: "#FAFAFA" }]}>
             <Text style={styles.tableLabel} uppercase>
               {"Quantidade"}
             </Text>
-            <Text style={styles.tableValue}>{apresentation.quantidade}</Text>
+            <Text style={styles.tableValue}>{this.state.apresentation.quantidade_rec}</Text>
           </View>
-
-          <View style={[styles.table]}>
-            <Text style={styles.tableLabel} uppercase>
-              {"Fabricante"}
-            </Text>
-            <Text style={styles.tableValue}>{apresentation.produto.fabricante}</Text>
-          </View>
-
-
         </ScrollView>
       </Container>
     );

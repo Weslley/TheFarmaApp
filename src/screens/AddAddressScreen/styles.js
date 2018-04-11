@@ -6,9 +6,8 @@ export default EStyleSheet.create({
     marginBottom: 24
   },
   formitem: {
-    marginLeft: 0,
-    paddingLeft: 0,
-    marginBottom: 16
+    width: '100%',
+    marginBottom: 16,
   },
   label: {
     fontFamily: "Roboto-Regular",
@@ -16,8 +15,7 @@ export default EStyleSheet.create({
     color: "rgba(0,0,0,0.80)"
   },
   input: {
-    paddingLeft: 0,
-    marginLeft: 0,
+    width: '100%',
     fontFamily: "Roboto-Bold",
     fontSize: 16,
     color: "#000000"
@@ -26,5 +24,10 @@ export default EStyleSheet.create({
     fontFamily: 'Roboto-Regular',
     fontSize: 12,
     color: '#E91E63'
+  },
+  example: {
+    fontFamily: 'Roboto-Regular',
+    fontSize: 12,
+    color: 'rgba(0,0,0,0.48)'
   }
 });

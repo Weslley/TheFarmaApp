@@ -11,6 +11,7 @@ import { Header } from "../../layout/Header";
 import { Container } from "../../layout/Container";
 
 import { Icon } from "../../components/Icon";
+import { ShoppingBagIcon } from "../../layout/ShoppingBagIcon";
 
 import { Components } from "../../helpers";
 import styles from "./styles";
@@ -62,6 +63,7 @@ class WelcomeScreen extends Component {
   /** Private functions */
   getTitle() {
     let clientName = this.props.client ? this.props.client.nome : "";
+    clientName = clientName.split(" ")[0]
     if (clientName) {
       let now = new Date().getHours();
       if (now >= 6 && now < 12) {
@@ -101,6 +103,10 @@ class WelcomeScreen extends Component {
     }
   };
 
+  showCart() {
+    this.props.navigation.navigate("Cart", { title: "Cestinha" });
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -111,8 +117,13 @@ class WelcomeScreen extends Component {
             source={require("../../assets/images/background-home.png")} />
 
           <Header
-            style={{ paddingHorizontal: 0, backgroundColor: "transparent" }}
+            style={{ paddingHorizontal: 0, paddingTop: 24, backgroundColor: "transparent" }}
             title={this.getTitle()}
+            menuRight={
+              this.props.cartItems.length > 0 ?
+                <ShoppingBagIcon value={this.props.cartItems.length} onPress={() => { this.showCart() }} /> :
+                null
+            }
           />
 
           <TouchableOpacity style={styles.searchBar} onPress={this.onSearch}>
@@ -133,6 +144,7 @@ function mapStateToProps(state) {
     latitude: state.locations.latitude,
     longitude: state.locations.longitude,
     uf: state.locations.uf,
+    cartItems: state.carts.cartItems,
   };
 }
 

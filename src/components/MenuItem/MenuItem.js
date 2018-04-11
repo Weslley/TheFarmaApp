@@ -6,9 +6,10 @@ import { Components } from "../../helpers";
 import styles from "./styles";
 class MenuItem extends Component {
   static defaultProps = {
+    iconStyle: {},
     iconSize: 24,
     iconColor: "#000",
-    iconStyle: {}
+    style: {}
   }
   constructor(props) {
     super(props);
@@ -16,20 +17,20 @@ class MenuItem extends Component {
   }
 
   render() {
-    return <TouchableOpacity onPress={this.props.onPress}>
-      <View style={styles.container}>
-      
-        {Components.renderIf(this.props.icon,
-          <Icon
-            style={this.props.iconStyle}
-            name={this.props.icon}
-            size={this.props.iconSize}
-            color={this.props.iconColor} />
-        )}
-
-        {Components.renderIf(this.props.text, <Text style={styles.text}>{this.props.text}</Text>)}
-      </View>
-    </TouchableOpacity>;
+    return (
+      <TouchableOpacity onPress={this.props.onPress}>
+        <View style={styles.container}>
+          {Components.renderIf(this.props.icon,
+            <Icon
+              name={this.props.icon}
+              size={this.props.iconSize}
+              color={this.props.iconColor}
+              style={[{ width: 24, height: 24 }, this.props.iconStyle]} />
+          )}
+          {Components.renderIf(this.props.text, <Text style={styles.text}>{this.props.text}</Text>)}
+        </View>
+      </TouchableOpacity>
+    );
   }
 }
 
