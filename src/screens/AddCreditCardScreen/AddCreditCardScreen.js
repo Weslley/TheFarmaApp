@@ -196,7 +196,7 @@ class AddCreditCardScreen extends Component {
           title={"Novo Cartão"}
           subtitle={"Preencha todos os dados necessários"}
           menuLeft={<MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }} />}
-          menuRight={<MenuItem icon="ios-checkmark-empty" iconSize={40} onPress={() => { this.submit() }} />}
+          menuRight={<MenuItem icon="check" iconSize={24} onPress={() => { this.submit() }} />}
         />
 
         <View style={{ alignItems: "center", paddingVertical: 32 }}>

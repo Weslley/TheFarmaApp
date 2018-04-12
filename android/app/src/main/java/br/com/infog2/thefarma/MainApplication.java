@@ -40,11 +40,11 @@ public class MainApplication extends Application implements ReactApplication {
        //mCallbackManager = new CallbackManager.Factory().create();
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new SnackbarPackage(),
-            new FBSDKPackage(mCallbackManager),
-            new VectorIconsPackage(),
-            new LinearGradientPackage(),
-            new RealmReactPackage()
+          new RealmReactPackage(),
+          new SnackbarPackage(),
+          new FBSDKPackage(mCallbackManager),
+          new VectorIconsPackage(),
+          new LinearGradientPackage()
       );
     }
 
