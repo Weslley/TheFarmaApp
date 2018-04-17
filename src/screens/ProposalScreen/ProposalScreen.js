@@ -220,7 +220,13 @@ class ProposalScreen extends Component {
           <Header
             title={this.state.proposal.farmacia.nome_fantasia}
             subtitle={`Fazemos entrega até ${this.state.proposal.farmacia.horario_funcionamento}`}
-            menuLeft={<MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }} />}
+            menuLeft={
+              <MenuItem
+                icon="md-arrow-back"
+                style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+                onPress={() => { this.onBack() }}
+              />
+            }
             menuRight={
               <View style={{ flexDirection: "row" }}>
                 <MenuItem icon="call" onPress={() => { this.onBack() }} />

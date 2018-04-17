@@ -1,7 +1,8 @@
 import realm from './realm';
 
 export const first = () => {
-  return realm.objects('Cliente')[0];
+  let first = realm.objects('Cliente')[0];
+  return first ? first : null;  
 }
 
 export const find = id => {

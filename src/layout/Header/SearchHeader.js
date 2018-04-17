@@ -15,7 +15,7 @@ import styles from './styles';
 class SearchHeader extends Component {
     static defaultProps = {
         separator: true,
-        style: { paddingHorizontal: 24, paddingTop: 24 }
+        style: { }
     }
 
     constructor(props) {

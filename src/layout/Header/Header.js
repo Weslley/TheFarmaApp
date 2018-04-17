@@ -10,8 +10,9 @@ import styles from "./styles";
 class Header extends Component {
   static defaultProps = {
     separator: true,
-    style: { paddingHorizontal: 24, paddingTop: 24 },
-    titleStyle: {letterSpacing: -1}
+    style: {},
+    actionsStyle: { backgroundColor: "transparent" },
+    titleStyle: { letterSpacing: -1 }
   }
 
   constructor(props) {
@@ -21,9 +22,9 @@ class Header extends Component {
 
   render() {
     return (
-      <View style={[styles.container, this.props.style]}>
+      <View style={[styles.container, { ...this.props.style }]}>
 
-        <View style={styles.actions}>
+        <View style={[styles.actions, this.props.actionsStyle]}>
           <View style={styles.menuLeft}>{this.props.menuLeft}</View>
           <View style={styles.menuRight}>{this.props.menuRight}</View>
         </View>

@@ -19,7 +19,7 @@ class MenuItem extends Component {
   render() {
     return (
       <TouchableOpacity onPress={this.props.onPress}>
-        <View style={styles.container}>
+        <View style={[styles.container, this.props.style]}>
           {Components.renderIf(this.props.icon,
             <Icon
               name={this.props.icon}

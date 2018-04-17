@@ -53,7 +53,10 @@ class DrugstoreScreen extends Component {
           <Header
             title={this.state.drugstore.nome_fantasia}
             subtitle={"Detalhes da farmácia"}
-            menuLeft={<MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }} />}
+            menuLeft={
+              <MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }}
+                style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }} />
+            }
             menuRight={
               <View style={{ flexDirection: "row" }}>
                 <MenuItem icon="call" onPress={() => { this.onBack() }} />

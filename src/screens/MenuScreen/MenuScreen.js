@@ -47,6 +47,7 @@ class MenuScreen extends Component {
             <MenuItem
               icon="md-arrow-back"
               onPress={() => { this.props.navigation.goBack(null) }}
+              style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
             />
           }
         />

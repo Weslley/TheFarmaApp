@@ -33,4 +33,14 @@ export default EStyleSheet.create({
         color: "#000000",
         color: "rgba(0,0,0,0.48)"
     },
+    avatarContainer: {
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 12,
+    },
+    avatar: {
+        width: 24,
+        height: 24,
+        borderRadius: 100,
+    }
 });

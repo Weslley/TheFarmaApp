@@ -1,7 +1,5 @@
-import React, { Component } from "react";
-import { Image } from "react-native";
-
 import { StackNavigator, TabNavigator } from "react-navigation";
+import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
 
 import { WelcomeScreen } from "../screens/WelcomeScreen";
 import { SearchMedicineScreen } from "../screens/SearchMedicineScreen";
@@ -23,14 +21,16 @@ import { ConfirmationScreen } from "../screens/ConfirmationScreen";
 import DialogSuccessScreen from "../screens/DialogSuccessScreen";
 import DialogErrorScreen from "../screens/DialogErrorScreen";
 
+import { Icon } from "../components/Icon";
+
 export const HomeNavigator = StackNavigator({
   Welcome: {
     screen: WelcomeScreen,
     navigationOptions: {
       tabBarIcon: ({ tintColor }) => (
-        <Image
-          source={require("../assets/images/ic_home.png")}
-          style={[{width: 24, height: 24}, { tintColor }]} />
+        <Icon
+          name="home-o"
+          style={[{ width: 24, height: 24 }, { tintColor }]} />
       ),
       tabBarLabel: "home"
     }
@@ -75,8 +75,12 @@ export const TabsNavigator = TabNavigator(
 
 export const MainNavigator = StackNavigator(
   {
-    //NewAddress: { screen: AddAddressScreen},
-    
+    Welcome: {
+      screen: WelcomeScreen
+    },
+    Profile: {
+      screen: ProfileScreen
+    },
     TabsNavigator: {
       screen: TabsNavigator,
       navigationOptions: { header: null }
@@ -126,11 +130,16 @@ export const MainNavigator = StackNavigator(
     DialogError: {
       screen: DialogErrorScreen
     },
-    Register: { 
-      screen: RegisterScreen 
+    Register: {
+      screen: RegisterScreen
     }
   },
   {
-    mode: "modal"
+    mode: "modal",
+    transitionConfig: () => ({
+      screenInterpolator: sceneProps => {
+        return CardStackStyleInterpolator.forHorizontal(sceneProps);
+      }
+    }),
   }
 );

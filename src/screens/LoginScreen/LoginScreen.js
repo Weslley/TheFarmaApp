@@ -43,7 +43,7 @@ class LoginScreen extends Component {
                 }
 
                 if (nextProps.error.response.data.facebook_id) {
-                    if(this.state.facebook_user){
+                    if (this.state.facebook_user) {
                         let params = {}
                         let u = this.state.facebook_user
                         if (u.id) params["facebook_id"] = u.id;
@@ -51,7 +51,7 @@ class LoginScreen extends Component {
                         if (u.first_name) params["nome"] = u.first_name;
                         if (u.last_name) params["nome"] += u.last_name;
                         if (u.birthday) params["data_nascimento"] = u.birthday;
-                        if (u.gender) params["sexo"] = u.birthday==='male'? "M" : "F";
+                        if (u.gender) params["sexo"] = u.birthday === 'male' ? "M" : "F";
                         if (u.picture && u.picture.data) params["foto"] = u.picture.data;
                         params["password"] = u.id;
                         this.props.dispatch(register(params));
@@ -122,10 +122,10 @@ class LoginScreen extends Component {
                     });
                 } else {
                     const infoRequest = new GraphRequest('/me', {
-                        parameters: { 'fields': { 'string': 'email, first_name, last_name, gender, birthday, picture.width(480)' }}
+                        parameters: { 'fields': { 'string': 'email, first_name, last_name, gender, birthday, picture.width(480)' } }
                     }, (err, res) => {
-                        this.setState({facebook_user: res})
-                        let params = {email: "", password: "", facebook_id: res.id}
+                        this.setState({ facebook_user: res })
+                        let params = { email: "", password: "", facebook_id: res.id }
                         this.props.dispatch(login(params));
                     });
                     new GraphRequestManager().addRequest(infoRequest).start();
@@ -156,7 +156,15 @@ class LoginScreen extends Component {
                     <Header
                         style={{ paddingHorizontal: 0, paddingTop: 24, backgroundColor: "transparent" }}
                         separator={false}
-                        menuLeft={<MenuItem icon="md-arrow-back" iconColor="#FFF" onPress={() => { this.props.navigation.goBack(null) }} />} />
+                        menuLeft={
+                            <MenuItem
+                                icon="md-arrow-back"
+                                iconColor="#FFF"
+                                style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+                                onPress={() => { this.props.navigation.goBack(null) }}
+                            />
+                        }
+                    />
 
                     <ScrollView>
                         <Form style={styles.form}>
@@ -191,7 +199,7 @@ class LoginScreen extends Component {
                                     placeholderTextColor="#CCC"
                                     multiline={false}
                                     secureTextEntry={true}
-                                    onChangeText={(password) => this.setState({ password })} 
+                                    onChangeText={(password) => this.setState({ password })}
                                     value={this.state.password}
                                 />
                             </Item>

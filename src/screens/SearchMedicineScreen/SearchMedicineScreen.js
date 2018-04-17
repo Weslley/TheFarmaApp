@@ -9,11 +9,13 @@ import { getLocation, updateLocation, getGeocodeAddress } from "../../actions/lo
 import { selectProduct, getHistory } from '../../actions/products';
 import { clearApresentations } from '../../actions/apresentations';
 
-import { Components } from '../../helpers';
-import { Container } from '../../layout/Container';
-import { SearchHeader } from '../../layout/Header';
+import { Icon } from '../../components/Icon';
 import { MenuItem } from '../../components/MenuItem';
 
+import { Container } from '../../layout/Container';
+import { SearchHeader } from '../../layout/Header';
+
+import { Components } from '../../helpers';
 import styles from "./styles";
 
 class SearchMedicineScreen extends Component {
@@ -28,7 +30,11 @@ class SearchMedicineScreen extends Component {
             header: () => (
                 <SearchHeader
                     menuLeft={
-                        <MenuItem icon="md-arrow-back" onPress={() => { navigation.goBack(null) }} />
+                        <MenuItem
+                            icon="md-arrow-back"
+                            onPress={() => { navigation.goBack(null) }}
+                            style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+                        />
                     }
                 />
             )
@@ -75,8 +81,8 @@ class SearchMedicineScreen extends Component {
                     <List dataArray={this.props.products} renderRow={product => (
                         <ListItem style={styles.itemContainer} onPress={() => { this.onSelect(product); }} >
                             {Components.renderIfElse(this.props.isHistory,
-                                <Image style={styles.itemIcon} source={require("../../assets/images/ic_history.png")} />,
-                                <Image style={styles.itemIcon} source={require("../../assets/images/ic_medicine.png")} />)}
+                                <Icon name="history" style={styles.itemIcon} />,
+                                <Icon name="pills" style={styles.itemIcon} />)}
                             <Text>{product.nome}</Text>
                         </ListItem>)}
                     /> : null}

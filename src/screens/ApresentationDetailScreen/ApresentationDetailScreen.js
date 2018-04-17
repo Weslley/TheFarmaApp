@@ -102,7 +102,10 @@ class ApresentationDetailScreen extends Component {
                 ? { uri: this.state.apresentation.imagem }
                 : require("../../assets/images/ic_default_medicine.png")
             }
-            menuLeft={<MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }} />}
+            menuLeft={
+              <MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }}
+                style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }} />
+            }
             menuRight={
               this.props.cartItems.length > 0 ? <ShoppingBagIcon value={this.props.cartItems.length} onPress={() => { this.showCart() }} /> : null
             }

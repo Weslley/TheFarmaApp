@@ -152,7 +152,13 @@ class RegisterScreen extends Component {
                     <Header
                         style={{ paddingHorizontal: 0, paddingTop: 24, backgroundColor: "transparent" }}
                         separator={false}
-                        menuLeft={<MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }} />} />
+                        menuLeft={
+                            <MenuItem
+                                icon="md-arrow-back"
+                                style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+                                onPress={() => { this.onBack() }} />
+                        }
+                    />
 
                     <ScrollView>
                         <Form>

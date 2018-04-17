@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { View, ScrollView, ActivityIndicator, Image, TouchableOpacity } from "react-native";
-import { Button, Icon, Text, List, ListItem } from "native-base";
+import { View, ScrollView, ActivityIndicator, Image, TouchableOpacity, FlatList } from "react-native";
+import { Container, Button, Text } from "native-base";
 import { TextMask } from "react-native-masked-text";
 
 import { connect } from "react-redux";
@@ -9,7 +9,6 @@ import { createOrder } from "../../actions/orders";
 import { getApresentations, clearError } from "../../actions/apresentations";
 import { addItemToCart, removeItemToCart } from "../../actions/carts";
 
-import { Container } from "../../layout/Container";
 import { Header } from "../../layout/Header";
 import { BottomBar } from "../../layout/Bar";
 import { ActionSheet } from "../../layout/ActionSheet";
@@ -37,8 +36,10 @@ class MedicineApresentationScreen extends Component {
       header: () => (
         <Header
           title={params ? params.title : ""}
+          style={{ backgroundColor: "#FFF" }}
           menuLeft={
-            <MenuItem icon="md-arrow-back" onPress={() => { navigation.goBack(null) }} />
+            <MenuItem icon="md-arrow-back" onPress={() => { navigation.goBack(null) }}
+              style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }} />
           }
           menuRight={
             <ShoppingBagIcon value={params && params.cartSize ? params.cartSize : 0} onPress={params ? params.onPressCart : null} />
@@ -159,29 +160,28 @@ class MedicineApresentationScreen extends Component {
     this.setState({ showDeliveryDialog: false });
   }
 
+  _renderItem = ({ item }) => (
+    <ApresentationDescription
+      apresentation={item}
+      showActions={true}
+      onPress={() => { this.props.navigation.navigate("ApresentationDetail", { apresentation: item }); }}
+      onPressMinus={() => this._removeItemToCart(item)}
+      onPressPlus={() => this._addItemToCart(item)}
+    />
+  );
+
   render() {
     return (
       <Container style={{ backgroundColor: "#FFFFFF" }}>
-        <ScrollView>
-          {Components.renderIf(
-            this.props.isLoading,
-            <ActivityIndicator size="small" style={{ marginTop: 16 }} />
-          )}
 
-          <List
-            style={styles.list}
-            dataArray={this.state.apresentations}
-            renderRow={apresentation => (
-              <ListItem style={styles.listItem}>
-                <ApresentationDescription
-                  apresentation={apresentation}
-                  showActions={true}
-                  onPress={() => { this.props.navigation.navigate("ApresentationDetail", { apresentation }); }}
-                  onPressMinus={() => this._removeItemToCart(apresentation)}
-                  onPressPlus={() => this._addItemToCart(apresentation)}
-                />
-              </ListItem>
-            )}
+        {Components.renderIf(this.props.isLoading, <ActivityIndicator size="small" style={{ marginTop: 16 }} />)}
+        
+        <ScrollView style={{ paddingHorizontal: 24 }}>
+          <FlatList
+            style={{ paddingBottom: 90 }}
+            data={this.state.apresentations}
+            keyExtractor={(item, index) => item.id.toString()}
+            renderItem={this._renderItem}
           />
         </ScrollView>
 

@@ -41,15 +41,14 @@ class ListAddressScreen extends Component {
           title={"Meus Endereços"}
           subtitle={"Seus endereços para futuras entregas"}
           menuLeft={
-            <MenuItem
-              icon="md-arrow-back"
-              onPress={() => { navigation.goBack(null) }}
-            />
+            <MenuItem icon="md-arrow-back" onPress={() => { navigation.goBack(null) }}
+              style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }} />
           }
           menuRight={
             <MenuItem
               icon="add-circle"
               onPress={() => { navigation.navigate("NewAddress") }}
+              style={{ paddingRight: 24, paddingVertical: 12 }}
             />
           }
         />
@@ -82,13 +81,13 @@ class ListAddressScreen extends Component {
     this.props.dispatch(clearError());
     this.props.dispatch(getAddresses({ client: this.props.client }));
     if (this.props.cities.length > 0) {
-      this.props.cities.map((c) => { return this.props.dispatch(getDistricts(c.ibge))});
+      this.props.cities.map((c) => { return this.props.dispatch(getDistricts(c.ibge)) });
     }
   }
 
   componentDidMount() {
     let { state: { params } } = this.props.navigation;
-    if (params && params.showBottomBar){
+    if (params && params.showBottomBar) {
       this.setState({ showBottomBar: true })
     }
   }

@@ -31,18 +31,14 @@ class WelcomeScreen extends Component {
   };
 
   componentWillMount() {
-    //Solicita cliente logado
     this.props.dispatch(getCurrentClient());
-
     Permissions.checkMultiple(['camera', 'photo', 'location']).then(response => {
       this.setState({ cameraPermission: response.camera, photoPermission: response.photo, locationPermission: response.location });
     });
   }
 
-
   componentDidMount() {
     StatusBar.setHidden(true);
-
     if (this.state.locationPermission === 'authorized') {
       this.getLocation();
     } else {
@@ -53,7 +49,6 @@ class WelcomeScreen extends Component {
         }
       });
     }
-    console.log(this.state);
   }
 
   componentWillUnmount() {
@@ -66,15 +61,9 @@ class WelcomeScreen extends Component {
     clientName = clientName.split(" ")[0]
     if (clientName) {
       let now = new Date().getHours();
-      if (now >= 6 && now < 12) {
-        return `Bom dia, ${clientName}`;
-      }
-      if (now >= 12 && now < 19) {
-        return `Boa tarde, ${clientName}`;
-      }
-      if (now >= 19 || now < 5) {
-        return `Boa noite, ${clientName}`;
-      }
+      if (now >= 6 && now < 12) { return `Bom dia, ${clientName}`; }
+      if (now >= 12 && now < 19) { return `Boa tarde, ${clientName}`; }
+      if (now >= 19 || now < 5) { return `Boa noite, ${clientName}`; }
     }
     return "Olá";
   }
@@ -104,34 +93,50 @@ class WelcomeScreen extends Component {
   };
 
   showCart() {
-    this.props.navigation.navigate("Cart", { title: "Cestinha" });
+    this.props.navigation.navigate({ key: 'cart1', routeName: 'Cart', params: { title: "Cestinha" } });
+  }
+
+  showMenuScreen() {
+    this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: {} });
   }
 
   render() {
+    console.log(this.props);
     return (
       <View style={{ flex: 1 }}>
-        <View style={{ flex: 1, paddingHorizontal: 24 }}>
-          <Image
-            resizeMode={"cover"}
-            style={styles.background}
-            source={require("../../assets/images/background-home.png")} />
+        <Image
+          resizeMode={"cover"}
+          style={styles.background}
+          source={require("../../assets/images/background-home.png")} />
 
-          <Header
-            style={{ paddingHorizontal: 0, paddingTop: 24, backgroundColor: "transparent" }}
-            title={this.getTitle()}
-            menuRight={
-              this.props.cartItems.length > 0 ?
-                <ShoppingBagIcon value={this.props.cartItems.length} onPress={() => { this.showCart() }} /> :
-                null
-            }
-          />
+        <Header
+          style={{ paddingHorizontal: 24, backgroundColor: "transparent" }}
+          title={this.getTitle()}
+          menuLeft={
+            <View style={{ paddingLeft: 24, }}>
+              <Image source={require('../../assets/images/logo.png')} style={{ width: 50, height: 50 }} />
+            </View>
+          }
+          menuRight={
+            <View style={{ flexDirection: 'row' }}>
+              <TouchableOpacity onPress={() => { this.showMenuScreen() }} style={styles.avatarContainer}>
+                <Image
+                  style={styles.avatar}
+                  resizeMode="contain"
+                  source={(this.props.client && this.props.client.foto) ? { uri: this.props.client.foto } : require("../../assets/images/avatar.png")}
+                />
+              </TouchableOpacity>
+              <ShoppingBagIcon value={this.props.cartItems.length} onPress={() => { this.showCart() }} />
+            </View>
+          }
+        />
 
+        <View style={{ paddingHorizontal: 24 }}>
           <TouchableOpacity style={styles.searchBar} onPress={this.onSearch}>
             <Image source={require("../../assets/images/ic_search.png")} style={styles.icon} />
             <Text style={styles.text}>Qual medicamento você deseja?</Text>
-            <Image source={require("../../assets/images/ic_barcode.png")} style={styles.icon} />
+            <Icon name="barcode" color={"#000"} style={styles.icon} />
           </TouchableOpacity>
-
         </View>
       </View>
     );

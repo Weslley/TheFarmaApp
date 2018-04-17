@@ -218,14 +218,16 @@ class AddAddressScreen extends Component {
           title={"Novo Endereço"}
           subtitle={"Prencha as informações do endereço"}
           menuLeft={
-            <MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }} />
+            <MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }}
+              style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }} />
           }
           menuRight={
-            <MenuItem icon="check" onPress={() => { this.submit() }} />
+            <MenuItem icon="check" onPress={() => { this.submit() }}
+              style={{ paddingRight: 24, paddingVertical: 12 }} />
           }
         />
 
-        <ScrollView style={{ paddingHorizontal: 24, paddingTop: 18}}>
+        <ScrollView style={{ paddingHorizontal: 24, paddingTop: 18 }}>
 
           <View floatingLabel style={styles.formitem}>
             <Text style={styles.label}>Nome</Text>

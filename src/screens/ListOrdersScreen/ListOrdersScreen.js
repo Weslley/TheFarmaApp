@@ -29,7 +29,11 @@ class ListOrdersScreen extends Component {
             header: () => (
                 <Header
                     title={"Minhas compras"}
-                    menuLeft={<MenuItem icon="md-arrow-back" onPress={() => { navigation.goBack(null) }} />}/>
+                    menuLeft={
+                        <MenuItem icon="md-arrow-back" onPress={() => { navigation.goBack(null) }}
+                            style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }} />
+                    }
+                />
             )
         };
     };
@@ -69,7 +73,7 @@ class ListOrdersScreen extends Component {
 
     _renderItem = ({ item }) => (
         <TouchableOpacity onPress={() => { this._showOrder(item) }}>
-            <View style={{paddingVertical: 24, borderBottomColor: 'rgba(0,0,0,0.08)', borderBottomWidth: 1}}>
+            <View style={{ paddingVertical: 24, borderBottomColor: 'rgba(0,0,0,0.08)', borderBottomWidth: 1 }}>
                 <OrderAdapter order={item} />
             </View>
         </TouchableOpacity>
@@ -77,9 +81,9 @@ class ListOrdersScreen extends Component {
 
     render() {
         return (
-            <View style={{ backgroundColor: "#FFFFFF"}}>
+            <View style={{ backgroundColor: "#FFFFFF" }}>
                 <FlatList
-                    style={{paddingHorizontal: 24 }}
+                    style={{ paddingHorizontal: 24 }}
                     data={this.props.orders}
                     keyExtractor={this._keyExtractor}
                     renderItem={this._renderItem}

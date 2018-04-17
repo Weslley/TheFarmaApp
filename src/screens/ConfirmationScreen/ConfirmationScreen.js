@@ -74,7 +74,11 @@ class ConfirmationScreen extends Component {
         <Header
           title={"Confirmação"}
           subtitle={"Detalhes do seu pedido"}
-          menuLeft={<MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }} />} />
+          menuLeft={
+            <MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }}
+              style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }} />
+          }
+        />
 
         <ScrollView>
           <View style={styles.container}>

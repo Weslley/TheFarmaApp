@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Alert, View, ScrollView, ActivityIndicator, Image, TouchableOpacity } from "react-native";
-import { Container, Button, Icon, Text, List, ListItem, Thumbnail } from "native-base";
+import { Alert, View, ScrollView, ActivityIndicator, Image, TouchableOpacity, FlatList } from "react-native";
+import { Container, Button, Text, Thumbnail } from "native-base";
 import { TextMask } from "react-native-masked-text";
 
 import { connect } from "react-redux";
@@ -86,6 +86,10 @@ class CartScreen extends Component {
     this.props.dispatch(removeItemToCart(apresentation));
   }
 
+  _showSearchMedicine() {
+    this.props.navigation.navigate("SearchMedicine");
+  }
+
   _showDeliveryDialog() {
     this.setState({ showDeliveryDialog: true });
   }
@@ -139,40 +143,61 @@ class CartScreen extends Component {
     this.setState({ showDeliveryDialog: false });
   }
 
+  _renderItem = ({ item }) => (
+    <ProductDescription
+      apresentation={item}
+      showActions={true}
+      onPressMinus={() => this._removeItemToCart(item)}
+      onPressPlus={() => this._addItemToCart(item)}
+    />
+  );
+
   render() {
     return (
       <Container style={{ backgroundColor: "#FFFFFF" }}>
 
         <Header
           title={"Cestinha"}
-          menuLeft={<MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }} />}
-          menuRight={<MenuItem icon="trash" onPress={() => { this.onClearCart() }} />} />
+          menuLeft={
+            <MenuItem
+              icon="md-arrow-back"
+              onPress={() => { this.onBack() }}
+              style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+            />
+          }
+          menuRight={
+            <MenuItem
+              icon="trash"
+              onPress={() => { this.onClearCart() }}
+              style={{ paddingRight: 24, paddingVertical: 12 }}
+            />
+          }
+        />
 
-        <ScrollView>
-          <List
-            style={{ marginRight: 24, paddingBottom: 90 }}
-            dataArray={this.state.cartItems}
-            renderRow={apresentation => (
-              <ListItem style={styles.listItem}>
-                <ProductDescription
-                  apresentation={apresentation}
-                  showActions={true}
-                  onPressMinus={() => this._removeItemToCart(apresentation)}
-                  onPressPlus={() => this._addItemToCart(apresentation)}
-                />
-              </ListItem>
-            )}
-          />
-        </ScrollView>
+        {Components.renderIfElse(this.state.cartItems.length > 0,
+          <ScrollView style={{ paddingHorizontal: 24 }}>
+            <FlatList
+              style={{ paddingBottom: 90 }}
+              data={this.state.cartItems}
+              keyExtractor={item => item.id.toString()}
+              renderItem={this._renderItem} />
+          </ScrollView>,
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginBottom: 90 }}>
+            <Text style={{ fontFamily: 'Roboto-Regular', fontSize: 14, color: 'rgba(0,0,0,0.48)', textAlign: 'center' }}>{"Cestinha vazia"}</Text>
+          </View>
+        )}
 
-        {Components.renderIf(
+        {Components.renderIfElse(
           this.props.cartItems.length > 0,
           <BottomBar
             buttonTitle="Ver propostas"
             price={CartUtils.getValueTotal(this.props.cartItems)}
-            onButtonPress={() => {
-              this._showDeliveryDialog();
-            }}
+            onButtonPress={() => { this._showDeliveryDialog() }}
+          />,
+          <BottomBar
+            buttonTitle="Adicionar"
+            price={0}
+            onButtonPress={() => { this._showSearchMedicine() }}
           />
         )}
 

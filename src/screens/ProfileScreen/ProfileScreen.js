@@ -20,13 +20,7 @@ class ProfileScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     let { state: { params } } = navigation;
-    return {
-      header: null,
-      tabBarIcon: ({ tintColor }) => (
-        <Image source={require("../../assets/images/ic_user.png")} style={[styles.tabIcon, { tintColor }]} />
-      ),
-      tabBarLabel: "Perfil"
-    };
+    return { header: null }
   };
 
   componentDidMount() {
@@ -37,12 +31,12 @@ class ProfileScreen extends Component {
 
   render() {
     return (
-    <Container style={{ backgroundColor: "#FFFFFF" }}>
-      {Components.renderIfElse(this.props.client,
-        <MenuScreen navigation={this.props.navigation} />,
-        <LoginScreen navigation={this.props.navigation} />
-      )}
-    </Container>);
+      <Container style={{ backgroundColor: "#FFFFFF" }}>
+        {Components.renderIfElse(this.props.client,
+          <MenuScreen navigation={this.props.navigation} />,
+          <LoginScreen navigation={this.props.navigation} />
+        )}
+      </Container>);
   }
 }
 

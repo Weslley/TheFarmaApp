@@ -39,12 +39,14 @@ class ListCreditCardsScreen extends Component {
             <MenuItem
               icon="md-arrow-back"
               onPress={() => { navigation.goBack(null) }}
+              style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
             />
           }
           menuRight={
             <MenuItem
               icon="add-circle"
               onPress={() => { navigation.navigate("NewCreditCard") }}
+              style={{ paddingRight: 24, paddingVertical: 12 }}
             />
           }
         />

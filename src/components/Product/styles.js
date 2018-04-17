@@ -46,7 +46,7 @@ export default EStyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    height: 24
+    minHeight: 24,
   },
   Button: {
     alignItems: "center",

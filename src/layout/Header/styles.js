@@ -5,19 +5,23 @@ export default EStyleSheet.create({
     container: {
         justifyContent: "center",
         backgroundColor: "$background",
-        paddingBottom: 8
+        paddingHorizontal: 24,
+        paddingTop: 24,
+        paddingBottom: 8,
+        overflow: 'visible',
     },
     actions: {
+        marginHorizontal: -24,
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
         minHeight: 48,
     },
     menuLeft: {
-        
+
     },
     menuRight: {
-        
+
     },
     image: {
         marginTop: -40,
@@ -25,8 +29,8 @@ export default EStyleSheet.create({
         height: 144,
         width: 144,
     },
-    profileContainer:{
-        flexDirection: "row",  
+    profileContainer: {
+        flexDirection: "row",
         justifyContent: "space-between"
     },
     title: {
