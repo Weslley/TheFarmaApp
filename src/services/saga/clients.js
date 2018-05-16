@@ -44,7 +44,9 @@ export const register = function* (action) {
 export const updateClient = function* (action) {
     try {
         const response = yield call(axios.patch, `${SERVER_API}/auth/users/`, action.params);
-        yield put(responseSuccess(UPDATE_CLIENT_SUCCESS, response.data));
+        let client = response.data;
+        yield call(save, client);
+        yield put(responseSuccess(UPDATE_CLIENT_SUCCESS, client));
     } catch (e) {
         yield put(responseError(UPDATE_CLIENT_ERROR, e));
     }
@@ -54,7 +56,9 @@ export const updateClientV2 = function* (action) {
     try {
         let config = { headers: { 'Authorization': 'Token ' + action.params.client.token } }
         const response = yield call(axios.patch, `${SERVER_API}/clientes/${action.params.client.id}`, action.params.fields, config);
-        yield put(responseSuccess(UPDATE_CLIENT_SUCCESS, response.data));
+        let client = response.data;
+        yield call(save, client);
+        yield put(responseSuccess(UPDATE_CLIENT_SUCCESS, client));
     } catch (e) {
         yield put(responseError(UPDATE_CLIENT_ERROR, e));
     }

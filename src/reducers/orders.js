@@ -1,4 +1,4 @@
-import { uniqBy, union } from 'lodash';
+import { uniqBy, union, sortBy, orderBy } from 'lodash';
 
 import {
     CLEAR_ERROR, CLEAR_ORDER, CLEAR_ORDERS,
@@ -22,7 +22,7 @@ const INITIAL_STATE = {
     num_pages: 0,
     next: null,
     previous: null,
-    orders: [],
+    orders: []
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -31,32 +31,42 @@ export default (state = INITIAL_STATE, action) => {
     let index = null;
     switch (action.type) {
         case LIST_ORDER:
+            return { ...state, isLoading: true, orders: [], error: null };
+
         case LIST_ORDER_NEXT_PAGE:
         case CREATE_ORDER:
         case CANCEL_ORDER:
-        case CHECKOUT:    
-            return { ...state, isLoading: true };
+        case CHECKOUT:
+            return { ...state, isLoading: true, error: null };
+
+
         case LIST_ORDER_SUCCESS:
         case LIST_ORDER_NEXT_PAGE_SUCCESS:
             list = uniqBy(union(action.data.results, state.orders), "id");
+            list = orderBy(list, ['id'], ['desc'])
             return {
                 ...state,
+                error: null,
                 isLoading: false,
                 count: action.data.count,
                 num_pages: action.data.num_pages,
                 next: action.data.next,
                 previous: action.data.previous,
-                orders: list
+                orders: list,
             };
+
         case UPDATE_ORDER:
             return { ...state, order: action.params.order };
+
         case GET_ORDER_SUCCESS:
         case CREATE_ORDER_SUCCESS:
         case UPDATE_ORDER_SUCCESS:
             return { ...state, order: action.data };
+
         case CHECKOUT_SUCCESS:
         case CANCEL_ORDER_SUCCESS:
             return { ...state, order: INITIAL_ORDER, orders: [] };
+
         case CHECKOUT_ERROR:
         case GET_ORDER_ERROR:
         case LIST_ORDER_ERROR:
@@ -69,9 +79,9 @@ export default (state = INITIAL_STATE, action) => {
         case CLEAR_ERROR:
             return { ...state, error: null };
         case CLEAR_ORDER:
-            return { ...state, error: null, order: INITIAL_ORDER};
+            return { ...state, error: null, order: INITIAL_ORDER };
         case CLEAR_ORDERS:
-            return { ...state, error: null, orders: null };
+            return { ...state, error: null, orders: [] };
         default:
             return state;
     }

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { NavigationActions } from 'react-navigation'
 import { Alert, View, ScrollView, TouchableOpacity, FlatList, BackHandler } from "react-native";
 import { Container, Text } from "native-base";
 import LinearGradient from "react-native-linear-gradient";
@@ -16,7 +17,9 @@ import styles from "./styles";
 class ListProposalsScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {}
+    this.state = {
+      back_screen: 'Cart'
+    }
     loadPropostas = 0;
   }
 
@@ -24,16 +27,17 @@ class ListProposalsScreen extends Component {
     return { header: null };
   };
 
-  componentDidMount() {
-    this.loadPropostas = setInterval(() => this.getProposals(), 10000);
-    BackHandler.addEventListener('hardwareBackPress', () => {
-      this.onBack()
-      return true;
-    });
+  componentWillMount = () => {
+    BackHandler.addEventListener('hardwareBackPress', this.onBack);
   }
 
-  componentWillUnmount() {
+  componentDidMount() {
+    this.loadPropostas = setInterval(() => this.getProposals(), 10000);
+  }
+
+  componentWillUnmount = () => {
     clearInterval(this.loadPropostas);
+    BackHandler.removeEventListener('hardwareBackPress', this.onBack);
   }
 
   /** Private functions */
@@ -54,7 +58,11 @@ class ListProposalsScreen extends Component {
     clearInterval(this.loadPropostas);
     let params = { client: this.props.client, order: this.props.order }
     this.props.dispatch(cancelOrder(params));
-    this.props.navigation.goBack(null);
+    const resetAction = NavigationActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: this.state.back_screen, params: {} })],
+    });
+    this.props.navigation.dispatch(resetAction);
   }
 
   getProposals() {
@@ -66,14 +74,16 @@ class ListProposalsScreen extends Component {
 
   _showProposal(proposal) {
     clearInterval(this.loadPropostas);
+
     if (this.props.order.id) {
       console.log(order);
       let order = this.props.order;
       order.proposta = proposal;
       let params = { client: this.props.client, order }
       this.props.dispatch(updateOrder(params));
-      this.props.navigation.navigate("Proposal", { proposal: proposal });
+      this.props.navigation.navigate({ key: 'proposal1', routeName: 'Proposal', params: { proposal: proposal } });
     }
+    
   }
 
   _renderItem = ({ item }) => (

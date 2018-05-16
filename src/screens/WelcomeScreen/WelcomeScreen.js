@@ -1,6 +1,9 @@
 import React, { Component } from "react";
+import { NavigationActions } from 'react-navigation';
 import { StatusBar, KeyboardAvoidingView, View, TouchableOpacity, Image } from "react-native";
 import { Text, Button } from "native-base";
+
+import Snackbar from 'react-native-snackbar';
 import Permissions from 'react-native-permissions';
 
 import { connect } from "react-redux";
@@ -29,6 +32,40 @@ class WelcomeScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return { header: null };
   };
+
+  componentWillReceiveProps = nextProps => {
+    try {
+
+      if (this.props.client) {
+        if (!this.props.client.nome && nextProps.client && nextProps.client.nome === '') {
+          const resetAction = NavigationActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ key: 'name1', routeName: 'Name', params: {} })],
+          });
+          this.props.navigation.dispatch(resetAction);
+        }
+      }
+
+      if (nextProps && nextProps.error) {
+        if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
+          if (nextProps.error.response.data.non_field_errors) {
+            Snackbar.show({ title: nextProps.error.response.data.non_field_errors[0], duration: Snackbar.LENGTH_SHORT });
+          }
+
+          if (nextProps.error.response.data.detail) {
+            Snackbar.show({ title: nextProps.error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
+          }
+        }
+
+        if (nextProps.error.message && nextProps.error.message === 'Network Error') {
+          this.setState({ showError: true });
+        }
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   componentWillMount() {
     this.props.dispatch(getCurrentClient());
@@ -81,7 +118,7 @@ class WelcomeScreen extends Component {
   onSearch = () => {
     if (this.state.locationPermission === 'authorized') {
       this.getLocation();
-      this.props.navigation.navigate("SearchMedicine");
+      this.props.navigation.navigate({ key: 'search_medicine1', routeName: 'SearchMedicine', params: {} });
     } else {
       Permissions.request('location').then(response => {
         this.setState({ locationPermission: response });
@@ -101,7 +138,6 @@ class WelcomeScreen extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <KeyboardAvoidingView style={{ flex: 1 }}>
         <Image
@@ -151,10 +187,11 @@ class WelcomeScreen extends Component {
 function mapStateToProps(state) {
   return {
     client: state.clients.client,
+    cartItems: state.carts.cartItems,
+
     latitude: state.locations.latitude,
     longitude: state.locations.longitude,
     uf: state.locations.uf,
-    cartItems: state.carts.cartItems,
   };
 }
 

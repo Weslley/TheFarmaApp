@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { View, KeyboardAvoidingView, ScrollView, Text, Imagem, TextInput, Image, TouchableOpacity } from "react-native";
+import { NavigationActions } from 'react-navigation';
+import { View, KeyboardAvoidingView, ScrollView, Text, Imagem, TextInput, Image, TouchableOpacity, Platform } from "react-native";
 import { PasswordInputText } from "../../components/PasswordInputText";
 import Snackbar from 'react-native-snackbar';
 import LinearGradient from "react-native-linear-gradient";
@@ -28,10 +29,10 @@ class PasswordScreen extends Component {
             data_nascimeento: "",
             sexo: "",
             facebook_id: "",
-            nomeError: null,
-            emailError: null,
-            celularError: null,
-            passwordError: null
+            nome_error: null,
+            email_error: null,
+            celular_error: null,
+            password_error: null
         };
     }
 
@@ -41,32 +42,38 @@ class PasswordScreen extends Component {
 
     componentWillReceiveProps = nextProps => {
         try {
-            if (nextProps && nextProps.error && nextProps.error.response && (nextProps.error.response.status == 400 || nextProps.error.response.status == 401)) {
-                if (nextProps.error.response.data.senha) {
-                    this.setState({ passwordError: nextProps.error.response.data.senha[0] })
-                }
+            if (nextProps && nextProps.error) {
+                if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
+                    if (nextProps.error.response.data.senha) {
+                        this.setState({ password_error: nextProps.error.response.data.senha[0] })
+                    }
 
-                if (nextProps.error.response.data.non_field_errors) {
-                    Snackbar.show({
-                        title: nextProps.error.response.data.non_field_errors[0],
-                        duration: Snackbar.LENGTH_SHORT,
-                    });
-                }
+                    if (nextProps.error.response.data.non_field_errors) {
+                        Snackbar.show({ title: nextProps.error.response.data.non_field_errors[0], duration: Snackbar.LENGTH_SHORT });
+                    }
 
-                if (nextProps.error.response.data.detail) {
-                    Snackbar.show({
-                        title: nextProps.error.response.data.detail,
-                        duration: Snackbar.LENGTH_SHORT,
-                    });
+                    if (nextProps.error.response.data.detail) {
+                        Snackbar.show({ title: nextProps.error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
+                    }
                 }
             }
+
             if (nextProps && nextProps.client) {
-                if(nextProps.client.nome){
-                    this.props.navigation.navigate({ key: 'welcome1', routeName: 'Welcome', params: {} });
-                }else{
-                    this.props.navigation.navigate({ key: 'name1', routeName: 'Name', params: {} });
+                if (nextProps.client.nome) {
+                    const resetAction = NavigationActions.reset({
+                        index: 0,
+                        actions: [NavigationActions.navigate({ routeName: 'Welcome', params: {} })],
+                    });
+                    this.props.navigation.dispatch(resetAction);
+                } else {
+                    const resetAction = NavigationActions.reset({
+                        index: 0,
+                        actions: [NavigationActions.navigate({ routeName: 'Name', params: {} })],
+                    });
+                    this.props.navigation.dispatch(resetAction);
                 }
             }
+
         } catch (e) {
             console.log(e);
         }
@@ -83,7 +90,7 @@ class PasswordScreen extends Component {
             if (params.sexo) this.setState({ sexo: params.sexo })
         }
 
-        this.setState({ passwordError: null })
+        this.setState({ password_error: null })
         this.props.dispatch(clearError());
     }
 
@@ -94,9 +101,9 @@ class PasswordScreen extends Component {
     }
 
     validForm() {
-        this.setState({ passwordError: null })
+        this.setState({ password_error: null })
         if (this.state.password == null || this.state.password == "") {
-            this.setState({ passwordError: "campo obrigatório" })
+            this.setState({ password_error: "Este campo é obrigatório" })
             return false;
         }
         return true;
@@ -145,6 +152,14 @@ class PasswordScreen extends Component {
                             onChangeText={(password) => this.setState({ password })}
                             value={this.state.password}
                         />
+
+                        {Components.renderIf(Platform.OS === 'ios',
+                            <View style={{ borderBottomColor: '#000', borderWidth: 0.5, marginTop: 4, marginBottom: 8 }} />
+                        )}
+
+                        {Components.renderIf(this.state.password_error,
+                            <Text style={[styles.inputError, { color: "#F0166D" }]}>{this.state.password_error}</Text>
+                        )}
                     </View>
 
                     <View style={{ paddingVertical: 16, flexDirection: 'row', }}>

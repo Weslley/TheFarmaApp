@@ -56,7 +56,7 @@ class MedicineApresentationScreen extends Component {
         this.props.navigation.goBack(null);
       },
       onPressCart: () => {
-        this.props.navigation.navigate("Cart", { title: "Cestinha" });
+        this.props.navigation.navigate({ key: 'cart1', routeName: 'Cart', params: {} });
       },
       cartSize: 0
     });
@@ -148,23 +148,27 @@ class MedicineApresentationScreen extends Component {
       order.longitude = this.props.longitude;
       let params = { client: this.props.client, order: order }
       this.props.dispatch(createOrder(params));
-      this.props.navigation.navigate("ListProposals", { title: "Propostas" });
+      this.props.navigation.navigate({ key: 'list_proposals1', routeName: 'ListProposals', params: {} });
     } else {
-      this.props.navigation.navigate("Profile");
+      this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: {} });
     }
     this.setState({ showDeliveryDialog: false });
   }
 
   _showListAddress() {
-    this.props.navigation.navigate("ListAddress", { showBottomBar: true });
+    this.props.navigation.navigate({ key: 'list_address1', routeName: 'ListAddress', params: { showBottomBar: true } });
     this.setState({ showDeliveryDialog: false });
+  }
+
+  _showProductDetail(item) {
+    this.props.navigation.navigate({ key: 'apresentation_detail1', routeName: 'ApresentationDetail', params: { apresentation: item } });
   }
 
   _renderItem = ({ item }) => (
     <ApresentationDescription
       apresentation={item}
       showActions={true}
-      onPress={() => { this.props.navigation.navigate("ApresentationDetail", { apresentation: item }); }}
+      onPress={() => { this._showProductDetail(item) }}
       onPressMinus={() => this._removeItemToCart(item)}
       onPressPlus={() => this._addItemToCart(item)}
     />
@@ -175,7 +179,7 @@ class MedicineApresentationScreen extends Component {
       <Container style={{ backgroundColor: "#FFFFFF" }}>
 
         {Components.renderIf(this.props.isLoading, <ActivityIndicator size="small" style={{ marginTop: 16 }} />)}
-        
+
         <ScrollView style={{ paddingHorizontal: 24 }}>
           <FlatList
             style={{ paddingBottom: 90 }}

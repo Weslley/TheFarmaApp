@@ -43,17 +43,13 @@ class SearchMedicineScreen extends Component {
 
     componentWillReceiveProps = nextProps => {
         try {
-            if (nextProps && nextProps.error && nextProps.error.response && nextProps.error.response.status == 400) {
-                Snackbar.show({
-                    title: nextProps.error.message,
-                    duration: Snackbar.LENGTH_SHORT,
-                });
+            if (nextProps && nextProps.error) {
+                if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
+                    Snackbar.show({ title: nextProps.error.message, duration: Snackbar.LENGTH_SHORT });
+                }
             }
         } catch (e) {
-            Snackbar.show({
-                title: e.message,
-                duration: Snackbar.LENGTH_SHORT,
-            });
+            Snackbar.show({ title: e.message, duration: Snackbar.LENGTH_SHORT });
         }
     }
 

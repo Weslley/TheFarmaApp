@@ -6,7 +6,7 @@ import store from './config/store';
 import { TabsNavigator, MainNavigator } from './config/routes';
 
 EStyleSheet.build({
-    $primaryColor: '',
+    $primaryColor: '#00C7BD',
     $accentColor: '',
     $warningColor: '',
 

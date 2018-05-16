@@ -29,31 +29,8 @@ class ListCreditCardsScreen extends Component {
   }
 
   static navigationOptions = ({ navigation }) => {
-    let { state: { params } } = navigation;
-    return {
-      header: () => (
-        <Header
-          title={"Meus Cartões"}
-          subtitle={"Seus cartões de creditos são salvos aqui"}
-          menuLeft={
-            <MenuItem
-              icon="md-arrow-back"
-              onPress={() => { navigation.goBack(null) }}
-              style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
-            />
-          }
-          menuRight={
-            <MenuItem
-              icon="add-circle"
-              onPress={() => { navigation.navigate("NewCreditCard") }}
-              style={{ paddingRight: 24, paddingVertical: 12 }}
-            />
-          }
-        />
-      )
-    };
+    return { header: null };
   };
-
 
   componentWillReceiveProps = nextProps => {
     try {
@@ -86,24 +63,26 @@ class ListCreditCardsScreen extends Component {
   }
 
   /** Private functions */
+  onBack() {
+    this.props.navigation.goBack(null);
+  }
+
+  _showConfirmation() {
+    this.props.navigation.navigate({ key: 'confirmation1', routeName: 'Confirmation', params: {} });
+  }
+
+  _showCreditCard(creditCard) {
+    this.props.navigation.navigate({ key: 'new_credit_card1', routeName: 'NewCreditCard', params: { creditCard } });
+  }
+
+  _selectCreditCard(creditCard) {
+    this.props.dispatch(selectCreditCard(creditCard))
+  }
+
   _removeCreditCard(creditCard) {
     let params = { client: this.props.client, creditCard }
     this.props.dispatch(removeCreditCard(params));
     this.props.dispatch(getCreditCards({ client: this.props.client }));
-  }
-
-  _showUpdateCreditCard(creditCard) {
-    this.props.navigation.navigate("NewCreditCard", { creditCard });
-  }
-
-  _renderItem = ({ item }) => (
-    <TouchableHighlight onPress={() => { this._selectCreditCard(item) }} style={styles.rowFront} underlayColor={'#F6F6F6'}>
-      <CreditCardAdapter creditCard={item} checked={(this.props.creditCard && item.id === this.props.creditCard.id)} />
-    </TouchableHighlight>
-  );
-
-  _selectCreditCard(creditCard) {
-    this.props.dispatch(selectCreditCard(creditCard))
   }
 
   _renderActions = (data) => (
@@ -116,14 +95,36 @@ class ListCreditCardsScreen extends Component {
     </View>
   );
 
-  _showConfirmation() {
-    this.props.navigation.navigate("Confirmation");
-  }
+  _renderItem = ({ item }) => (
+    <TouchableHighlight onPress={() => { this._selectCreditCard(item) }} style={styles.rowFront} underlayColor={'#F6F6F6'}>
+      <CreditCardAdapter creditCard={item} checked={(this.props.creditCard && item.id === this.props.creditCard.id)} />
+    </TouchableHighlight>
+  );
 
   render() {
     return (
       <View style={{ flex: 1 }}>
         <View style={{ backgroundColor: "#FFFFFF" }}>
+
+          <Header
+            title={"Meus Cartões"}
+            subtitle={"Seus cartões de creditos são salvos aqui"}
+            menuLeft={
+              <MenuItem
+                icon="md-arrow-back"
+                onPress={() => { this.onBack() }}
+                style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+              />
+            }
+            menuRight={
+              <MenuItem
+                icon="add-circle"
+                onPress={() => { this._showCreditCard({}) }}
+                style={{ paddingRight: 24, paddingVertical: 12 }}
+              />
+            }
+          />
+
           <ScrollView>
             <SwipeListView
               useFlatList

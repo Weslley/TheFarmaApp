@@ -1,20 +1,22 @@
 import React, { Component } from "react";
-import { View, ScrollView, Image, TouchableOpacity, FlatList } from "react-native";
+import { View, ScrollView, Image, TouchableOpacity, FlatList, ActivityIndicator } from "react-native";
 import { Text } from "native-base";
 import Snackbar from 'react-native-snackbar';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
 import { connect } from "react-redux";
 import { logout } from "../../actions/clients";
-import { getOrders, clearOrders, clearError } from "../../actions/orders"
+import { getOrders, getOrdersNextPage, clearOrders, clearError } from "../../actions/orders"
 
 import { Header } from "../../layout/Header";
 import { Container } from '../../layout/Container';
 
 import { Icon } from "../../components/Icon";
+import { Loading } from "../../components/Loading";
 import { MenuItem } from "../../components/MenuItem";
 import { OrderAdapter } from "../../components/OrderAdapter";
 
+import { Components } from "../../helpers";
 import styles from "./styles";
 
 class ListOrdersScreen extends Component {
@@ -24,20 +26,8 @@ class ListOrdersScreen extends Component {
     }
 
     static navigationOptions = ({ navigation }) => {
-        let { state: { params } } = navigation;
-        return {
-            header: () => (
-                <Header
-                    title={"Minhas compras"}
-                    menuLeft={
-                        <MenuItem icon="md-arrow-back" onPress={() => { navigation.goBack(null) }}
-                            style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }} />
-                    }
-                />
-            )
-        };
+        return { header: null };
     };
-
 
     componentWillReceiveProps = nextProps => {
         try {
@@ -65,10 +55,20 @@ class ListOrdersScreen extends Component {
     }
 
     /** Private functions */
-    _keyExtractor = (item, index) => item.id.toString();
+    onBack() {
+        this.props.navigation.goBack(null);
+    }
 
     _showOrder(order) {
-        this.props.navigation.navigate("Order", { order });
+        this.props.navigation.navigate({ key: 'order1', routeName: 'Order', params: { order } });
+    }
+
+    onEndReached = ({ distanceFromEnd }) => {
+        console.log("NEXTPAGE");
+        if (this.props.nextPage) {
+            let params = { client: this.props.client, url: this.props.nextPage }
+            this.props.dispatch(getOrdersNextPage(params));
+        }
     }
 
     _renderItem = ({ item }) => (
@@ -79,15 +79,50 @@ class ListOrdersScreen extends Component {
         </TouchableOpacity>
     );
 
+    renderFooter = () => {
+        if (!this.props.isLoading) return null;
+        return (
+            <View style={{ alignItems: 'center', paddingVertical: 16, }}>
+                <ActivityIndicator color={"#00C7BD"} size={"large"} />
+            </View>
+        );
+    };
+
     render() {
         return (
             <View style={{ backgroundColor: "#FFFFFF" }}>
-                <FlatList
-                    style={{ paddingHorizontal: 24 }}
-                    data={this.props.orders}
-                    keyExtractor={this._keyExtractor}
-                    renderItem={this._renderItem}
+
+                <Header
+                    title={"Minhas compras"}
+                    menuLeft={
+                        <MenuItem
+                            icon="md-arrow-back"
+                            onPress={() => { this.onBack() }}
+                            style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+                        />
+                    }
                 />
+
+                {Components.renderIfElse(this.props.orders && this.props.orders.length === 0 && this.props.isLoading === true,
+                    <Loading />,
+                    <ScrollView style={{ paddingHorizontal: 24 }}
+                        onScroll={(e) => {
+                            let paddingToBottom = 0;
+                            paddingToBottom += e.nativeEvent.layoutMeasurement.height;
+                            if (e.nativeEvent.contentOffset.y.toFixed(1) === (e.nativeEvent.contentSize.height - paddingToBottom).toFixed(1)) {
+                                this.onEndReached(0)
+                            }
+                        }}
+                    >
+                        <FlatList
+                            data={this.props.orders}
+                            keyExtractor={(item, index) => item.id.toString()}
+                            renderItem={this._renderItem}
+                            ListFooterComponent={this.renderFooter()}
+                        />
+
+                    </ScrollView>
+                )}
             </View>
         );
     }
@@ -97,6 +132,9 @@ function mapStateToProps(state) {
     return {
         client: state.clients.client,
         orders: state.orders.orders,
+        isLoading: state.orders.isLoading,
+        nextPage: state.orders.next,
+
         error: state.orders.error
     };
 }

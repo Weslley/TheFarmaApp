@@ -87,7 +87,7 @@ class CartScreen extends Component {
   }
 
   _showSearchMedicine() {
-    this.props.navigation.navigate("SearchMedicine");
+    this.props.navigation.navigate({ key: 'search_medicine1', routeName: 'SearchMedicine', params: {} });
   }
 
   _showDeliveryDialog() {
@@ -131,16 +131,15 @@ class CartScreen extends Component {
       order.longitude = this.props.longitude;
       let params = { client: this.props.client, order: order }
       this.props.dispatch(createOrder(params));
-      this.props.navigation.navigate("ListProposals", { title: "Propostas" });
+      this.props.navigation.navigate({ key: 'list_proposals1', routeName: 'ListProposals', params: {} });
     } else {
-      this.props.navigation.navigate("Profile");
+      this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: {} });
     }
     this.setState({ showDeliveryDialog: false });
   }
 
   _showListAddress() {
-    this.props.navigation.navigate("ListAddress", { showBottomBar: true });
-    this.setState({ showDeliveryDialog: false });
+    this.props.navigation.navigate({ key: 'list_address1', routeName: 'ListAddress', params: { showBottomBar: true } });
   }
 
   _renderItem = ({ item }) => (

@@ -54,19 +54,19 @@ class MenuScreen extends Component {
 
         <ScrollView style={{ paddingHorizontal: 24 }}>
           <ProfileMenuItem icon="history" text={"Minhas compras"} onPress={() => {
-            this.props.navigation.navigate("ListOrders");
-          }}
-            badge={2} />
+            this.props.navigation.navigate({ key: 'list_orders1', routeName: 'ListOrders', params: {} });
+          }} />
+
           <ProfileMenuItem icon="marker" text={"Meus Endereços"} onPress={() => {
-            this.props.navigation.navigate("ListAddress", {
-              title: "Meus Endereços"
-            });
+            this.props.navigation.navigate({ key: 'list_address1', routeName: 'ListAddress', params: {} });
           }} />
+
           <ProfileMenuItem icon="card-a" text={"Meus Cartões"} onPress={() => {
-            this.props.navigation.navigate("ListCreditCards");
+            this.props.navigation.navigate({ key: 'list_credit1', routeName: 'ListCreditCards', params: {} });
           }} />
+
           <ProfileMenuItem icon="chat" text={"Dúvidas e Reclamações"} onPress={() => {
-            this.props.navigation.navigate("DialogSuccess");
+            this.props.navigation.navigate({ key: 'dialog_success1', routeName: 'DialogSuccess', params: {} });
           }} />
         </ScrollView>
 

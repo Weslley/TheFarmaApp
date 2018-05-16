@@ -64,7 +64,7 @@ class ApresentationDetailScreen extends Component {
   }
 
   showCart() {
-    this.props.navigation.navigate("Cart", { title: "Cestinha" });
+    this.props.navigation.navigate({ key: 'cart1', routeName: 'Cart', params: {} });
   }
 
   _rankingView() {
@@ -137,7 +137,7 @@ class ApresentationDetailScreen extends Component {
                   <ListItem style={styles.listItem}>
                     <ProductDescription apresentation={generic}
                       onPress={() => {
-                        this.props.navigation.navigate("ApresentationDetail", { apresentation: generic });
+                        this.props.navigation.navigate({ key: 'apresentation_detail1', routeName: 'ApresentationDetail', params: { apresentation: generic } });
                       }} />
                   </ListItem>
                 )}

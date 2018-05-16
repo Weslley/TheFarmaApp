@@ -27,8 +27,8 @@ import { LIST_ADDRESS, SAVE_ADDRESS, UPDATE_ADDRESS, REMOVE_ADDRESS } from '../a
 import { getCreditCards, createCreditCard, removeCreditCard } from '../services/saga/creditCards';
 import { LIST_CREDIT_CARD, REMOVE_CREDIT_CARD, SAVE_CREDIT_CARD } from '../actions/creditCards';
 //ORDERS
-import { getOrder, getOrders, createOrder, checkoutOrder, cancelOrder } from '../services/saga/orders';
-import { GET_ORDER, LIST_ORDER, CREATE_ORDER, CHECKOUT, CANCEL_ORDER } from '../actions/orders';
+import { getOrder, getOrders, createOrder, checkoutOrder, cancelOrder, getOrdersNextPage } from '../services/saga/orders';
+import { GET_ORDER, LIST_ORDER, CREATE_ORDER, CHECKOUT, CANCEL_ORDER, LIST_ORDER_NEXT_PAGE } from '../actions/orders';
 
 const rootSaga = function* () {
     yield takeLatest(GET_LOCATION, getLocation);
@@ -62,6 +62,7 @@ const rootSaga = function* () {
 
     yield takeEvery(GET_ORDER, getOrder);
     yield takeEvery(LIST_ORDER, getOrders);
+    yield takeEvery(LIST_ORDER_NEXT_PAGE, getOrdersNextPage);
     yield takeEvery(CREATE_ORDER, createOrder);
     yield takeEvery(CHECKOUT, checkoutOrder);
     yield takeEvery(CANCEL_ORDER, cancelOrder);

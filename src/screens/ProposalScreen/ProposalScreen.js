@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, Image, TouchableOpacity, FlatList, TextInput } from "react-native";
+import { View, ScrollView, Image, TouchableOpacity, FlatList, TextInput, Platform } from "react-native";
 import { Container, Text, Button, Item, Input } from "native-base";
 import { TextInputMask, MaskService } from "react-native-masked-text";
 import LinearGradient from "react-native-linear-gradient";
@@ -41,6 +41,11 @@ class ProposalScreen extends Component {
     let params = this.props.navigation.state.params;
     let proposal = params ? params.proposal : null;
     this.setState({ proposal });
+    BackHandler.addEventListener('hardwareBackPress', this.onBack);
+  }
+
+  componentWillUnmount = () => {
+    BackHandler.removeEventListener('hardwareBackPress', this.onBack);
   }
 
   /** Private functions */
@@ -56,12 +61,11 @@ class ProposalScreen extends Component {
 
   _setTroco() {
     this.setState({ trocoError: null })
-
     let troco = parseFloat(this.state.troco.replace(/\D/g, "")) / 100
     if (troco >= this.state.proposal.valor_total) {
       let order = this.props.order;
-      order.troco =
-        order.forma_pagamento = 1;
+      order.troco = troco
+      order.forma_pagamento = 1;
       if (this.props.order.id) {
         let params = { client: this.props.client, order }
         this.props.dispatch(updateOrder(params));
@@ -82,17 +86,17 @@ class ProposalScreen extends Component {
   }
 
   _showDrugstore() {
-    this.props.navigation.navigate('Drugstore', { drugstore: this.state.proposal.farmacia })
+    this.props.navigation.navigate({ key: 'drugstore1', routeName: 'Drugstore', params: { drugstore: this.state.proposal.farmacia } });
     this.setState({ showPaymentDialog: false, showTrocoDialog: false });
   }
 
   _showConfirmation() {
-    this.props.navigation.navigate("Confirmation");
+    this.props.navigation.navigate({ key: 'confirmation1', routeName: 'Confirmation', params: {} });
     this.setState({ showPaymentDialog: false, showTrocoDialog: false });
   }
 
   _showListCreditCards() {
-    this.props.navigation.navigate("ListCreditCards", { showBottomBar: true });
+    this.props.navigation.navigate({ key: 'list_credit_cards1', routeName: 'ListCreditCards', params: { showBottomBar: true } });
     this.setState({ showPaymentDialog: false, showTrocoDialog: false });
   }
 
@@ -140,7 +144,7 @@ class ProposalScreen extends Component {
                 <TextInputMask
                   type={"money"}
                   keyboardType={"numeric"}
-                  style={{ fontFamily: "Roboto-Regular", fontSize: 16, paddingHorizontal: 0, paddingBottom: 8 }}
+                  style={{ fontFamily: "Roboto-Regular", fontSize: 16, paddingHorizontal: 0 }}
                   multiline={false}
                   onChangeText={this.onChangeTroco}
                   value={this.state.troco}
@@ -149,6 +153,10 @@ class ProposalScreen extends Component {
                 <TouchableOpacity style={{ position: "absolute", right: 0, top: 5, bottom: 0 }} onPress={() => { this.setState({ troco: 0 }) }}>
                   <Icon name="ios-close-empty" size={30} color={"#000"} />
                 </TouchableOpacity>
+
+                {Components.renderIf(Platform.OS === 'ios',
+                  <View style={{ borderBottomColor: '#000', borderWidth: 0.5, marginTop: 4, marginBottom: 8 }} />
+                )}
 
                 {Components.renderIf(this.state.trocoError,
                   <Text style={styles.inputError} uppercase={false}>{this.state.trocoError}</Text>
@@ -271,9 +279,10 @@ class ProposalScreen extends Component {
 
 function mapStateToProps(state) {
   return {
-    uf: state.locations.uf,
-    cartItems: state.carts.cartItems,
     client: state.clients.client,
+    cartItems: state.carts.cartItems,
+    uf: state.locations.uf,
+
     order: state.orders.order,
     error: state.orders.error,
   };

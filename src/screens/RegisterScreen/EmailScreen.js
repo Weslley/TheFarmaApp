@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, KeyboardAvoidingView, ScrollView, Text, Imagem, TextInput, Image, TouchableOpacity } from "react-native";
+import { View, KeyboardAvoidingView, ScrollView, Text, Imagem, TextInput, Image, TouchableOpacity, Platform } from "react-native";
 import Snackbar from 'react-native-snackbar';
 import LinearGradient from "react-native-linear-gradient";
 
@@ -23,8 +23,8 @@ class EmailScreen extends Component {
             login_type: 0,
             email: "",
             password: "",
-            emailError: null,
-            passwordError: null,
+            email_error: null,
+            password_error: null,
             facebook_user: null
         };
     }
@@ -35,26 +35,23 @@ class EmailScreen extends Component {
 
     componentWillReceiveProps = nextProps => {
         try {
-            if (nextProps && nextProps.error && nextProps.error.response && (nextProps.error.response.status == 400 || nextProps.error.response.status == 401)) {
+            if (nextProps && nextProps.error) {
+                if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
 
-                if (nextProps.error.response.data.email) {
-                    this.setState({ nomeError: nextProps.error.response.data.email[0] })
-                }
+                    if (nextProps.error.response.data.email) {
+                        this.setState({ nomeError: nextProps.error.response.data.email[0] })
+                    }
 
-                if (nextProps.error.response.data.non_field_errors) {
-                    Snackbar.show({
-                        title: nextProps.error.response.data.non_field_errors[0],
-                        duration: Snackbar.LENGTH_SHORT,
-                    });
-                }
+                    if (nextProps.error.response.data.non_field_errors) {
+                        Snackbar.show({ title: nextProps.error.response.data.non_field_errors[0], duration: Snackbar.LENGTH_SHORT });
+                    }
 
-                if (nextProps.error.response.data.detail) {
-                    Snackbar.show({
-                        title: nextProps.error.response.data.detail,
-                        duration: Snackbar.LENGTH_SHORT,
-                    });
+                    if (nextProps.error.response.data.detail) {
+                        Snackbar.show({ title: nextProps.error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
+                    }
                 }
             }
+
         } catch (e) {
             console.log(e);
         }
@@ -67,7 +64,7 @@ class EmailScreen extends Component {
             if (params.facebook_user) this.setState({ facebook_user: params.facebook_user })
         }
 
-        this.setState({ emailError: null })
+        this.setState({ email_error: null })
         this.props.dispatch(clearError());
     }
 
@@ -78,16 +75,16 @@ class EmailScreen extends Component {
     }
 
     validForm() {
-        this.setState({ emailError: null })
+        this.setState({ email_error: null })
 
         if (this.state.email == null || this.state.email == "") {
-            this.setState({ emailError: "Este campo é obrigatório" })
+            this.setState({ email_error: "Este campo é obrigatório" })
             return false;
         }
 
         let regexEmail = /^[a-zA-Z0-9][a-zA-Z0-9\._-]+@([a-zA-Z0-9\._-]+\.)[a-zA-Z-0-9]{2,3}$/;
         if (!regexEmail.test(this.state.email)) {
-            this.setState({ emailError: "E-mail inválido." })
+            this.setState({ email_error: "E-mail inválido." })
             return false;
         }
 
@@ -147,8 +144,12 @@ class EmailScreen extends Component {
                             onChangeText={(email) => this.setState({ email })}
                             value={this.state.email}
                         />
-                        {Components.renderIf(this.state.emailError,
-                            <Text style={styles.inputError} uppercase={false}>{this.state.emailError}</Text>
+                        {Components.renderIf(Platform.OS === 'ios',
+                            <View style={{ borderBottomColor: '#000', borderWidth: 0.5, marginTop: 4, marginBottom: 8 }} />
+                        )}
+
+                        {Components.renderIf(this.state.email_error,
+                            <Text style={styles.inputError} uppercase={false}>{this.state.email_error}</Text>
                         )}
                     </View>
 

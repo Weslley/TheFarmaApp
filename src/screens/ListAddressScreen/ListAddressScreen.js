@@ -34,26 +34,7 @@ class ListAddressScreen extends Component {
   }
 
   static navigationOptions = ({ navigation }) => {
-    let { state: { params } } = navigation;
-    return {
-      header: () => (
-        <Header
-          title={"Meus Endereços"}
-          subtitle={"Seus endereços para futuras entregas"}
-          menuLeft={
-            <MenuItem icon="md-arrow-back" onPress={() => { navigation.goBack(null) }}
-              style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }} />
-          }
-          menuRight={
-            <MenuItem
-              icon="add-circle"
-              onPress={() => { navigation.navigate("NewAddress") }}
-              style={{ paddingRight: 24, paddingVertical: 12 }}
-            />
-          }
-        />
-      )
-    };
+    return { header: null };
   };
 
   componentWillReceiveProps = nextProps => {
@@ -97,14 +78,18 @@ class ListAddressScreen extends Component {
   }
 
   /** Private functions */
+  onBack() {
+    this.props.navigation.goBack(null);
+  }
+
   _removeAddress(address) {
     let params = { client: this.props.client, address }
     this.props.dispatch(removeAddress(params));
     this.props.dispatch(getAddresses({ client: this.props.client }));
   }
 
-  _showUpdateAddress(address) {
-    this.props.navigation.navigate("NewAddress", { address });
+  _showAddress(address) {
+    this.props.navigation.navigate({ key: 'new_address1', routeName: 'NewAddress', params: { address } });
   }
 
   _renderItem = ({ item }) => (
@@ -123,7 +108,7 @@ class ListAddressScreen extends Component {
       <View style={styles.rowBack}>
         <TouchableOpacity
           style={[styles.backRightBtn, styles.backRightBtnLeft]}
-          onPress={() => { this._showUpdateAddress(data.item) }} >
+          onPress={() => { this._showAddress(data.item) }} >
           <Icon name="edit" size={24} style={{ color: "#FFF" }} />
         </TouchableOpacity>
 
@@ -149,12 +134,12 @@ class ListAddressScreen extends Component {
         order.delivery = true;
         let params = { client: this.props.client, order: order }
         this.props.dispatch(createOrder(params));
-        this.props.navigation.navigate("ListProposals");
+        this.props.navigation.navigate({ key: 'list_proposals1', routeName: 'ListProposals', params: {} });
       } else {
         Snackbar.show({ title: "Selecione um endereço", duration: Snackbar.LENGTH_SHORT });
       }
     } else {
-      this.props.navigation.navigate("Profile");
+      this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: {} });
     }
     this.setState({ showDeliveryDialog: false });
   }
@@ -162,8 +147,27 @@ class ListAddressScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-
         <View style={{ backgroundColor: "#FFFFFF" }}>
+        
+          <Header
+            title={"Meus Endereços"}
+            subtitle={"Seus endereços para futuras entregas"}
+            menuLeft={
+              <MenuItem
+                icon="md-arrow-back"
+                onPress={() => { this.onBack() }}
+                style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+              />
+            }
+            menuRight={
+              <MenuItem
+                icon="add-circle"
+                onPress={() => { this._showAddress(null) }}
+                style={{ paddingRight: 24, paddingVertical: 12 }}
+              />
+            }
+          />
+
           <ScrollView>
             <SwipeListView
               useFlatList
