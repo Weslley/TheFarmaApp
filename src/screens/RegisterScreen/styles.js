@@ -11,42 +11,36 @@ export default EStyleSheet.create({
         top: 0,
         bottom: 0
     },
-    form: {
-        marginLeft: 0,
-        paddingLeft: 0,
-        marginBottom: 24
-    },
-    formitem: {
-        marginLeft: 0,
-        paddingLeft: 0
-    },
-    label: {
-        fontFamily: "Roboto-Regular",
-        fontSize: 12,
-        color: "rgba(0,0,0,0.80)"
+    title: {
+        fontFamily: 'Roboto-Black',
+        fontSize: 32,
+        color: 'rgba(0,0,0,0.80)'
     },
     input: {
         paddingLeft: 0,
         marginLeft: 0,
-        fontFamily: "Roboto-Bold",
-        fontSize: 16,
-        color: "#000000"
+        fontFamily: "Roboto-Medium",
+        fontSize: 20,
+        color: "rgba(0,0,0,0.80)",
     },
     button: {
-        width: "100%",
+        width: "50%",
         marginBottom: 24,
     },
     buttonText: {
         fontFamily: "Roboto-Bold",
         fontSize: 16,
-        color: "rgba(0,0,0,0.80)"
-    },
-    buttonIcon: {
-        fontSize: 30
+        color: "#FFF"
     },
     inputError: {
         fontFamily: 'Roboto-Regular',
         fontSize: 12,
         color: '#E91E63'
+    },
+    codeInput: {
+        fontFamily: 'Roboto-Medium',
+        fontSize: 20,
+        color: 'rgba(0,0,0,0.80)',
+        textAlign: 'center'
     }
 });

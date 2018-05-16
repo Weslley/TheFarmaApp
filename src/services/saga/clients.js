@@ -22,7 +22,7 @@ import {
 export const login = function* (action) {
     try {
         const response = yield call(axios.post, `${SERVER_API}/auth/login/`, action.params);
-        let client = ClientLoginSerializable.serialize(response.data)
+        let client = response.data;
         yield call(save, client);
         yield put(responseSuccess(REQUEST_LOGIN_SUCCESS, client));
     } catch (e) {
@@ -50,6 +50,16 @@ export const updateClient = function* (action) {
     }
 }
 
+export const updateClientV2 = function* (action) {
+    try {
+        let config = { headers: { 'Authorization': 'Token ' + action.params.client.token } }
+        const response = yield call(axios.patch, `${SERVER_API}/clientes/${action.params.client.id}`, action.params.fields, config);
+        yield put(responseSuccess(UPDATE_CLIENT_SUCCESS, response.data));
+    } catch (e) {
+        yield put(responseError(UPDATE_CLIENT_ERROR, e));
+    }
+}
+
 export const getCurrentClient = function* (action) {
     try {
         let client = yield call(firstClient);
@@ -60,5 +70,5 @@ export const getCurrentClient = function* (action) {
 }
 
 export const logout = function* (action) {
-    yield call(logout);
+    yield call(removeAll);
 }

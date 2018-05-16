@@ -8,7 +8,7 @@ import { ApresentationDetailScreen } from "../screens/ApresentationDetailScreen"
 import { CartScreen } from "../screens/CartScreen";
 import { ProfileScreen } from "../screens/ProfileScreen";
 import { LoginScreen } from "../screens/LoginScreen";
-import { RegisterScreen } from "../screens/RegisterScreen";
+import { RegisterScreen, NameScreen, EmailScreen, PasswordScreen, PhoneScreen, VerificationCodeScreen } from "../screens/RegisterScreen";
 import { ListProposalsScreen } from "../screens/ListProposalsScreen";
 import { ListAddressScreen } from "../screens/ListAddressScreen";
 import { ListCreditCardsScreen } from "../screens/ListCreditCardsScreen";
@@ -75,64 +75,35 @@ export const TabsNavigator = TabNavigator(
 
 export const MainNavigator = StackNavigator(
   {
-    Welcome: {
-      screen: WelcomeScreen
-    },
-    Profile: {
-      screen: ProfileScreen
-    },
+    Welcome: { screen: WelcomeScreen },
+    Profile: { screen: ProfileScreen },
     TabsNavigator: {
       screen: TabsNavigator,
       navigationOptions: { header: null }
     },
-    SearchMedicine: {
-      screen: SearchMedicineScreen
-    },
-    MedicineApresentations: {
-      screen: MedicineApresentationsScreen
-    },
-    ApresentationDetail: {
-      screen: ApresentationDetailScreen
-    },
-    Cart: {
-      screen: CartScreen
-    },
-    ListProposals: {
-      screen: ListProposalsScreen
-    },
-    ListOrders: {
-      screen: ListOrdersScreen
-    },
-    ListAddress: {
-      screen: ListAddressScreen
-    },
-    ListCreditCards: {
-      screen: ListCreditCardsScreen
-    },
-    NewAddress: {
-      screen: AddAddressScreen
-    },
-    NewCreditCard: {
-      screen: AddCreditCardScreen
-    },
-    Proposal: {
-      screen: ProposalScreen
-    },
-    Drugstore: {
-      screen: DrugstoreScreen
-    },
-    Confirmation: {
-      screen: ConfirmationScreen
-    },
-    DialogSuccess: {
-      screen: DialogSuccessScreen
-    },
-    DialogError: {
-      screen: DialogErrorScreen
-    },
-    Register: {
-      screen: RegisterScreen
-    }
+    SearchMedicine: { screen: SearchMedicineScreen },
+    MedicineApresentations: { screen: MedicineApresentationsScreen },
+    ApresentationDetail: { screen: ApresentationDetailScreen },
+    Cart: { screen: CartScreen },
+    ListProposals: { screen: ListProposalsScreen },
+    ListOrders: { screen: ListOrdersScreen },
+    ListAddress: { screen: ListAddressScreen },
+    ListCreditCards: { screen: ListCreditCardsScreen },
+    NewAddress: { screen: AddAddressScreen },
+    NewCreditCard: { screen: AddCreditCardScreen },
+    Proposal: { screen: ProposalScreen },
+    Drugstore: { screen: DrugstoreScreen },
+    Confirmation: { screen: ConfirmationScreen },
+    DialogSuccess: { screen: DialogSuccessScreen },
+    DialogError: { screen: DialogErrorScreen },
+
+    Login: { screen: LoginScreen },
+    Register: { screen: RegisterScreen },
+    Name: { screen: NameScreen },
+    Email: { screen: EmailScreen },
+    Password: { screen: PasswordScreen },
+    Phone: { screen: PhoneScreen },
+    VerificationCode: { screen: VerificationCodeScreen },
   },
   {
     mode: "modal",

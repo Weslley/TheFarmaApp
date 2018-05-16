@@ -19,3 +19,7 @@
 	}
 
 */
+
+{ "login_type": 0, "email": "weslley.yell@gmail.com", "password": "123456" }
+{ "login_type": 1, "facebook_id": "1262188310506669" }
+{ "login_type": 2, "celular": "86995676616" }

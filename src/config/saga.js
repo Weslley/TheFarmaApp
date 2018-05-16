@@ -18,8 +18,8 @@ import { GET_CITIES } from '../actions/cities';
 import { getDistricts } from '../services/saga/districts';
 import { GET_DISTRICTS } from '../actions/districts';
 //CLIENTS
-import { login, logout, register, updateClient, getCurrentClient } from '../services/saga/clients';
-import { REQUEST_LOGIN, REGISTER_CLIENT, UPDATE_CLIENT, GET_CURRENT_CLIENT, LOGOUT } from '../actions/clients';
+import { login, logout, register, updateClient, updateClientV2, getCurrentClient } from '../services/saga/clients';
+import { REQUEST_LOGIN, REGISTER_CLIENT, UPDATE_CLIENT, UPDATE_CLIENT_V2, GET_CURRENT_CLIENT, LOGOUT } from '../actions/clients';
 //ADDRESSES
 import { getAddresses, createAddress, updateAddress, removeAddress } from '../services/saga/addresses';
 import { LIST_ADDRESS, SAVE_ADDRESS, UPDATE_ADDRESS, REMOVE_ADDRESS } from '../actions/addresses';
@@ -33,7 +33,7 @@ import { GET_ORDER, LIST_ORDER, CREATE_ORDER, CHECKOUT, CANCEL_ORDER } from '../
 const rootSaga = function* () {
     yield takeLatest(GET_LOCATION, getLocation);
     yield takeLatest(REQUEST_GEOCODE, getGeocode);
-    
+
     yield takeEvery(GET_CITIES, getCities);
     yield takeEvery(GET_DISTRICTS, getDistricts);
 
@@ -47,6 +47,7 @@ const rootSaga = function* () {
     yield takeEvery(REQUEST_LOGIN, login);
     yield takeEvery(REGISTER_CLIENT, register);
     yield takeEvery(UPDATE_CLIENT, updateClient);
+    yield takeEvery(UPDATE_CLIENT_V2, updateClientV2);
     yield takeEvery(GET_CURRENT_CLIENT, getCurrentClient);
     yield takeEvery(LOGOUT, logout);
 

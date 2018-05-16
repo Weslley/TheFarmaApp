@@ -81,8 +81,8 @@ class SearchMedicineScreen extends Component {
                     <List dataArray={this.props.products} renderRow={product => (
                         <ListItem style={styles.itemContainer} onPress={() => { this.onSelect(product); }} >
                             {Components.renderIfElse(this.props.isHistory,
-                                <Icon name="history" style={styles.itemIcon} />,
-                                <Icon name="pills" style={styles.itemIcon} />)}
+                                <Icon name="history" size={16} color={"#000"} style={styles.itemIcon} />,
+                                <Icon name="pills" size={16} color={"#000"} style={styles.itemIcon} />)}
                             <Text>{product.nome}</Text>
                         </ListItem>)}
                     /> : null}

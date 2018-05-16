@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ScrollView, Image } from "react-native";
+import { ScrollView, KeyboardAvoidingView, Image } from "react-native";
 import { Container } from "native-base";
 
 import { connect } from "react-redux";

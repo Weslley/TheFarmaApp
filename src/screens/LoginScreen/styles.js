@@ -11,34 +11,24 @@ export default EStyleSheet.create({
         top: 0,
         bottom: 0
     },
-    form: {
-        marginLeft: 0,
-        paddingLeft: 0,
-        marginBottom: 24
+    logo: {
+        width: 75,
+        height: 75,
+        marginBottom: 16,
     },
-    item: {
-        marginLeft: 0,
-        paddingLeft: 0
-    },
-    itemLabel: {
-        fontFamily: "Roboto-Regular",
-        fontSize: 12,
-        color: "#FFFFFF"
-    },
-    input: {
-        paddingLeft: 0,
-        marginLeft: 0,
-        fontFamily: "Roboto-Bold",
+    text: {
+        fontFamily: 'Roboto-Bold',
         fontSize: 16,
-        color: "#FFF"
+        color: '#FFFFFF',
+        marginBottom: 16,
     },
     button: {
         width: "100%",
-        marginBottom: 24,
+        marginBottom: 16,
         borderColor: "#FFF",
     },
     buttonText: {
-        fontFamily: "Roboto-Bold",
+        fontFamily: "Roboto-Medium",
         fontSize: 16,
         color: "#FFFFFF"
     },

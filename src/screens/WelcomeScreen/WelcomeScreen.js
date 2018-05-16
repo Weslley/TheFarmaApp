@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StatusBar, View, TouchableOpacity, Image } from "react-native";
+import { StatusBar, KeyboardAvoidingView, View, TouchableOpacity, Image } from "react-native";
 import { Text, Button } from "native-base";
 import Permissions from 'react-native-permissions';
 
@@ -103,7 +103,7 @@ class WelcomeScreen extends Component {
   render() {
     console.log(this.props);
     return (
-      <View style={{ flex: 1 }}>
+      <KeyboardAvoidingView style={{ flex: 1 }}>
         <Image
           resizeMode={"cover"}
           style={styles.background}
@@ -118,13 +118,18 @@ class WelcomeScreen extends Component {
             </View>
           }
           menuRight={
-            <View style={{ flexDirection: 'row' }}>
-              <TouchableOpacity onPress={() => { this.showMenuScreen() }} style={styles.avatarContainer}>
-                <Image
-                  style={styles.avatar}
-                  resizeMode="contain"
-                  source={(this.props.client && this.props.client.foto) ? { uri: this.props.client.foto } : require("../../assets/images/avatar.png")}
-                />
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <TouchableOpacity onPress={() => { this.showMenuScreen() }} style={{ padding: 12, }}>
+                <View style={styles.avatarContainer}>
+                  {Components.renderIfElse(this.props.client && this.props.client.foto,
+                    <Image
+                      style={styles.avatar}
+                      resizeMode="contain"
+                      source={(this.props.client && this.props.client.foto) ? { uri: this.props.client.foto } : require("../../assets/images/avatar.png")}
+                    />,
+                    <Icon name="md-person" color={"#000"} size={16} style={{ width: 16, height: 16, textAlign: 'center' }} />
+                  )}
+                </View>
               </TouchableOpacity>
               <ShoppingBagIcon value={this.props.cartItems.length} onPress={() => { this.showCart() }} />
             </View>
@@ -135,10 +140,10 @@ class WelcomeScreen extends Component {
           <TouchableOpacity style={styles.searchBar} onPress={this.onSearch}>
             <Image source={require("../../assets/images/ic_search.png")} style={styles.icon} />
             <Text style={styles.text}>Qual medicamento você deseja?</Text>
-            <Icon name="barcode" color={"#000"} style={styles.icon} />
+            <Icon name="barcode" size={24} color={"#000"} style={styles.icon} />
           </TouchableOpacity>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }

@@ -18,6 +18,10 @@ export const UPDATE_CLIENT = "UPDATE_CLIENT";
 export const UPDATE_CLIENT_ERROR = "UPDATE_CLIENT_ERROR";
 export const UPDATE_CLIENT_SUCCESS = "UPDATE_CLIENT_SUCCESS";
 
+export const UPDATE_CLIENT_V2 = "UPDATE_CLIENT_V2";
+export const UPDATE_CLIENT_V2_ERROR = "UPDATE_CLIENT_V2_ERROR";
+export const UPDATE_CLIENT_V2_SUCCESS = "UPDATE_CLIENT_V2_SUCCESS";
+
 export const getCurrentClient = () => ({
   type: GET_CURRENT_CLIENT
 });
@@ -32,6 +36,10 @@ export const register = params => ({
 
 export const update = params => ({
   type: UPDATE_CLIENT, params
+});
+
+export const updateV2 = params => ({
+  type: UPDATE_CLIENT_V2, params
 });
 
 export const logout = () => ({
