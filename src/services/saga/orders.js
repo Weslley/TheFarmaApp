@@ -68,7 +68,7 @@ export const createOrder = function* (action) {
 export const checkoutOrder = function* (action) {
     try {
         let config = { headers: { 'Authorization': 'Token ' + action.params.client.token } }
-        const response = yield call(axios.put, `${SERVER_API}/pedidos/${action.params.order.id}/checkout/`, action.params.checkout, config);
+        const response = yield call(axios.put, `${SERVER_API}/pedidos/${action.params.order.id}/checkout/`, action.params.fields, config);
         yield put(responseSuccess(CHECKOUT_SUCCESS, response.data));
     } catch (e) {
         yield put(responseError(CHECKOUT_ERROR, e));

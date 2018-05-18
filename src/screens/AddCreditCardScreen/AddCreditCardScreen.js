@@ -1,32 +1,35 @@
+import moment from "moment";
+
 import React, { Component } from "react";
-import { View, ScrollView, Image, TouchableOpacity, TextInput } from "react-native";
-import { Container, Text, Form, Item as FormItem, Label, Input, Button, Picker } from "native-base";
+import { KeyboardAvoidingView, ScrollView, View, Image, TouchableOpacity, TextInput, Platform } from "react-native";
+import { Button, Text } from "native-base";
 import { TextInputMask, MaskService } from "react-native-masked-text";
 
-Input.defaultProps.selectionColor = "black";
-Input.defaultProps.underlineColorAndroid = 'black'
+TextInput.defaultProps.selectionColor = "black";
+TextInput.defaultProps.underlineColorAndroid = 'black'
 
 import { connect } from "react-redux";
 import { getCreditCards, saveCreditCard, clearError } from "../../actions/creditCards";
 
 import { Header } from "../../layout/Header"
+import { Icon } from "../../components/Icon"
+import { Loading } from "../../components/Loading"
 import { MenuItem } from "../../components/MenuItem"
 
 import { Components, StringUtils } from "../../helpers";
 import styles from "./styles";
-import { Icon } from "../../components/Icon";
 
 class AddCreditCardScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       nome_proprietario: '',
-      numero_cartao: '5162 3096 1953 9999',
-      validade: '10/20',
-      cvv: '123',
-      bandeira: 'master',
-      mes_expiracao: '10',
-      ano_expiracao: '20',
+      numero_cartao: '',
+      validade: '',
+      cvv: '',
+      bandeira: '',
+      mes_expiracao: '',
+      ano_expiracao: '',
 
       numeroCartaoError: null,
       validadeError: null,
@@ -42,33 +45,34 @@ class AddCreditCardScreen extends Component {
 
   componentWillReceiveProps = nextProps => {
     try {
-      if (nextProps && nextProps.error && nextProps.error.response && (nextProps.error.response.status == 400 || nextProps.error.response.status == 401)) {
+      if (nextProps && nextProps.error) {
+        if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
+          if (nextProps.error.response.data.numero_cartao) {
+            this.setState({ numeroCartaoError: nextProps.error.response.data.numero_cartao[0] })
+          }
 
-        if (nextProps.error.response.data.numero_cartao) {
-          this.setState({ numeroCartaoError: nextProps.error.response.data.numero_cartao[0] })
-        }
+          if (nextProps.error.response.data.mes_expiracao) {
+            this.setState({ validadeError: nextProps.error.response.data.mes_expiracao[0] })
+          }
 
-        if (nextProps.error.response.data.mes_expiracao) {
-          this.setState({ validadeError: nextProps.error.response.data.mes_expiracao[0] })
-        }
+          if (nextProps.error.response.data.ano_expiracao) {
+            this.setState({ validadeError: nextProps.error.response.data.ano_expiracao[0] })
+          }
 
-        if (nextProps.error.response.data.ano_expiracao) {
-          this.setState({ validadeError: nextProps.error.response.data.ano_expiracao[0] })
-        }
+          if (nextProps.error.response.data.cvv)
+            this.setState({ cvvError: nextProps.error.response.data.cvv[0] })
 
-        if (nextProps.error.response.data.cvv)
-          this.setState({ cvvError: nextProps.error.response.data.cvv[0] })
+          if (nextProps.error.response.data.non_field_errors) {
+            Snackbar.show({ title: nextProps.error.response.data.non_field_errors[0], duration: Snackbar.LENGTH_SHORT });
+          }
 
-        if (nextProps.error.response.data.non_field_errors) {
-          Snackbar.show({ title: nextProps.error.response.data.non_field_errors[0], duration: Snackbar.LENGTH_SHORT });
-        }
-
-        if (nextProps.error.response.data.detail) {
-          Snackbar.show({ title: nextProps.error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
+          if (nextProps.error.response.data.detail) {
+            Snackbar.show({ title: nextProps.error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
+          }
         }
       }
 
-      if (nextProps && nextProps.actionSuccess) {
+      if (nextProps && nextProps.success === true) {
         this.props.dispatch(getCreditCards({ client: this.props.client }));
         this.onBack();
       }
@@ -106,6 +110,10 @@ class AddCreditCardScreen extends Component {
       ano_expiracao = valueMask.split("/")[1]
       this.setState({ mes_expiracao, ano_expiracao })
     }
+  }
+
+  onChangeCVV = value => {
+
   }
 
   getCreditCardLabel(cardNumber) {
@@ -149,22 +157,29 @@ class AddCreditCardScreen extends Component {
     this.clearFormErrors();
 
     if (this.state.numero_cartao == null || this.state.numero_cartao == "") {
-      this.setState({ numeroCartaoError: "campo obrigatório" })
+      this.setState({ numeroCartaoError: "Este campo é obrigatório" })
       return false;
     }
 
     if (this.state.bandeira == null || this.state.bandeira == "") {
-      this.setState({ numeroCartaoError: "campo inválido" })
+      this.setState({ numeroCartaoError: "Cartão inválido" })
       return false;
     }
 
-    if (this.state.validade == null || this.state.validade == "") {
-      this.setState({ validadeError: "campo obrigatório" })
-      return false;
-    }
-
-    if (this.state.validade.length < 5) {
-      this.setState({ validadeError: "campo inválido" })
+    if (this.state.validade && this.state.validade.length === 5) {
+      let parts = this.state.validade.split('/');
+      let data = moment(`20${parts[1]}-${parts[0]}-01`);
+      if (data.isValid()) {
+        if (data.toDate().getTime() < new Date().getTime()) {
+          this.setState({ validadeError: "Cartão vencido" })
+          return false;
+        }
+      } else {
+        this.setState({ validadeError: "Data inválida" })
+        return false;
+      }
+    } else {
+      this.setState({ validadeError: "Data inválida" })
       return false;
     }
 
@@ -191,87 +206,118 @@ class AddCreditCardScreen extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
-        <Header
-          title={"Novo Cartão"}
-          subtitle={"Preencha todos os dados necessários"}
-          menuLeft={
-            <MenuItem
-              icon="md-arrow-back"
-              onPress={() => { this.onBack() }}
-              style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
-            />
-          }
-          menuRight={
-            <MenuItem
-              icon="check"
-              onPress={() => { this.submit() }}
-              style={{ paddingRight: 24, paddingVertical: 12 }}
-            />
-          }
-        />
+      <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
 
-        <View style={{ alignItems: "center", paddingVertical: 32 }}>
-          <Image style={{ width: 128, height: 88 }} source={require("../../assets/images/CreditCard.png")} />
+          <Header
+            title={"Novo Cartão"}
+            subtitle={"Preencha todos os dados necessários"}
+            menuLeft={
+              <MenuItem
+                icon="md-arrow-back"
+                onPress={() => { this.onBack() }}
+                style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+              />
+            }
+            menuRight={
+              <MenuItem
+                icon="check"
+                onPress={() => { this.submit() }}
+                style={{ paddingRight: 24, paddingVertical: 12 }}
+              />
+            }
+          />
+
+          <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+
+            <ScrollView>
+              <View style={{ alignItems: "center", paddingVertical: 32 }}>
+                <Image style={{ width: 128, height: 88 }} source={require("../../assets/images/CreditCard.png")} />
+              </View>
+
+              <ScrollView horizontal={true}>
+                <View style={[styles.item, { marginLeft: 24, maxHeight: 100 }]}>
+                  <Text style={styles.label}>{"Número do cartão"}</Text>
+                  <View style={{ flexDirection: "row", alignItems: 'center' }}>
+                    <TextInput
+                      maxLength={19}
+                      autoFocus={true}
+                      keyboardType={"numeric"}
+                      style={[styles.input, { width: 230 }]}
+                      multiline={false}
+                      onChangeText={this.onChangeNumeroCartao}
+                      value={this.state.numero_cartao}
+                    />
+                    {Components.renderIfElse(this.state.bandeira,
+                      <View style={styles.flagContainer}>
+                        <Text style={styles.flagText} uppercase={true}>{this.state.bandeira}</Text>
+                      </View>,
+                      <TouchableOpacity onPress={() => { }} style={{ position: "absolute", right: 1 }}>
+                        <Icon name="camera" size={25} color={"#000000"} />
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                  {Components.renderIf(Platform.OS === 'ios',
+                    <View style={{ borderBottomColor: '#000', borderWidth: 0.5, marginTop: 4, }} />
+                  )}
+                  {Components.renderIf(this.state.numeroCartaoError,
+                    <Text style={styles.inputError} uppercase={false}>{this.state.numeroCartaoError}</Text>
+                  )}
+                </View>
+
+                <View style={[styles.item, { width: 90 }]}>
+                  <Text style={styles.label}>{"Validade"}</Text>
+                  <TextInput
+                    maxLength={5}
+                    keyboardType={"numeric"}
+                    style={styles.input}
+                    multiline={false}
+                    onChangeText={this.onChangeValidade}
+                    value={this.state.validade}
+                  />
+
+                  {Components.renderIf(Platform.OS === 'ios',
+                    <View style={{ borderBottomColor: '#000', borderWidth: 0.5, marginTop: 4, }} />
+                  )}
+
+                  {Components.renderIf(this.state.validadeError,
+                    <Text style={styles.inputError} uppercase={false}>{this.state.validadeError}</Text>
+                  )}
+                </View>
+
+                <View style={[styles.item, { width: 90 }]}>
+                  <Text style={styles.label}>{"CVV"}</Text>
+                  <TextInput
+                    maxLength={3}
+                    keyboardType={"numeric"}
+                    style={styles.input}
+                    multiline={false}
+                    secureTextEntry={true}
+                    onChangeText={(cvv) => this.setState({ cvv })}
+                    value={this.state.cvv}
+                  />
+
+                  {Components.renderIf(Platform.OS === 'ios',
+                    <View style={{ borderBottomColor: '#000', borderWidth: 0.5, marginTop: 4, }} />
+                  )}
+
+                  {Components.renderIf(this.state.cvvError,
+                    <Text style={styles.inputError} uppercase={false}>{this.state.cvvError}</Text>
+                  )}
+                </View>
+              </ScrollView>
+
+            </ScrollView>
+
+          </KeyboardAvoidingView>
         </View>
 
-        <ScrollView horizontal={true}>
-          <View style={[styles.item, { marginLeft: 24 }]}>
-            <Text style={styles.label}>{"Número do cartão"}</Text>
-            <View style={{ flexDirection: "row", alignItems: 'center' }}>
-              <TextInput
-                autoFocus={true}
-                keyboardType={"numeric"}
-                style={[styles.input, { width: 230 }]}
-                multiline={false}
-                onChangeText={this.onChangeNumeroCartao}
-                value={this.state.numero_cartao}
-              />
-
-              {Components.renderIfElse(this.state.bandeira,
-                <View style={styles.flagContainer}>
-                  <Text style={styles.flagText} uppercase={true}>{this.state.bandeira}</Text>
-                </View>,
-                <TouchableOpacity onPress={() => { }} style={{ position: "absolute", right: 1 }}>
-                  <Icon name="camera" size={25} color={"#000000"} />
-                </TouchableOpacity>
-              )}
-            </View>
-            {Components.renderIf(this.state.numeroCartaoError,
-              <Text style={styles.inputError} uppercase={false}>{this.state.numeroCartaoError}</Text>
-            )}
+        {Components.renderIf(this.props.isLoading === true,
+          <View style={{ flex: 1, backgroundColor: "rgba(255,255,255,0.8)", position: 'absolute', top: 0, bottom: 0, right: 0, left: 0 }}>
+            <Loading />
           </View>
+        )}
 
-          <View style={[styles.item, { width: 90 }]}>
-            <Text style={styles.label}>{"Validade"}</Text>
-            <TextInput
-              keyboardType={"numeric"}
-              style={styles.input}
-              multiline={false}
-              onChangeText={this.onChangeValidade}
-              value={this.state.validade} />
-
-            {Components.renderIf(this.state.validadeError,
-              <Text style={styles.inputError} uppercase={false}>{this.state.validadeError}</Text>
-            )}
-          </View>
-
-          <View style={[styles.item, { width: 90 }]}>
-            <Text style={styles.label}>{"CVV"}</Text>
-            <TextInput
-              keyboardType={"numeric"}
-              style={styles.input}
-              multiline={false}
-              secureTextEntry={true}
-              onChangeText={(cvv) => this.setState({ cvv })}
-              value={this.state.cvv} />
-
-            {Components.renderIf(this.state.cvvError,
-              <Text style={styles.inputError} uppercase={false}>{this.state.cvvError}</Text>
-            )}
-          </View>
-
-        </ScrollView>
       </View>
     );
   }
@@ -280,8 +326,10 @@ class AddCreditCardScreen extends Component {
 function mapStateToProps(state) {
   return {
     client: state.clients.client,
+
+    isLoading: state.creditCards.isLoading,
     error: state.creditCards.error,
-    actionSuccess: state.creditCards.actionSuccess,
+    success: state.creditCards.success,
   };
 }
 

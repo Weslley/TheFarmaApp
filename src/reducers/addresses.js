@@ -9,11 +9,11 @@ import {
 } from '../actions/addresses';
 
 const INITIAL_STATE = {
-  isLoading: false,
-  error: null,
-  address: null,
   addresses: [],
-  actionSuccess: null,
+  address: null,
+  isLoading: false,
+  success: false,
+  error: null,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -28,7 +28,7 @@ export default (state = INITIAL_STATE, action) => {
     case UPDATE_ADDRESS:
     case REMOVE_ADDRESS:
     case LIST_ADDRESS_NEXT_PAGE:
-      return { ...state, isLoading: true };
+      return { ...state, isLoading: true, success: false };
     case LIST_ADDRESS_SUCCESS:
     case LIST_ADDRESS_NEXT_PAGE_SUCCESS:
       return {
@@ -38,7 +38,7 @@ export default (state = INITIAL_STATE, action) => {
       };
     case SAVE_ADDRESS_SUCCESS:
     case UPDATE_ADDRESS_SUCCESS:
-      return { ...state, address: action.data, actionSuccess: 'back' };
+      return { ...state, address: action.data, success: true };
 
     case REMOVE_ADDRESS_SUCCESS:
       list = [...state.addresses];
@@ -46,18 +46,20 @@ export default (state = INITIAL_STATE, action) => {
       address = list.find(item => item.id === action.data.id);
       if (address) list.splice(index, 1);
       return { ...state, addresses: [...list] };
+
     case LIST_ADDRESS_ERROR:
     case SAVE_ADDRESS_ERROR:
     case UPDATE_ADDRESS_ERROR:
     case REMOVE_ADDRESS_ERROR:
     case LIST_ADDRESS_NEXT_PAGE_ERROR:
       return { ...state, error: action.error };
+
     case CLEAR_ERROR:
-      return { ...state, error: null, actionSuccess: null };
+      return { ...state, error: null, success: false };
     case CLEAR_ADDRESS:
-      return { ...state, error: null, address: null, actionSuccess: null };
+      return { ...state, error: null, address: null, success: false };
     case CLEAR_ADDRESSES:
-      return { ...state, error: null, addresses: null, actionSuccess: null };
+      return { ...state, error: null, addresses: null, success: false };
     default:
       return state;
   }

@@ -5,7 +5,7 @@ import { Container, Text } from "native-base";
 import LinearGradient from "react-native-linear-gradient";
 
 import { connect } from "react-redux";
-import { getOrder, cancelOrder, clearError, updateOrder } from "../../actions/orders";
+import { getOrder, cancelOrder, clearError, updateOrder, selectProposal } from "../../actions/orders";
 
 import { Header } from "../../layout/Header"
 import { MenuItem } from "../../components/MenuItem"
@@ -28,7 +28,7 @@ class ListProposalsScreen extends Component {
   };
 
   componentWillMount = () => {
-    BackHandler.addEventListener('hardwareBackPress', this.onBack);
+    BackHandler.addEventListener('hardwareBackPress', this.nothing);
   }
 
   componentDidMount() {
@@ -37,17 +37,24 @@ class ListProposalsScreen extends Component {
 
   componentWillUnmount = () => {
     clearInterval(this.loadPropostas);
-    BackHandler.removeEventListener('hardwareBackPress', this.onBack);
+    BackHandler.removeEventListener('hardwareBackPress', this.nothing);
   }
 
   /** Private functions */
+  nothing() {
+
+  }
 
   onBack() {
+    this.props.navigation.goBack(null);
+  }
+
+  alertCancel() {
     Alert.alert(
       '',
       'Você gostaria de cancelar o recebimento das propostas?',
       [
-        { text: 'NÃO', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+        { text: 'NÃO', onPress: () => { console.log('cancelou.'); } },
         { text: 'SIM', onPress: () => { this._cancelOrder() } },
       ],
       { cancelable: false }
@@ -58,11 +65,8 @@ class ListProposalsScreen extends Component {
     clearInterval(this.loadPropostas);
     let params = { client: this.props.client, order: this.props.order }
     this.props.dispatch(cancelOrder(params));
-    const resetAction = NavigationActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: this.state.back_screen, params: {} })],
-    });
-    this.props.navigation.dispatch(resetAction);
+
+    this.onBack();
   }
 
   getProposals() {
@@ -73,17 +77,20 @@ class ListProposalsScreen extends Component {
   }
 
   _showProposal(proposal) {
+    BackHandler.removeEventListener('hardwareBackPress', this.nothing);
     clearInterval(this.loadPropostas);
 
     if (this.props.order.id) {
-      console.log(order);
       let order = this.props.order;
       order.proposta = proposal;
+
+      this.props.dispatch(selectProposal(proposal));
+
       let params = { client: this.props.client, order }
       this.props.dispatch(updateOrder(params));
-      this.props.navigation.navigate({ key: 'proposal1', routeName: 'Proposal', params: { proposal: proposal } });
+      this.props.navigation.navigate({ key: 'proposal1', routeName: 'Proposal', params: {} });
     }
-    
+
   }
 
   _renderItem = ({ item }) => (
@@ -100,7 +107,7 @@ class ListProposalsScreen extends Component {
         <Header
           title={"Propostas"}
           menuLeft={
-            <MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }}
+            <MenuItem icon="md-arrow-back" onPress={() => { this.alertCancel() }}
               style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
             />}
         />
@@ -126,7 +133,9 @@ class ListProposalsScreen extends Component {
 function mapStateToProps(state) {
   return {
     client: state.clients.client,
+
     order: state.orders.order,
+    success: state.orders.success,
     error: state.orders.error,
   };
 }

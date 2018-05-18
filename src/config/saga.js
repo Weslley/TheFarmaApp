@@ -63,9 +63,9 @@ const rootSaga = function* () {
     yield takeEvery(GET_ORDER, getOrder);
     yield takeEvery(LIST_ORDER, getOrders);
     yield takeEvery(LIST_ORDER_NEXT_PAGE, getOrdersNextPage);
-    yield takeEvery(CREATE_ORDER, createOrder);
-    yield takeEvery(CHECKOUT, checkoutOrder);
-    yield takeEvery(CANCEL_ORDER, cancelOrder);
+    yield takeLatest(CREATE_ORDER, createOrder);
+    yield takeLatest(CHECKOUT, checkoutOrder);
+    yield takeLatest(CANCEL_ORDER, cancelOrder);
 }
 
 export default rootSaga;

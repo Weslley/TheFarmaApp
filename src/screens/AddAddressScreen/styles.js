@@ -29,5 +29,16 @@ export default EStyleSheet.create({
     fontFamily: 'Roboto-Regular',
     fontSize: 12,
     color: 'rgba(0,0,0,0.48)'
-  }
+  },
+  nbItem: {
+    paddingLeft: 16
+  },
+  nbTextItem: {
+    width: '95%',
+    fontFamily: "Roboto-Bold",
+    color: "$textColorPrimary",
+    fontSize: 16,
+    paddingHorizontal: 0, 
+    paddingLeft: 0
+  },
 });

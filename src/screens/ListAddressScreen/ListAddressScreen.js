@@ -18,6 +18,7 @@ import { BottomBar } from "../../layout/Bar";
 import { Container } from '../../layout/Container';
 
 import { Icon } from "../../components/Icon";
+import { Loading } from "../../components/Loading";
 import { MenuItem } from "../../components/MenuItem";
 import { AddressAdapter } from "../../components/Address/";
 import { ButtonCustom } from "../../components/ButtonCustom";
@@ -39,18 +40,15 @@ class ListAddressScreen extends Component {
 
   componentWillReceiveProps = nextProps => {
     try {
-      if (nextProps && nextProps.error && nextProps.error.response && (nextProps.error.response.status == 400 || nextProps.error.response.status == 401)) {
-        if (nextProps.error.response.data.detail) {
-
-          if (nextProps.error.response.data.detail === "Token inválido.") {
-            this.props.dispatch(clearError());
-            this.props.dispatch(logout());
+      if (nextProps && nextProps.error) {
+        if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
+          if (nextProps.error.response.data.detail) {
+            if (nextProps.error.response.data.detail === "Token inválido.") {
+              this.props.dispatch(clearError());
+              this.props.dispatch(logout());
+            }
+            Snackbar.show({ title: nextProps.error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
           }
-
-          Snackbar.show({
-            title: nextProps.error.response.data.detail,
-            duration: Snackbar.LENGTH_SHORT,
-          });
         }
       }
     } catch (e) {
@@ -61,9 +59,6 @@ class ListAddressScreen extends Component {
   componentWillMount() {
     this.props.dispatch(clearError());
     this.props.dispatch(getAddresses({ client: this.props.client }));
-    if (this.props.cities.length > 0) {
-      this.props.cities.map((c) => { return this.props.dispatch(getDistricts(c.ibge)) });
-    }
   }
 
   componentDidMount() {
@@ -148,7 +143,7 @@ class ListAddressScreen extends Component {
     return (
       <View style={{ flex: 1 }}>
         <View style={{ backgroundColor: "#FFFFFF" }}>
-        
+
           <Header
             title={"Meus Endereços"}
             subtitle={"Seus endereços para futuras entregas"}
@@ -180,6 +175,8 @@ class ListAddressScreen extends Component {
           </ScrollView>
         </View>
 
+        {Components.renderIf(this.props.addresses && this.props.addresses.length === 0 && this.props.isLoading === true, <Loading />)}
+
         {Components.renderIf(this.state.showBottomBar,
           <BottomBar
             buttonTitle="Continuar"
@@ -194,11 +191,12 @@ class ListAddressScreen extends Component {
 
 function mapStateToProps(state) {
   return {
+    addresses: state.addresses.addresses,
+    isLoading: state.addresses.isLoading,
+    error: state.addresses.error,
+    address: state.addresses.address,
     cities: state.cities.cities,
     districts: state.districts.districts,
-    addresses: state.addresses.addresses,
-    address: state.addresses.address,
-    error: state.addresses.error,
     latitude: state.locations.latitude,
     longitude: state.locations.longitude,
     cartItems: state.carts.cartItems,

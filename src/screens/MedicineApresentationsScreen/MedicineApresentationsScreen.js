@@ -156,7 +156,11 @@ class MedicineApresentationScreen extends Component {
   }
 
   _showListAddress() {
-    this.props.navigation.navigate({ key: 'list_address1', routeName: 'ListAddress', params: { showBottomBar: true } });
+    if (this.props.client) {
+      this.props.navigation.navigate({ key: 'list_address1', routeName: 'ListAddress', params: { showBottomBar: true } });
+    } else {
+      this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: {} });
+    }
     this.setState({ showDeliveryDialog: false });
   }
 

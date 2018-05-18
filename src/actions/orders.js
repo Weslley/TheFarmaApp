@@ -1,6 +1,7 @@
 export const CLEAR_ERROR = "CLEAR_ERROR";
 export const CLEAR_ORDER = "CLEAR_ORDER";
 export const CLEAR_ORDERS = "CLEAR_ORDERS";
+export const CLEAR_PROPOSAL = "CLEAR_PROPOSAL";
 
 export const GET_ORDER = "GET_ORDER";
 export const GET_ORDER_ERROR = "GET_ORDER_ERROR";
@@ -26,6 +27,8 @@ export const CANCEL_ORDER = "CANCEL_ORDER";
 export const CANCEL_ORDER_ERROR = "CANCEL_ORDER_ERROR";
 export const CANCEL_ORDER_SUCCESS = "CANCEL_ORDER_SUCCESS";
 
+export const SELECT_PROPOSAL = "SELECT_PROPOSAL";
+
 export const GET_PROPOSALS = "GET_PROPOSALS";
 export const GET_PROPOSALS_ERROR = "GET_PROPOSALS_ERROR";
 export const GET_PROPOSALS_SUCCESS = "GET_PROPOSALS_SUCCESS";
@@ -44,6 +47,14 @@ export const getOrders = params => ({
 
 export const getOrdersNextPage = (params) => ({
     type: LIST_ORDER_NEXT_PAGE, params
+});
+
+export const selectProposal = params => ({
+    type: SELECT_PROPOSAL, params
+});
+
+export const clearProposal = () => ({
+    type: CLEAR_PROPOSAL
 });
 
 export const getProposals = params => ({

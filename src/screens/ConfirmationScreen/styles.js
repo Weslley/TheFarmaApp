@@ -7,7 +7,6 @@ export default EStyleSheet.create({
     borderBottomColor: "#CCC"
   },
   title: {
-    paddingTop: 24,
     marginBottom: 16,
     fontFamily: "Roboto-Bold",
     fontSize: 16,
@@ -27,11 +26,33 @@ export default EStyleSheet.create({
   footerOrderText: {
     flex: 1,
     textAlign: "right",
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Roboto-Medium",
     fontSize: 18,
     color: "rgba(0,0,0,0.80)"
   },
-  containerParcel: { flexDirection: "row", justifyContent: "space-between", marginTop: 24 },
-  parcelTitle: { fontFamily: "Roboto-Bold", fontSize: 16, color: "rgba(0,0,0,0.80)" },
-  parcelText: { fontFamily: "Roboto-Medium", fontSize: 18, color: "rgba(0,0,0,0.87)" }
+  containerParcel: {
+    width: "100%",
+    marginTop: 24
+  },
+  parcelTitle: {
+    fontFamily: "Roboto-Bold",
+    fontSize: 16,
+    color: "rgba(0,0,0,0.80)"
+  },
+  parcelText: {
+    fontFamily: "Roboto-Medium",
+    fontSize: 18,
+    color: "rgba(0,0,0,0.87)"
+  },
+  nbItem: {
+    paddingLeft: 16
+  },
+  nbTextItem: {
+    width: '95%',
+    fontFamily: "Roboto-Bold",
+    color: "rgba(0,0,0,0.80)",
+    fontSize: 16,
+    paddingHorizontal: 0,
+    paddingLeft: 0
+  },
 });

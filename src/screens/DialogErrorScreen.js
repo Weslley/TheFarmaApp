@@ -59,14 +59,15 @@ const styles = EStyleSheet.create({
 class DialogErrorScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
   }
 
   static navigationOptions = ({ navigation }) => {
     return { header: null };
   };
+
   render() {
-    return <Container style={{ backgroundColor: "#FFFFFF", paddingHorizontal: 24 }}>
+    return (
+      <Container style={{ backgroundColor: "#FFFFFF", paddingHorizontal: 24 }}>
         <View>
           <Icon name="ios-close-circle-outline" style={{ color: "#F0166D", marginBottom: 64, marginTop: 64, fontSize: 100 }} />
           <Text style={styles.title}>{"Erro! Seu cartão não pode ser debitado."}</Text>
@@ -74,7 +75,7 @@ class DialogErrorScreen extends Component {
         </View>
 
         <View style={[styles.footer, {}]}>
-          <TouchableOpacity style={{ marginBottom: 16 }} onPress={() => {}}>
+          <TouchableOpacity style={{ marginBottom: 16 }} onPress={this.props.onPressButton}>
             <LinearGradient colors={["#00C7BD", "#009999"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.buttonMyOrders}>
               <Text style={styles.buttonMyOrdersText}>
                 {"meus cartões"}
@@ -82,11 +83,12 @@ class DialogErrorScreen extends Component {
             </LinearGradient>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.buttonHome} onPress={() => {}}>
+          <TouchableOpacity style={styles.buttonHome} onPress={this.props.onPressClose}>
             <Text style={styles.buttonHomeText}>{"fechar"}</Text>
           </TouchableOpacity>
         </View>
-      </Container>;
+      </Container>
+    );
   }
 }
 

@@ -1,6 +1,7 @@
 import { uniqBy, union, sortBy, orderBy } from 'lodash';
 
 import {
+    CLEAR_PROPOSAL, SELECT_PROPOSAL,
     CLEAR_ERROR, CLEAR_ORDER, CLEAR_ORDERS,
     GET_ORDER, GET_ORDER_ERROR, GET_ORDER_SUCCESS,
     LIST_ORDER, LIST_ORDER_ERROR, LIST_ORDER_SUCCESS,
@@ -18,26 +19,31 @@ const INITIAL_STATE = {
     isLoading: false,
     error: null,
     order: INITIAL_ORDER,
+    proposal: null,
     count: 0,
     num_pages: 0,
     next: null,
     previous: null,
-    orders: []
+    orders: [],
+    success: false
 };
 
 export default (state = INITIAL_STATE, action) => {
-    let order = null;
+    let newOrder = null;
     let list = [];
     let index = null;
     switch (action.type) {
+        case SELECT_PROPOSAL:
+            return { ...state, proposal: action.params };
+
         case LIST_ORDER:
-            return { ...state, isLoading: true, orders: [], error: null };
+            return { ...state, isLoading: true, orders: [], error: null, success: false };
 
         case LIST_ORDER_NEXT_PAGE:
         case CREATE_ORDER:
         case CANCEL_ORDER:
         case CHECKOUT:
-            return { ...state, isLoading: true, error: null };
+            return { ...state, isLoading: true, error: null, success: false };
 
 
         case LIST_ORDER_SUCCESS:
@@ -56,16 +62,25 @@ export default (state = INITIAL_STATE, action) => {
             };
 
         case UPDATE_ORDER:
-            return { ...state, order: action.params.order };
+            return { ...state, order: action.params.order, isLoading: true, error: null, success: false };
 
         case GET_ORDER_SUCCESS:
+            newOrder = Object.assign(state.order, action.data)
+            return { ...state, order: action.data, error: null, isLoading: false };
+
         case CREATE_ORDER_SUCCESS:
         case UPDATE_ORDER_SUCCESS:
-            return { ...state, order: action.data };
+            return { ...state, order: action.data, error: null, isLoading: false };
 
         case CHECKOUT_SUCCESS:
+            //newOrder = Object.assign(state.order, action.data)
+            newOrder = state.order
+            newOrder.cartao = action.data.cartao
+            newOrder.farmacia = action.data.farmacia
+            return { ...state, orders: [], order: newOrder, isLoading: false, error: null, success: true };
+
         case CANCEL_ORDER_SUCCESS:
-            return { ...state, order: INITIAL_ORDER, orders: [] };
+            return { ...state, orders: [], order: INITIAL_ORDER, isLoading: false, error: null, success: true };
 
         case CHECKOUT_ERROR:
         case GET_ORDER_ERROR:
@@ -75,13 +90,20 @@ export default (state = INITIAL_STATE, action) => {
         case CANCEL_ORDER_ERROR:
         case GET_PROPOSALS_ERROR:
         case LIST_ORDER_NEXT_PAGE_ERROR:
-            return { ...state, error: action.error };
+            return { ...state, error: action.error, isLoading: false };
+
         case CLEAR_ERROR:
-            return { ...state, error: null };
+            return { ...state, error: null, isLoading: false };
+
         case CLEAR_ORDER:
-            return { ...state, error: null, order: INITIAL_ORDER };
+            return { ...state, error: null, order: INITIAL_ORDER, isLoading: false };
+
         case CLEAR_ORDERS:
-            return { ...state, error: null, orders: [] };
+            return { ...state, error: null, orders: [], isLoading: false };
+
+        case CLEAR_PROPOSAL:
+            return { ...state, isLoading: false, error: null, proposal: null, };
+
         default:
             return state;
     }

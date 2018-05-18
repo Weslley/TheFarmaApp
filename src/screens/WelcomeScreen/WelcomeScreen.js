@@ -72,6 +72,12 @@ class WelcomeScreen extends Component {
     Permissions.checkMultiple(['camera', 'photo', 'location']).then(response => {
       this.setState({ cameraPermission: response.camera, photoPermission: response.photo, locationPermission: response.location });
     });
+
+    let params = this.props.navigation.state.params;
+    let actionBack = params ? params.actionBack : null;
+    if (actionBack) {
+      this.props.navigation.navigate(actionBack);
+    }
   }
 
   componentDidMount() {
@@ -179,6 +185,7 @@ class WelcomeScreen extends Component {
             <Icon name="barcode" size={24} color={"#000"} style={styles.icon} />
           </TouchableOpacity>
         </View>
+
       </KeyboardAvoidingView>
     );
   }

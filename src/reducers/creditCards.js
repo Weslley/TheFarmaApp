@@ -13,7 +13,7 @@ const INITIAL_STATE = {
   error: null,
   creditCard: null,
   creditCards: [],
-  actionSuccess: null,
+  success: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -23,40 +23,45 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case SELECT_CREDIT_CARD:
       return { ...state, creditCard: action.params };
+
     case LIST_CREDIT_CARD:
     case SAVE_CREDIT_CARD:
     case UPDATE_CREDIT_CARD:
     case REMOVE_CREDIT_CARD:
     case LIST_CREDIT_CARD_NEXT_PAGE:
-      return { ...state, isLoading: true };
+      return { ...state, isLoading: true, success: false };
+
     case LIST_CREDIT_CARD_SUCCESS:
     case LIST_CREDIT_CARD_NEXT_PAGE_SUCCESS:
-      return {
-        ...state,
-        isLoading: false,
-        creditCards: action.data
-      };
+      return { ...state, isLoading: false, creditCards: action.data };
+
     case SAVE_CREDIT_CARD_SUCCESS:
     case UPDATE_CREDIT_CARD_SUCCESS:
-      return { ...state, creditCard: action.data, actionSuccess: 'back' };
+      return { ...state, creditCard: action.data, success: true };
+
     case REMOVE_CREDIT_CARD_SUCCESS:
       list = [...state.creditCards];
       index = list.findIndex(item => item.id === action.data.id);
       creditCard = list.find(item => item.id === action.data.id);
       if (creditCard) list.splice(index, 1);
       return { ...state, creditCards: [...list] };
+
     case LIST_CREDIT_CARD_ERROR:
     case SAVE_CREDIT_CARD_ERROR:
     case UPDATE_CREDIT_CARD_ERROR:
     case REMOVE_CREDIT_CARD_ERROR:
     case LIST_CREDIT_CARD_NEXT_PAGE_ERROR:
-      return { ...state, error: action.error };
+      return { ...state, error: action.error, success: false };
+
     case CLEAR_ERROR:
-      return { ...state, error: null, actionSuccess: null  };
+      return { ...state, error: null, success: false };
+
     case CLEAR_CREDIT_CARD:
-      return { ...state, error: null, creditCard: null, actionSuccess: null  };
+      return { ...state, error: null, creditCard: null, success: false };
+
     case CLEAR_CREDIT_CARDS:
-      return { ...state, error: null, creditCards: null, actionSuccess: null  };
+      return { ...state, error: null, creditCards: null, success: false };
+
     default:
       return state;
   }

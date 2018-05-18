@@ -8,14 +8,19 @@ import {
   GET_CITIES_NEXT_PAGE_ERROR, GET_CITIES_NEXT_PAGE_SUCCESS
 } from "../../actions/cities";
 
+var nextPage = "";
 export const getCities = function* (action) {
     try {
         const response = yield call(axios.get, `${SERVER_API}/cidades/`);
         let cities = response.data.results
-        while(response.data.next){
-           let result = yield call(axios.get, response.data.next);
-           cities.push(...result.data.results)
+
+        nextPage = response.data.next;
+        while (nextPage) {
+            let result = yield call(axios.get, nextPage);
+            cities.push(...result.data.results)
+            nextPage = result.data.next;
         }
+
         yield put(responseSuccess(GET_CITIES_SUCCESS, cities));
     } catch(e) {
         yield put(responseError(GET_CITIES_ERROR, e));

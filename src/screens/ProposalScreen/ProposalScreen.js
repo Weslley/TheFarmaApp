@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import { View, ScrollView, Image, TouchableOpacity, FlatList, TextInput, Platform } from "react-native";
+import { View, ScrollView, Image, TouchableOpacity, FlatList, TextInput, Platform, BackHandler } from "react-native";
 import { Container, Text, Button, Item, Input } from "native-base";
 import { TextInputMask, MaskService } from "react-native-masked-text";
+import Snackbar from 'react-native-snackbar';
 import LinearGradient from "react-native-linear-gradient";
+import Communications from 'react-native-communications';
 
 import { connect } from "react-redux";
 import { updateOrder } from "../../actions/orders";
@@ -37,21 +39,33 @@ class ProposalScreen extends Component {
     return { header: null };
   };
 
-  componentWillMount() {
-    let params = this.props.navigation.state.params;
-    let proposal = params ? params.proposal : null;
-    this.setState({ proposal });
-    BackHandler.addEventListener('hardwareBackPress', this.onBack);
+  componentWillReceiveProps = nextProps => {
+    try {
+      if (nextProps && nextProps.error) {
+        if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
+
+          if (nextProps.error.response.data.non_field_errors) {
+            Snackbar.show({ title: nextProps.error.response.data.non_field_errors[0], duration: Snackbar.LENGTH_SHORT });
+          }
+
+          if (nextProps.error.response.data.detail) {
+            Snackbar.show({ title: nextProps.error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
+          }
+        }
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
   }
 
-  componentWillUnmount = () => {
-    BackHandler.removeEventListener('hardwareBackPress', this.onBack);
-  }
+  componentWillMount() { }
 
   /** Private functions */
 
   onBack() {
-    this.props.navigation.goBack(null);
+    //this.props.navigation.goBack(null);
+    this.props.navigation.navigate({ key: 'list_proposals1', routeName: 'ListProposals', params: { startQuery: true } });
   }
 
   onChangeTroco = value => {
@@ -62,7 +76,7 @@ class ProposalScreen extends Component {
   _setTroco() {
     this.setState({ trocoError: null })
     let troco = parseFloat(this.state.troco.replace(/\D/g, "")) / 100
-    if (troco >= this.state.proposal.valor_total) {
+    if (troco >= this.props.proposal.valor_total) {
       let order = this.props.order;
       order.troco = troco
       order.forma_pagamento = 1;
@@ -86,7 +100,7 @@ class ProposalScreen extends Component {
   }
 
   _showDrugstore() {
-    this.props.navigation.navigate({ key: 'drugstore1', routeName: 'Drugstore', params: { drugstore: this.state.proposal.farmacia } });
+    this.props.navigation.navigate({ key: 'drugstore1', routeName: 'Drugstore', params: { drugstore: this.props.proposal.farmacia } });
     this.setState({ showPaymentDialog: false, showTrocoDialog: false });
   }
 
@@ -98,6 +112,14 @@ class ProposalScreen extends Component {
   _showListCreditCards() {
     this.props.navigation.navigate({ key: 'list_credit_cards1', routeName: 'ListCreditCards', params: { showBottomBar: true } });
     this.setState({ showPaymentDialog: false, showTrocoDialog: false });
+  }
+
+  _callPhone() {
+    Communications.phonecall(this.props.proposal.farmacia.telefone, true);
+  }
+
+  _callMap() {
+    Communications.web(`https://www.google.com/maps/search/?api=1&query=${this.props.proposal.farmacia.latitude},${this.props.proposal.farmacia.longitude}`)
   }
 
   _renderPaymentDialog() {
@@ -195,7 +217,7 @@ class ProposalScreen extends Component {
           <View style={styles.infoContainer}>
             <Icon name="place" size={18} color={"#000"} style={{ marginRight: 8 }} />
             <Text style={styles.infoTextBold}>
-              {this.state.proposal.farmacia.distancia}
+              {this.props.proposal.farmacia.distancia}
               <Text style={styles.infoText}>{" do endereço indicado"}</Text>
             </Text>
           </View>
@@ -203,7 +225,7 @@ class ProposalScreen extends Component {
           <View style={styles.infoContainer}>
             <Icon name="clock-o" size={18} color={"#000"} style={{ marginRight: 8 }} />
             <Text style={styles.infoTextBold}>
-              {this.state.proposal.farmacia.tempo_entrega}
+              {this.props.proposal.farmacia.tempo_entrega}
               <Text style={[styles.infoText, { marginBottom: 0 }]}>{" em média para entregar"}</Text>
             </Text>
           </View>
@@ -219,15 +241,22 @@ class ProposalScreen extends Component {
     }
   }
 
-  _renderItem = ({ item }) => (<ProposalApresentation proposalItem={item} />);
+  _renderItem = ({ item }) => {
+    let apresentation = this.props.cartItems.find(i => i.id === item.apresentacao);
+    if (apresentation) {
+      return (<ProposalApresentation apresentation={apresentation} proposalItem={item} />);
+    } else {
+      return null;
+    }
+  }
 
   render() {
     return (
       <Container style={{ backgroundColor: "#FFFFFF" }}>
         <ScrollView>
           <Header
-            title={this.state.proposal.farmacia.nome_fantasia}
-            subtitle={`Fazemos entrega até ${this.state.proposal.farmacia.horario_funcionamento}`}
+            title={this.props.proposal.farmacia.nome_fantasia}
+            subtitle={`Fazemos entrega até ${this.props.proposal.farmacia.horario_funcionamento}`}
             menuLeft={
               <MenuItem
                 icon="md-arrow-back"
@@ -237,30 +266,41 @@ class ProposalScreen extends Component {
             }
             menuRight={
               <View style={{ flexDirection: "row" }}>
-                <MenuItem icon="call" onPress={() => { this.onBack() }} />
-                <MenuItem icon="marker" onPress={() => { this.onBack() }} />
+                <MenuItem
+                  icon="call"
+                  onPress={() => { this._callPhone() }}
+                  style={{ paddingVertical: 12, paddingHorizontal: 12 }}
+                />
+                <MenuItem
+                  icon="marker"
+                  onPress={() => { this._callMap() }}
+                  style={{ paddingVertical: 12, paddingHorizontal: 12 }}
+                />
               </View>
             }
             footer={this._renderHeaderFooter()}
           />
 
-          {Components.renderIf((!this.state.proposal.possui_todos_itens && !this.state.onScrollList),
+          {Components.renderIf((!this.props.proposal.possui_todos_itens && !this.state.onScrollList),
             <View style={{ backgroundColor: "#FF1967", marginTop: 4, paddingVertical: 14, paddingHorizontal: 24 }}>
               <Text style={{ fontFamily: "Roboto-Regular", fontSize: 16, color: "#FFFFFF" }}>{"Essa farmacia não tem todos os itens"}</Text>
             </View>
           )}
 
-          <FlatList
-            style={{ paddingHorizontal: 24 }}
-            data={this.state.proposal.itens}
-            keyExtractor={item => item.apresentacao.toString()}
-            renderItem={this._renderItem}
-          />
+          {Components.renderIf(this.props.proposal && this.props.proposal.itens,
+            <FlatList
+              style={{ paddingHorizontal: 24 }}
+              data={this.props.proposal.itens}
+              keyExtractor={item => item.apresentacao.toString()}
+              renderItem={this._renderItem}
+            />
+          )}
+
         </ScrollView>
 
         <BottomBar
           buttonTitle="comprar"
-          price={this.state.proposal.valor_total}
+          price={this.props.proposal.valor_total}
           onButtonPress={() => { this._showPaymentDialog(); }}
         />
 
@@ -284,6 +324,7 @@ function mapStateToProps(state) {
     uf: state.locations.uf,
 
     order: state.orders.order,
+    proposal: state.orders.proposal,
     error: state.orders.error,
   };
 }

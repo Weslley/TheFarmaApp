@@ -58,30 +58,24 @@ const styles = EStyleSheet.create({
 
 class DialogSuccessScreen extends Component {
   constructor(props) {
-    //ios - close - circle - outline;
     super(props);
-    this.state = {};
   }
 
   static navigationOptions = ({ navigation }) => {
     return { header: null };
   };
+
   render() {
-    return <Container style={{ backgroundColor: "#FFFFFF", paddingHorizontal: 24 }}>
+    return (
+      <Container style={{ backgroundColor: "#FFFFFF", paddingHorizontal: 24 }}>
         <View>
           <Icon name="ios-checkmark-circle-outline" style={{ color: "#00C7BD", marginBottom: 64, marginTop: 64, fontSize: 100 }} />
-
-          <Text style={styles.title}>
-            {"Parabéns! Sua compra foi efetuada com sucesso."}
-          </Text>
-
-          <Text style={styles.description}>
-            {"Para acompanhar seu pedido acesse Minhas Compras."}
-          </Text>
+          <Text style={styles.title}>{"Parabéns! Sua compra foi efetuada com sucesso."}</Text>
+          <Text style={styles.description}>{"Para acompanhar seu pedido acesse Minhas Compras."}</Text>
         </View>
 
-        <View style={[styles.footer, {}]}>
-          <TouchableOpacity style={{ marginBottom: 16 }} onPress={() => {}}>
+        <View style={[styles.footer]}>
+          <TouchableOpacity style={{ marginBottom: 16 }} onPress={this.props.onPressButton}>
             <LinearGradient colors={["#00C7BD", "#009999"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.buttonMyOrders}>
               <Text style={styles.buttonMyOrdersText}>
                 {"minhas compras"}
@@ -89,11 +83,12 @@ class DialogSuccessScreen extends Component {
             </LinearGradient>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.buttonHome} onPress={() => {}}>
+          <TouchableOpacity style={styles.buttonHome} onPress={this.props.onPressHome}>
             <Text style={styles.buttonHomeText}>{"home"}</Text>
           </TouchableOpacity>
         </View>
-      </Container>;
+      </Container>
+    );
   }
 }
 

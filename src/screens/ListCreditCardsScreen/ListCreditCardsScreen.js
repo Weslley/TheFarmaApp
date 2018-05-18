@@ -13,6 +13,7 @@ import { BottomBar } from "../../layout/Bar";
 import { Container } from '../../layout/Container';
 
 import { Icon } from "../../components/Icon";
+import { Loading } from "../../components/Loading";
 import { MenuItem } from "../../components/MenuItem";
 import { CreditCardAdapter } from "../../components/CreditCard";
 
@@ -34,13 +35,15 @@ class ListCreditCardsScreen extends Component {
 
   componentWillReceiveProps = nextProps => {
     try {
-      if (nextProps && nextProps.error && nextProps.error.response && (nextProps.error.response.status == 400 || nextProps.error.response.status == 401)) {
-        if (nextProps.error.response.data.detail) {
-          if (nextProps.error.response.data.detail === "Token inválido.") {
-            this.props.dispatch(clearError());
-            this.props.dispatch(logout());
+      if (nextProps && nextProps.error) {
+        if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
+          if (nextProps.error.response.data.detail) {
+            if (nextProps.error.response.data.detail === "Token inválido.") {
+              this.props.dispatch(clearError());
+              this.props.dispatch(logout());
+            }
+            Snackbar.show({ title: nextProps.error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
           }
-          Snackbar.show({ title: nextProps.error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
         }
       }
     } catch (e) {
@@ -105,7 +108,6 @@ class ListCreditCardsScreen extends Component {
     return (
       <View style={{ flex: 1 }}>
         <View style={{ backgroundColor: "#FFFFFF" }}>
-
           <Header
             title={"Meus Cartões"}
             subtitle={"Seus cartões de creditos são salvos aqui"}
@@ -137,6 +139,10 @@ class ListCreditCardsScreen extends Component {
           </ScrollView>
         </View>
 
+        {Components.renderIf(this.props.creditCards && this.props.creditCards.length === 0 && this.props.isLoading === true,
+          <Loading />
+        )}
+
         {Components.renderIf(this.state.showBottomBar,
           <BottomBar buttonTitle="Continuar" onButtonPress={() => { this._showConfirmation() }} />
         )}
@@ -150,6 +156,7 @@ function mapStateToProps(state) {
     client: state.clients.client,
     creditCards: state.creditCards.creditCards,
     creditCard: state.creditCards.creditCard,
+    isLoading: state.creditCards.isLoading,
     error: state.creditCards.error
   };
 }

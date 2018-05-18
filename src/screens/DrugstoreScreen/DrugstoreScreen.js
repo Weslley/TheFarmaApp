@@ -40,7 +40,7 @@ class DrugstoreScreen extends Component {
   }
 
   _callMap() {
-    Communications.web(`https://www.google.com/maps/dir/${this.state.drugstore.latitude},${this.state.drugstore.longitude}`)
+    Communications.web(`https://www.google.com/maps/search/?api=1&query=${this.state.drugstore.latitude},${this.state.drugstore.longitude}`)
   }
 
   _renderItem = ({ item }) => (<BusinessHour label={item.dia_semana} value={item.horario} />);
@@ -59,8 +59,16 @@ class DrugstoreScreen extends Component {
             }
             menuRight={
               <View style={{ flexDirection: "row" }}>
-                <MenuItem icon="call" onPress={() => { this.onBack() }} />
-                <MenuItem icon="marker" onPress={() => { this.onBack() }} />
+                <MenuItem
+                  icon="call"
+                  onPress={() => { this._callPhone() }}
+                  style={{ paddingVertical: 12, paddingHorizontal: 12 }}
+                />
+                <MenuItem
+                  icon="marker"
+                  onPress={() => { this._callMap() }}
+                  style={{ paddingVertical: 12, paddingHorizontal: 12 }}
+                />
               </View>
             }
           />
