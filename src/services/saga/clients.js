@@ -55,7 +55,7 @@ export const updateClient = function* (action) {
 export const updateClientV2 = function* (action) {
     try {
         let config = { headers: { 'Authorization': 'Token ' + action.params.client.token } }
-        const response = yield call(axios.patch, `${SERVER_API}/clientes/${action.params.client.id}`, action.params.fields, config);
+        const response = yield call(axios.patch, `${SERVER_API}/clientes/${action.params.client.id}/`, action.params.fields, config);
         let client = response.data;
         yield call(save, client);
         yield put(responseSuccess(UPDATE_CLIENT_SUCCESS, client));

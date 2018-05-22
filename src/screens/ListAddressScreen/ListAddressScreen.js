@@ -80,7 +80,8 @@ class ListAddressScreen extends Component {
   _removeAddress(address) {
     let params = { client: this.props.client, address }
     this.props.dispatch(removeAddress(params));
-    this.props.dispatch(getAddresses({ client: this.props.client }));
+    
+    setTimeout(() => { this.props.dispatch(getAddresses({ client: this.props.client }));}, 1000);
   }
 
   _showAddress(address) {

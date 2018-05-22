@@ -62,7 +62,7 @@ export default (state = INITIAL_STATE, action) => {
             };
 
         case UPDATE_ORDER:
-            return { ...state, order: action.params.order, isLoading: true, error: null, success: false };
+            return { ...state, order: action.params.order, isLoading: false, error: null, success: false };
 
         case GET_ORDER_SUCCESS:
             newOrder = Object.assign(state.order, action.data)

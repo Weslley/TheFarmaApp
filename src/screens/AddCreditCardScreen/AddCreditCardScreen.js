@@ -34,6 +34,8 @@ class AddCreditCardScreen extends Component {
       numeroCartaoError: null,
       validadeError: null,
       cvvError: null,
+
+      currentIndex: 0,
     };
   }
 
@@ -82,10 +84,6 @@ class AddCreditCardScreen extends Component {
     }
   }
 
-  componentWillMount() { }
-
-  componentDidMount() { }
-
   /** Private functions */
   onBack() {
     this.props.navigation.goBack(null);
@@ -106,8 +104,8 @@ class AddCreditCardScreen extends Component {
     let valueMask = MaskService.toMask('custom', value, { mask: "99/99" });
     this.setState({ validade: valueMask })
     if (valueMask.length === 5) {
-      mes_expiracao = valueMask.split("/")[0]
-      ano_expiracao = valueMask.split("/")[1]
+      mes_expiracao = "" + parseInt(valueMask.split("/")[0])
+      ano_expiracao = "" + parseInt(valueMask.split("/")[1])
       this.setState({ mes_expiracao, ano_expiracao })
     }
   }

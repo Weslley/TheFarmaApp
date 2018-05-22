@@ -12,13 +12,11 @@ export const GET_APRESENTATIONS_NEXT_PAGE_ERROR = "GET_APRESENTATIONS_NEXT_PAGE_
 export const GET_APRESENTATIONS_NEXT_PAGE_SUCCESS = "GET_APRESENTATIONS_NEXT_PAGE_SUCCESS";
 
 export const getApresentations = (uf, name, page) => ({
-  type: GET_APRESENTATIONS,
-  uf, name, page
+  type: GET_APRESENTATIONS, uf, name, page
 });
 
-export const getApresentationsNextPage = (next) => ({
-  type: GET_APRESENTATIONS_NEXT_PAGE,
-  next
+export const getApresentationsNextPage = (params) => ({
+  type: GET_APRESENTATIONS_NEXT_PAGE, params
 });
 
 export const rankingView = (apresentation_id) => ({

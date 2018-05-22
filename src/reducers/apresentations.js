@@ -21,25 +21,30 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   let list = [];
   switch (action.type) {
+
     case GET_APRESENTATIONS:
+      return { ...state, apresentations: [], isLoading: true, error: null, success: false };
+
     case GET_APRESENTATIONS_NEXT_PAGE:
-      return { ...state, isLoading: true };
+      return { ...state, isLoading: true, error: null, success: false };
+
     case GET_APRESENTATIONS_SUCCESS:
     case GET_APRESENTATIONS_NEXT_PAGE_SUCCESS:
       list = uniqBy(union(action.data.results, state.apresentations), "id");
-      return { 
-        ...state, 
-        isLoading: false, 
+      //list = orderBy(list, ['id'], ['desc'])
+      return {
+        ...state,
+        isLoading: false,
         count: action.data.count,
         num_pages: action.data.num_pages,
         next: action.data.next,
         previous: action.data.previous,
-        apresentations:  list
+        apresentations: list
       };
     case GET_APRESENTATIONS_ERROR:
-      return { ...state, isLoading: false, error: action.error };
+      return { ...state, error: action.error, isLoading: false };
     case CLEAR_APRESENTATIONS:
-      return { ...state, error: null, apresentations: [], count: 0, num_pages: 0, next: null};
+      return { ...state, error: null, apresentations: [], count: 0, num_pages: 0, next: null };
     case CLEAR_ERROR:
       return { ...state, error: null };
     default:

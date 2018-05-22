@@ -65,9 +65,7 @@ class MenuScreen extends Component {
             this.props.navigation.navigate({ key: 'list_credit1', routeName: 'ListCreditCards', params: {} });
           }} />
 
-          <ProfileMenuItem icon="chat" text={"Dúvidas e Reclamações"} onPress={() => {
-            this.props.navigation.navigate({ key: 'dialog_success1', routeName: 'DialogSuccess', params: {} });
-          }} />
+          <ProfileMenuItem icon="chat" text={"Dúvidas e Reclamações"} onPress={() => { }} />
         </ScrollView>
 
         <View style={{ paddingHorizontal: 24, }}>

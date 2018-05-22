@@ -15,25 +15,33 @@ export default EStyleSheet.create({
         fontSize: 16,
         color: "rgba(0,0,0,0.80)"
     },
-    list: { 
-        marginLeft: 24, 
-        paddingHorizontal: 0, 
-        paddingLeft: 0 
+    list: {
+        marginLeft: 24,
+        paddingHorizontal: 0,
+        paddingLeft: 0
     },
     listItem: {
         width: 312,
-        marginTop: 0,
-        paddingTop: 0,
-        marginLeft: 0,
-        marginBottom: 0,
-        paddingBottom: 16,
-        paddingLeft: 0,
-        paddingRight: 0,
-        paddingVertical: 0,
         marginRight: 16,
-        borderColor: "#CCCCCC",
+        borderColor: '#F3F3F3',
+        borderRadius: 8,
         borderWidth: 1,
-        borderRadius: 4
+    },
+    containerDelivery: {
+        paddingHorizontal: 24,
+        paddingTop: 24,
+        paddingBottom: 32
+    },
+    titleDialog: {
+        fontFamily: "Roboto-Bold",
+        fontSize: 22,
+        color: "rgba(0,0,0,0.87)",
+        marginLeft: 8,
+        marginBottom: 24
+    },
+    row: {
+        flexDirection: "row",
+        justifyContent: "space-around"
     },
     table: {
         paddingHorizontal: 24,

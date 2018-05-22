@@ -18,6 +18,7 @@ import { AddCreditCardScreen } from "../screens/AddCreditCardScreen";
 import { ProposalScreen } from "../screens/ProposalScreen";
 import { DrugstoreScreen } from "../screens/DrugstoreScreen";
 import { ConfirmationScreen } from "../screens/ConfirmationScreen";
+import { OrderScreen } from "../screens/OrderScreen";
 import DialogSuccessScreen from "../screens/DialogSuccessScreen";
 import DialogErrorScreen from "../screens/DialogErrorScreen";
 
@@ -94,6 +95,7 @@ export const MainNavigator = StackNavigator(
     Proposal: { screen: ProposalScreen },
     Drugstore: { screen: DrugstoreScreen },
     Confirmation: { screen: ConfirmationScreen },
+    Order: { screen: OrderScreen },
     DialogSuccess: { screen: DialogSuccessScreen },
     DialogError: { screen: DialogErrorScreen },
 

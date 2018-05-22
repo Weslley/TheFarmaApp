@@ -59,13 +59,29 @@ class ProposalScreen extends Component {
     }
   }
 
-  componentWillMount() { }
+  componentWillMount() {
+    console.log("Montando!");
+  }
+
+  componentDidMount() {
+    console.log("Montou!");
+    BackHandler.addEventListener('hardwareBackPress', this.nothing);
+  }
+
+  componentWillUnmount = () => {
+    BackHandler.removeEventListener('hardwareBackPress', this.nothing);
+  }
 
   /** Private functions */
-
   onBack() {
-    //this.props.navigation.goBack(null);
+    console.log(this.props);
     this.props.navigation.navigate({ key: 'list_proposals1', routeName: 'ListProposals', params: { startQuery: true } });
+    BackHandler.addEventListener('hardwareBackPress', this.nothing);
+  }
+
+  nothing() {
+    console.log("Nothing!");
+    return true;
   }
 
   onChangeTroco = value => {
@@ -104,12 +120,14 @@ class ProposalScreen extends Component {
     this.setState({ showPaymentDialog: false, showTrocoDialog: false });
   }
 
-  _showConfirmation() {
-    this.props.navigation.navigate({ key: 'confirmation1', routeName: 'Confirmation', params: {} });
-    this.setState({ showPaymentDialog: false, showTrocoDialog: false });
-  }
-
   _showListCreditCards() {
+    if (this.props.order.id) {
+      let order = this.props.order;
+      order.forma_pagamento = 0;
+      let params = { client: this.props.client, order }
+      this.props.dispatch(updateOrder(params));
+    }
+
     this.props.navigation.navigate({ key: 'list_credit_cards1', routeName: 'ListCreditCards', params: { showBottomBar: true } });
     this.setState({ showPaymentDialog: false, showTrocoDialog: false });
   }

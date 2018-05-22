@@ -6,11 +6,11 @@ import { REQUEST_GEOCODE, GET_LOCATION } from '../actions/locations';
 import { getByName, selectProduct, getHistory } from '../services/saga/products';
 import { SEARCH_PRODUCTS, SELECT_PRODUCT, GET_HISTORY } from '../actions/products';
 //APRESENTATIONS
-import { getApresentations, ranking } from '../services/saga/apresentations';
-import { GET_APRESENTATIONS, RANKING_VIEW } from '../actions/apresentations';
+import { getApresentations, getApresentationsNextPage, ranking } from '../services/saga/apresentations';
+import { GET_APRESENTATIONS, GET_APRESENTATIONS_NEXT_PAGE, RANKING_VIEW } from '../actions/apresentations';
 //GENERICS
-import { getGenerics } from '../services/saga/generics';
-import { GET_GENERICS } from '../actions/generics';
+import { getGenerics, getGenericsNextPage } from '../services/saga/generics';
+import { GET_GENERICS, GET_GENERICS_NEXT_PAGE } from '../actions/generics';
 //CITIES
 import { getCities } from '../services/saga/cities';
 import { GET_CITIES } from '../actions/cities';
@@ -41,7 +41,9 @@ const rootSaga = function* () {
     yield takeEvery(GET_HISTORY, getHistory);
     yield takeEvery(SELECT_PRODUCT, selectProduct);
     yield takeEvery(GET_APRESENTATIONS, getApresentations);
+    yield takeLatest(GET_APRESENTATIONS_NEXT_PAGE, getApresentationsNextPage);
     yield takeEvery(GET_GENERICS, getGenerics);
+    yield takeLatest(GET_GENERICS_NEXT_PAGE, getGenericsNextPage);
     yield takeEvery(RANKING_VIEW, ranking);
 
     yield takeEvery(REQUEST_LOGIN, login);

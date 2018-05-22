@@ -17,7 +17,7 @@ EStyleSheet.build({
     $textColorSecundary: "rgba(0,0,0,0.32)",
 
     $buttonColor: "#50E3C2",
-    $outline: 1
+    //$outline: 1
 });
 
 export default () => (

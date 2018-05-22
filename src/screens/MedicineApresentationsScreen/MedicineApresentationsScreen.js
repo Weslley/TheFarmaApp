@@ -6,7 +6,7 @@ import { TextMask } from "react-native-masked-text";
 import { connect } from "react-redux";
 
 import { createOrder } from "../../actions/orders";
-import { getApresentations, clearError } from "../../actions/apresentations";
+import { getApresentations, getApresentationsNextPage, clearError } from "../../actions/apresentations";
 import { addItemToCart, removeItemToCart } from "../../actions/carts";
 
 import { Header } from "../../layout/Header";
@@ -14,6 +14,8 @@ import { BottomBar } from "../../layout/Bar";
 import { ActionSheet } from "../../layout/ActionSheet";
 import { ShoppingBagIcon } from "../../layout/ShoppingBagIcon";
 
+import { Icon } from "../../components/Icon";
+import { Loading } from "../../components/Loading"
 import { MenuItem } from '../../components/MenuItem';
 import { ButtonCustom } from "../../components/ButtonCustom";
 import { ApresentationDescription } from "../../components/Product";
@@ -31,41 +33,8 @@ class MedicineApresentationScreen extends Component {
   }
 
   static navigationOptions = ({ navigation }) => {
-    let { state: { params } } = navigation;
-    return {
-      header: () => (
-        <Header
-          title={params ? params.title : ""}
-          style={{ backgroundColor: "#FFF" }}
-          menuLeft={
-            <MenuItem icon="md-arrow-back" onPress={() => { navigation.goBack(null) }}
-              style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }} />
-          }
-          menuRight={
-            <ShoppingBagIcon value={params && params.cartSize ? params.cartSize : 0} onPress={params ? params.onPressCart : null} />
-          }
-        />
-      ),
-
-    };
+    return { header: null }
   };
-
-  componentWillMount() {
-    this.props.navigation.setParams({
-      onBack: () => {
-        this.props.navigation.goBack(null);
-      },
-      onPressCart: () => {
-        this.props.navigation.navigate({ key: 'cart1', routeName: 'Cart', params: {} });
-      },
-      cartSize: 0
-    });
-  }
-
-  componentDidMount() {
-    this.props.dispatch(clearError());
-    this.props.dispatch(getApresentations(this.props.uf, this.props.selected.nome));
-  }
 
   componentWillReceiveProps = nextProps => {
     this.setState({ apresentations: this.props.apresentations });
@@ -74,18 +43,26 @@ class MedicineApresentationScreen extends Component {
       quantidade: this.getApresentationQuantity(nextProps, apresentation)
     }));
     this.setState({ apresentations });
-
-    //Atualiza badge
-    let { state: { params } } = this.props.navigation;
-    let cartSize = params ? params.cartSize : 0;
-    if (parseInt(cartSize) !== nextProps.cartItems.length) {
-      this.props.navigation.setParams({
-        cartSize: nextProps.cartItems.length
-      });
-    }
   };
 
+  componentWillMount() {
+    this.props.dispatch(clearError());
+    this.props.dispatch(getApresentations(this.props.uf, this.props.selected.nome));
+  }
+
   /** Private functions */
+  onBack() {
+    this.props.navigation.goBack(null);
+  }
+
+  showCart() {
+    this.props.navigation.navigate({ key: 'cart1', routeName: 'Cart', params: {} });
+  }
+
+  getCartSize() {
+    return (this.props.cartItems && this.props.cartItems.length) ? this.props.cartItems.length : 0;
+  }
+
   getApresentationQuantity(nextProps, apresentation) {
     try {
       const cItem = nextProps.cartItems.find(
@@ -104,10 +81,6 @@ class MedicineApresentationScreen extends Component {
   _removeItemToCart(apresentation) {
     this.props.dispatch(removeItemToCart(apresentation));
   }
-
-  showActionSheet = () => this.actionSheet.show()
-
-  getActionSheetRef = ref => (this.actionSheet = ref)
 
   _showDeliveryDialog() { this.setState({ showDeliveryDialog: true }); }
 
@@ -168,6 +141,14 @@ class MedicineApresentationScreen extends Component {
     this.props.navigation.navigate({ key: 'apresentation_detail1', routeName: 'ApresentationDetail', params: { apresentation: item } });
   }
 
+  onEndReached = ({ distanceFromEnd }) => {
+    console.log("NEXTPAGE");
+    if (this.props.nextPage) {
+      let params = { client: this.props.client, url: this.props.nextPage }
+      this.props.dispatch(getApresentationsNextPage(params));
+    }
+  }
+
   _renderItem = ({ item }) => (
     <ApresentationDescription
       apresentation={item}
@@ -178,23 +159,59 @@ class MedicineApresentationScreen extends Component {
     />
   );
 
+  renderFooter = () => {
+    if (!this.props.isLoading) return null;
+    return (
+      <View style={{ alignItems: 'center', paddingVertical: 16, }}>
+        <ActivityIndicator color={"#00C7BD"} size={"large"} />
+      </View>
+    );
+  };
+
   render() {
     return (
-      <Container style={{ backgroundColor: "#FFFFFF" }}>
+      <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
 
-        {Components.renderIf(this.props.isLoading, <ActivityIndicator size="small" style={{ marginTop: 16 }} />)}
+        <Header
+          title={this.props.selected.nome}
+          style={{ backgroundColor: "#FFF" }}
+          menuLeft={
+            <MenuItem
+              icon="md-arrow-back"
+              onPress={() => { this.onBack() }}
+              style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }} />
+          }
+          menuRight={
+            <ShoppingBagIcon
+              value={this.getCartSize()}
+              onPress={() => { this.showCart() }}
+            />
+          }
+        />
 
-        <ScrollView style={{ paddingHorizontal: 24 }}>
-          <FlatList
-            style={{ paddingBottom: 90 }}
-            data={this.state.apresentations}
-            keyExtractor={(item, index) => item.id.toString()}
-            renderItem={this._renderItem}
-          />
-        </ScrollView>
+        {Components.renderIfElse(this.props.apresentations && this.props.apresentations.length === 0 && this.props.isLoading === true,
+          <Loading />,
+          <ScrollView style={{ paddingHorizontal: 24 }}
+            onScroll={(e) => {
+              let paddingToBottom = 0;
+              paddingToBottom += e.nativeEvent.layoutMeasurement.height;
+              if (e.nativeEvent.contentOffset.y.toFixed(1) === (e.nativeEvent.contentSize.height - paddingToBottom).toFixed(1)) {
+                this.onEndReached(0)
+              }
+            }}
+          >
 
-        {Components.renderIf(
-          this.props.cartItems.length > 0,
+            <FlatList
+              style={{ paddingBottom: 90 }}
+              data={this.state.apresentations}
+              keyExtractor={(item, index) => item.id.toString()}
+              renderItem={this._renderItem}
+              ListFooterComponent={this.renderFooter()}
+            />
+          </ScrollView>
+        )}
+
+        {Components.renderIf(this.props.cartItems.length > 0,
           <BottomBar
             buttonTitle="Ver propostas"
             price={CartUtils.getValueTotal(this.props.cartItems)}
@@ -206,7 +223,7 @@ class MedicineApresentationScreen extends Component {
           this._renderDeliveryDialog()
         )}
 
-      </Container>
+      </View>
     );
   }
 }
@@ -217,13 +234,14 @@ function mapStateToProps(state) {
     latitude: state.locations.latitude,
     longitude: state.locations.longitude,
     selected: state.products.selected,
-    isLoading: state.products.isLoading,
-    apresentations: state.apresentations.apresentations,
-    cartItems: state.carts.cartItems,
-    error: state.apresentations.error,
     client: state.clients.client,
+    cartItems: state.carts.cartItems,
     order: state.orders.order,
-    errorOrder: state.orders.error
+
+    apresentations: state.apresentations.apresentations,
+    isLoading: state.apresentations.isLoading,
+    nextPage: state.apresentations.next,
+    error: state.apresentations.error,
   };
 }
 

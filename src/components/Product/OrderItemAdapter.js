@@ -19,18 +19,17 @@ class OrderItemAdapter extends Component {
       <View style={styles.container}>
 
         <View style={styles.ImageContainer}>
-          {Components.renderIfElse(
-            this.props.item.apresentacao.imagem,
-            <Thumbnail style={styles.Image} square size={88} source={{ uri: this.props.item.apresentacao.imagem }} />,
+          {Components.renderIfElse(this.props.apresentation.imagem,
+            <Thumbnail style={styles.Image} square size={88} source={{ uri: this.props.apresentation.imagem }} />,
             <Image style={[styles.Image, { width: 88, height: 88 }]} source={imgDefault} />
           )}
         </View>
 
         <View style={styles.container1}>
           <View>
-            <Text style={[styles.ProductName, { width: "100%" }]}>{this.props.item.apresentacao.produto.nome}</Text>
-            <Text style={styles.ApresentationName}>{this.props.item.apresentacao.nome}</Text>
-            <Text style={styles.Maker} uppercase>{this.props.item.apresentacao.produto.fabricante}</Text>
+            <Text style={[styles.ProductName, { width: "100%" }]}>{this.props.apresentation.produto.nome}</Text>
+            <Text style={styles.ApresentationName}>{this.props.apresentation.nome}</Text>
+            <Text style={styles.Maker} uppercase>{this.props.apresentation.produto.fabricante}</Text>
           </View>
 
           <View style={styles.Footer}>

@@ -11,6 +11,8 @@ import { connect } from "react-redux";
 import { login, register, clearError } from "../../actions/clients"
 
 import { Header } from "../../layout/Header"
+
+import { Loading } from "../../components/Loading"
 import { MenuItem } from "../../components/MenuItem"
 
 import { Components, StringUtils } from "../../helpers";
@@ -31,7 +33,8 @@ class PhoneScreen extends Component {
             nomeError: null,
             emailError: null,
             celularError: null,
-            passwordError: null
+            passwordError: null,
+            showNetworkError: false
         };
     }
 
@@ -41,30 +44,31 @@ class PhoneScreen extends Component {
 
     componentWillReceiveProps = nextProps => {
         try {
-            if (nextProps && nextProps.error && nextProps.error.response && (nextProps.error.response.status == 400 || nextProps.error.response.status == 401)) {
+            if (nextProps && nextProps.error) {
+                if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
 
-                if (nextProps.error.response.data.email) {
-                    this.setState({ emailError: nextProps.error.response.data.email[0] })
+                    if (nextProps.error.response.data.email) {
+                        this.setState({ emailError: nextProps.error.response.data.email[0] })
+                    }
+
+                    if (nextProps.error.response.data.celular) {
+                        this.setState({ celularError: nextProps.error.response.data.celular[0] })
+                    }
+
+                    if (nextProps.error.response.data.non_field_errors) {
+                        Snackbar.show({ title: nextProps.error.response.data.non_field_errors[0], duration: Snackbar.LENGTH_SHORT });
+                    }
+
+                    if (nextProps.error.response.data.detail) {
+                        Snackbar.show({ title: nextProps.error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
+                    }
                 }
 
-                if (nextProps.error.response.data.celular) {
-                    this.setState({ celularError: nextProps.error.response.data.celular[0] })
-                }
-
-                if (nextProps.error.response.data.non_field_errors) {
-                    Snackbar.show({
-                        title: nextProps.error.response.data.non_field_errors[0],
-                        duration: Snackbar.LENGTH_SHORT,
-                    });
-                }
-
-                if (nextProps.error.response.data.detail) {
-                    Snackbar.show({
-                        title: nextProps.error.response.data.detail,
-                        duration: Snackbar.LENGTH_SHORT,
-                    });
+                if (nextProps.error.message && nextProps.error.message === 'Network Error') {
+                    this.setState({ showError: true });
                 }
             }
+
         } catch (e) {
             console.log(e);
         }
@@ -117,6 +121,7 @@ class PhoneScreen extends Component {
             params["login_type"] = 2;
             params["celular"] = StringUtils.removeMask(this.state.celular);
             this.props.dispatch(login(params));
+            this.props.navigation.navigate({ key: 'verification_code1', routeName: 'VerificationCode', params });
         }
     }
 
@@ -170,6 +175,12 @@ class PhoneScreen extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
+
+                {Components.renderIf(this.props.isLoading === true,
+                    <View style={{ flex: 1, backgroundColor: "rgba(255,255,255,0.8)", position: 'absolute', top: 0, bottom: 0, right: 0, left: 0 }}>
+                        <Loading />
+                    </View>
+                )}
             </KeyboardAvoidingView>
         );
     }
@@ -178,6 +189,7 @@ class PhoneScreen extends Component {
 function mapStateToProps(state) {
     return {
         client: state.clients.client,
+        isLoading: state.clients.isLoading,
         error: state.clients.error
     };
 }

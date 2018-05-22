@@ -35,7 +35,8 @@ export default EStyleSheet.create({
     inputError: {
         fontFamily: 'Roboto-Regular',
         fontSize: 12,
-        color: '#E91E63'
+        color: '#E91E63',
+        marginTop: 8
     },
     codeInput: {
         fontFamily: 'Roboto-Medium',

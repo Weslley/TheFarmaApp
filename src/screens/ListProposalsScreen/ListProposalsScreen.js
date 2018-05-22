@@ -28,10 +28,12 @@ class ListProposalsScreen extends Component {
   };
 
   componentWillMount = () => {
+    console.log("Montando!");
     BackHandler.addEventListener('hardwareBackPress', this.nothing);
   }
 
   componentDidMount() {
+    console.log("Montou!");
     this.loadPropostas = setInterval(() => this.getProposals(), 10000);
   }
 
@@ -41,8 +43,9 @@ class ListProposalsScreen extends Component {
   }
 
   /** Private functions */
-  nothing() {
-
+  nothing = () => {
+    console.log("Nothing!");
+    return true;
   }
 
   onBack() {
@@ -102,6 +105,7 @@ class ListProposalsScreen extends Component {
   );
 
   render() {
+    console.log(this.props);
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
         <Header

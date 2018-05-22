@@ -95,15 +95,15 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "br.com.infog2.thefarma"
         minSdkVersion 20
-        targetSdkVersion 26
-        versionCode 20
-        versionName "4.0.0"
+        targetSdkVersion 27
+        versionCode 21
+        versionName "4.0.1"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }

@@ -12,6 +12,8 @@ import { connect } from "react-redux";
 import { login, clearError } from "../../actions/clients"
 
 import { Header } from "../../layout/Header"
+
+import { Loading } from "../../components/Loading"
 import { MenuItem } from "../../components/MenuItem"
 
 import { Components, StringUtils } from "../../helpers";
@@ -32,7 +34,8 @@ class PasswordScreen extends Component {
             nome_error: null,
             email_error: null,
             celular_error: null,
-            password_error: null
+            password_error: null,
+            showNetworkError: false
         };
     }
 
@@ -55,6 +58,10 @@ class PasswordScreen extends Component {
                     if (nextProps.error.response.data.detail) {
                         Snackbar.show({ title: nextProps.error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
                     }
+                }
+
+                if (nextProps.error.message && nextProps.error.message === 'Network Error') {
+                    this.setState({ showNetworkError: true });
                 }
             }
 
@@ -171,6 +178,12 @@ class PasswordScreen extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
+
+                {Components.renderIf(this.props.isLoading === true,
+                    <View style={{ flex: 1, backgroundColor: "rgba(255,255,255,0.8)", position: 'absolute', top: 0, bottom: 0, right: 0, left: 0 }}>
+                        <Loading />
+                    </View>
+                )}
             </KeyboardAvoidingView>
         );
     }
@@ -179,6 +192,7 @@ class PasswordScreen extends Component {
 function mapStateToProps(state) {
     return {
         client: state.clients.client,
+        isLoading: state.clients.isLoading,
         error: state.clients.error
     };
 }

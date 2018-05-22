@@ -71,7 +71,11 @@ class ListCreditCardsScreen extends Component {
   }
 
   _showConfirmation() {
-    this.props.navigation.navigate({ key: 'confirmation1', routeName: 'Confirmation', params: {} });
+    if (this.props.creditCard) {
+      this.props.navigation.navigate({ key: 'confirmation1', routeName: 'Confirmation', params: {} });
+    } else {
+      Snackbar.show({ title: "Selecione um cartão", duration: Snackbar.LENGTH_SHORT });
+    }
   }
 
   _showCreditCard(creditCard) {
@@ -85,7 +89,8 @@ class ListCreditCardsScreen extends Component {
   _removeCreditCard(creditCard) {
     let params = { client: this.props.client, creditCard }
     this.props.dispatch(removeCreditCard(params));
-    this.props.dispatch(getCreditCards({ client: this.props.client }));
+
+    setTimeout(() => { this.props.dispatch(getCreditCards({ client: this.props.client })); }, 1000);
   }
 
   _renderActions = (data) => (
@@ -153,11 +158,14 @@ class ListCreditCardsScreen extends Component {
 
 function mapStateToProps(state) {
   return {
-    client: state.clients.client,
     creditCards: state.creditCards.creditCards,
     creditCard: state.creditCards.creditCard,
     isLoading: state.creditCards.isLoading,
-    error: state.creditCards.error
+    error: state.creditCards.error,
+
+    client: state.clients.client,
+    order: state.orders.order,
+    errorOrder: state.orders.error
   };
 }
 

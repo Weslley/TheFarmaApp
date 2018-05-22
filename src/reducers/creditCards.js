@@ -51,7 +51,7 @@ export default (state = INITIAL_STATE, action) => {
     case UPDATE_CREDIT_CARD_ERROR:
     case REMOVE_CREDIT_CARD_ERROR:
     case LIST_CREDIT_CARD_NEXT_PAGE_ERROR:
-      return { ...state, error: action.error, success: false };
+      return { ...state, error: action.error, isLoading: false, success: false };
 
     case CLEAR_ERROR:
       return { ...state, error: null, success: false };

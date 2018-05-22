@@ -8,6 +8,7 @@ import { NavigationActions } from 'react-navigation';
 
 import { connect } from "react-redux";
 import { checkout, clearError, clearOrder } from "../../actions/orders";
+import { cleanCart } from "../../actions/carts";
 
 import { Header } from "../../layout/Header";
 import { BottomBar } from "../../layout/Bar";
@@ -42,6 +43,7 @@ class ConfirmationScreen extends Component {
   componentWillReceiveProps = nextProps => {
     try {
       if (nextProps && nextProps.error) {
+
         if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
           if (nextProps.error.response.data.non_field_errors) {
             if (nextProps.error.response.data.non_field_errors === 'Pagamento não confirmado') {
@@ -54,13 +56,20 @@ class ConfirmationScreen extends Component {
           if (nextProps.error.response.data.detail) {
             Snackbar.show({ title: nextProps.error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
           }
-
           this.setState({ showCheckoutError: true })
         }
+
+        if (nextProps.error.message && nextProps.error.message === 'Network Error') {
+          this.setState({ showNetworkError: true });
+        }
+
       }
 
       if (nextProps && nextProps.success === true) {
-        this.setState({ showCheckoutSuccess: true })
+        this.props.dispatch(cleanCart());
+        this.props.dispatch(clearOrder());
+        this.setState({ showCheckoutSuccess: true });
+        BackHandler.addEventListener('hardwareBackPress', this.nothing);
       }
 
     } catch (e) {
@@ -70,6 +79,10 @@ class ConfirmationScreen extends Component {
 
   componentWillMount = () => {
     BackHandler.addEventListener('hardwareBackPress', this.nothing);
+  }
+
+  componentWillUnmount = () => {
+    BackHandler.removeEventListener('hardwareBackPress', this.nothing);
   }
 
   /** Private functions */
@@ -100,6 +113,7 @@ class ConfirmationScreen extends Component {
   }
 
   showCreditCards() {
+    this.setState({ showCheckoutError: false });
     this.onBack();
   }
 
@@ -143,16 +157,14 @@ class ConfirmationScreen extends Component {
   _renderItem = ({ item }) => {
     let apresentation = this.props.order.itens.find(i => i.apresentacao.id === item.apresentacao)
     if (apresentation && apresentation.apresentacao && item.possui === true) {
-      item.apresentacao = apresentation.apresentacao
-      return (<OrderItemAdapter item={item} />)
+      //item.apresentacao = apresentation.apresentacao
+      return (<OrderItemAdapter apresentation={apresentation.apresentacao} item={item} />)
     } else {
       return null;
     }
   };
 
   render() {
-    console.log(this.props);
-    console.log(this.state);
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
 
@@ -165,83 +177,75 @@ class ConfirmationScreen extends Component {
           }
         />
 
-        {Components.renderIfElse(this.state.showCheckoutSuccess === true,
-          <View style={{ flex: 1, backgroundColor: "rgba(255,255,255,0.8)", position: 'absolute', top: 0, bottom: 0, right: 0, left: 0 }}>
-            <DialogSuccessScreen
-              onPressButton={() => { this.showMyOrders() }}
-              onPressHome={() => { this.showHome() }}
-            />
-          </View>,
-          <ScrollView>
-            <View style={styles.container}>
-              <Text style={styles.title}>{"Meu pedido"}</Text>
+        <ScrollView>
+          <View style={styles.container}>
+            <Text style={styles.title}>{"Meu pedido"}</Text>
 
-              {Components.renderIf(this.props.order && this.props.proposal && this.props.proposal.itens,
-                <FlatList
-                  data={this.props.proposal.itens}
-                  keyExtractor={item => item.apresentacao.toString()}
-                  renderItem={this._renderItem}
-                />
-              )}
-
-              <View style={[styles.footerOrder, { marginBottom: 8, marginTop: 16 }]}>
-                <Text style={styles.footerOrderTitle}>{"Entrega"}</Text>
-                {Components.renderIfElse(this.props.order.valor_frete === "0.00",
-                  <Text style={styles.footerOrderText} >{"GRÁTIS"}</Text>,
-                  <TextMask type={"money"} value={this.props.order.valor_frete} />
-                )}
-              </View>
-
-              <View style={[styles.footerOrder]}>
-                <Text style={[styles.footerOrderTitle, { color: "rgba(0,0,0,0.80)" }]}>{"Total"}</Text>
-                <TextMask style={styles.footerOrderText} type={"money"} value={this.props.proposal.valor_total} />
-              </View>
-            </View>
-
-            <View style={styles.container}>
-              <Text style={styles.title}>{"Pagamento"}</Text>
-              {Components.renderIfElse(this.props.order.forma_pagamento === 0,
-                <View>
-                  <CreditCardAdapter creditCard={this.props.creditCard} />
-                  <View style={styles.containerParcel}>
-                    <Text style={styles.parcelTitle} >{"Parcelas"}</Text>
-                    <NBPicker
-                      mode={Platform.OS === 'ios' ? "dropdown" : 'dialog'}
-                      iosHeader="Selecione uma opção"
-                      iosIcon={<Icon name="ios-arrow-down" size={24} color={"#000"} />}
-                      headerBackButtonText="voltar"
-                      itemStyle={styles.nbItem}
-                      textStyle={styles.nbTextItem}
-                      selectedValue={this.state.numero_parcelas}
-                      onValueChange={(value, index) => this.setState({ numero_parcelas: value.id })}
-                    >
-                      {this._renderParcelsOptions()}
-                    </NBPicker>
-                  </View>
-                </View>,
-                <View>
-                  <Text>{`Troco para ${MaskService.toMask('money', this.props.order.troco)}`}</Text>
-                </View>
-              )}
-            </View>
-
-            {Components.renderIfElse(this.props.address,
-              <View style={[styles.container, { marginBottom: 90 }]}>
-                <Text style={styles.title}>{"Endereço para entrega"}</Text>
-                <View style={{ marginHorizontal: -24, paddingHorizontal: 24, backgroundColor: "#F8F8F8" }}>
-                  <AddressAdapter address={this.props.address} />
-                </View>
-              </View>,
-              <View style={[styles.container, { marginBottom: 90 }]}>
-                <Text style={styles.title}>{"Endereço da farmácia"}</Text>
-                <View style={{ marginHorizontal: -24, paddingHorizontal: 24, backgroundColor: "#F8F8F8" }}>
-                  <AddressAdapter address={this.props.proposal.farmacia.endereco} />
-                </View>
-              </View>
+            {Components.renderIf(this.props.order && this.props.proposal && this.props.proposal.itens,
+              <FlatList
+                data={this.props.proposal.itens}
+                keyExtractor={item => item.apresentacao.toString()}
+                renderItem={this._renderItem}
+              />
             )}
 
-          </ScrollView>,
-        )}
+            <View style={[styles.footerOrder, { marginBottom: 8, marginTop: 16 }]}>
+              <Text style={styles.footerOrderTitle}>{"Entrega"}</Text>
+              {Components.renderIfElse(this.props.order.valor_frete === "0.00",
+                <Text style={styles.footerOrderText} >{"GRÁTIS"}</Text>,
+                <TextMask type={"money"} value={this.props.order.valor_frete} />
+              )}
+            </View>
+
+            <View style={[styles.footerOrder]}>
+              <Text style={[styles.footerOrderTitle, { color: "rgba(0,0,0,0.80)" }]}>{"Total"}</Text>
+              <TextMask style={styles.footerOrderText} type={"money"} value={this.props.proposal.valor_total} />
+            </View>
+          </View>
+
+          <View style={styles.container}>
+            <Text style={styles.title}>{"Pagamento"}</Text>
+            {Components.renderIfElse(this.props.order.forma_pagamento === 0,
+              <View>
+                <CreditCardAdapter creditCard={this.props.creditCard} />
+                <View style={styles.containerParcel}>
+                  <Text style={styles.parcelTitle} >{"Parcelas"}</Text>
+                  <NBPicker
+                    mode={Platform.OS === 'ios' ? "dropdown" : 'dialog'}
+                    iosHeader="Selecione uma opção"
+                    iosIcon={<Icon name="ios-arrow-down" size={24} color={"#000"} />}
+                    headerBackButtonText="voltar"
+                    itemStyle={styles.nbItem}
+                    textStyle={styles.nbTextItem}
+                    selectedValue={this.state.numero_parcelas}
+                    onValueChange={(value, index) => this.setState({ numero_parcelas: value.id })}
+                  >
+                    {this._renderParcelsOptions()}
+                  </NBPicker>
+                </View>
+              </View>,
+              <View>
+                <Text>{`Troco para ${MaskService.toMask('money', this.props.order.troco)}`}</Text>
+              </View>
+            )}
+          </View>
+
+          {Components.renderIfElse(this.props.address,
+            <View style={[styles.container, { marginBottom: 90 }]}>
+              <Text style={styles.title}>{"Endereço para entrega"}</Text>
+              <View style={{ marginHorizontal: -24, paddingHorizontal: 24, backgroundColor: "#F8F8F8" }}>
+                <AddressAdapter address={this.props.address} />
+              </View>
+            </View>,
+            <View style={[styles.container, { marginBottom: 90 }]}>
+              <Text style={styles.title}>{"Endereço da farmácia"}</Text>
+              <View style={{ marginHorizontal: -24, paddingHorizontal: 24, backgroundColor: "#F8F8F8" }}>
+                <AddressAdapter address={this.props.proposal.farmacia.endereco} />
+              </View>
+            </View>
+          )}
+
+        </ScrollView>
 
         <BottomBar
           buttonTitle="Confirmar"
@@ -284,6 +288,7 @@ function mapStateToProps(state) {
     proposal: state.orders.proposal,
     isLoading: state.orders.isLoading,
     success: state.orders.success,
+    error: state.orders.error,
 
     address: state.addresses.address,
     creditCard: state.creditCards.creditCard,

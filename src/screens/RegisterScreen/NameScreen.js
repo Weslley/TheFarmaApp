@@ -12,6 +12,8 @@ import { connect } from "react-redux";
 import { updateV2, clearError } from "../../actions/clients"
 
 import { Header } from "../../layout/Header"
+
+import { Loading } from "../../components/Loading"
 import { MenuItem } from "../../components/MenuItem"
 
 import { Components, StringUtils } from "../../helpers";
@@ -133,7 +135,7 @@ class NameScreen extends Component {
                     }
                 />
 
-                <KeyboardAvoidingView style={{ flex: 1, paddingHorizontal: 24, justifyContent: "space-between" }}>
+                <View style={{ flex: 1, paddingHorizontal: 24, justifyContent: "space-between" }}>
                     <View style={{ paddingTop: 40 }}>
                         <Text style={[styles.title, { paddingBottom: 40 }]}>{"Digite o seu nome completo"}</Text>
                         <TextInput
@@ -161,7 +163,13 @@ class NameScreen extends Component {
                             </LinearGradient>
                         </TouchableOpacity>
                     </View>
-                </KeyboardAvoidingView>
+                </View>
+
+                {Components.renderIf(this.props.isLoading === true,
+                    <View style={{ flex: 1, backgroundColor: "rgba(255,255,255,0.8)", position: 'absolute', top: 0, bottom: 0, right: 0, left: 0 }}>
+                        <Loading />
+                    </View>
+                )}
             </KeyboardAvoidingView>
         );
     }
@@ -170,6 +178,7 @@ class NameScreen extends Component {
 function mapStateToProps(state) {
     return {
         client: state.clients.client,
+        isLoading: state.clients.isLoading,
         error: state.clients.error
     };
 }

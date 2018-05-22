@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { StatusBar, View, ScrollView, Image, TouchableOpacity } from "react-native";
-import { Container, Icon, Text, List, ListItem } from "native-base";
+import { StatusBar, View, ScrollView, Image, TouchableOpacity, FlatList, ActivityIndicator } from "react-native";
+import { Text } from "native-base";
 
 import { connect } from "react-redux";
 
@@ -9,6 +9,8 @@ import { BottomBar } from "../../layout/Bar";
 import { ActionSheet } from "../../layout/ActionSheet";
 import { ShoppingBagIcon } from "../../layout/ShoppingBagIcon";
 
+import { Icon } from "../../components/Icon";
+import { Loading } from "../../components/Loading"
 import { MenuItem } from '../../components/MenuItem';
 import { ButtonCustom } from "../../components/ButtonCustom";
 import { ProductDescription } from "../../components/Product";
@@ -27,7 +29,9 @@ class ApresentationDetailScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      apresentation: null
+      apresentation: null,
+      generics: [],
+      showDeliveryDialog: false
     };
   }
 
@@ -41,6 +45,7 @@ class ApresentationDetailScreen extends Component {
       apresentation.quantidade = this.getApresentationQuantity(nextProps, apresentation);
       this.setState({ apresentation })
     }
+    this.setState({ generics: nextProps.generics })
   };
 
   componentWillMount() {
@@ -90,10 +95,86 @@ class ApresentationDetailScreen extends Component {
     this.props.dispatch(removeItemToCart(apresentation));
   }
 
-  render() {
-    console.log(this.state.apresentation);
+  _showGenerics(generic) {
+    this.props.navigation.navigate({ routeName: 'ApresentationDetail', params: { apresentation: generic } });
+  }
+
+  _showDeliveryDialog() { this.setState({ showDeliveryDialog: true }); }
+
+  _showListProposals() {
+    if (this.props.client) {
+      let order = this.props.order;
+      let itens = []
+      this.props.cartItems.map((item) => { itens.push({ apresentacao: item.id, quantidade: item.quantidade }) })
+      order.itens = itens
+      order.latitude = this.props.latitude;
+      order.longitude = this.props.longitude;
+      let params = { client: this.props.client, order: order }
+      this.props.dispatch(createOrder(params));
+      this.props.navigation.navigate({ key: 'list_proposals1', routeName: 'ListProposals', params: {} });
+    } else {
+      this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: {} });
+    }
+    this.setState({ showDeliveryDialog: false });
+  }
+
+  _showListAddress() {
+    if (this.props.client) {
+      this.props.navigation.navigate({ key: 'list_address1', routeName: 'ListAddress', params: { showBottomBar: true } });
+    } else {
+      this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: {} });
+    }
+    this.setState({ showDeliveryDialog: false });
+  }
+
+  _renderDeliveryDialog() {
     return (
-      <Container style={{ backgroundColor: "#FFFFFF" }}>
+      <ActionSheet
+        callback={buttonIndex => { this.setState({ showDeliveryDialog: false }); }}
+        content={
+          <View style={styles.containerDelivery}>
+            <Text style={styles.titleDialog}>Como deseja obter os seus medicamentos?</Text>
+            <View style={styles.row}>
+              <ButtonCustom
+                image={require("../../assets/images/ic_walking.png")}
+                title="Buscar"
+                description="Opta em ir buscar seu medicamento em uma farmácia mais próxima."
+                onPress={() => { this._showListProposals(); }}
+              />
+              <ButtonCustom
+                image={require("../../assets/images/ic_delivery.png")}
+                title="Entregar"
+                description="Seu medicamento é entregue em um local de sua escolha."
+                onPress={() => { this._showListAddress(); }}
+              />
+            </View>
+          </View>
+        }
+      />
+    )
+  }
+
+  renderFooter = () => {
+    if (!this.props.isLoading) return null;
+    return (
+      <View style={{ alignItems: 'center', paddingVertical: 16, }}>
+        <ActivityIndicator color={"#00C7BD"} size={"large"} />
+      </View>
+    );
+  };
+
+  _renderItem = ({ item }) => (
+    <View style={styles.listItem}>
+      <ProductDescription
+        apresentation={item}
+        onPress={() => { this._showGenerics(item) }}
+      />
+    </View>
+  );
+
+  render() {
+    return (
+      <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
         <ScrollView>
           <Header
             title={this.state.apresentation.produto.nome}
@@ -103,8 +184,11 @@ class ApresentationDetailScreen extends Component {
                 : require("../../assets/images/ic_default_medicine.png")
             }
             menuLeft={
-              <MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }}
-                style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }} />
+              <MenuItem
+                icon="md-arrow-back"
+                onPress={() => { this.onBack() }}
+                style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+              />
             }
             menuRight={
               this.props.cartItems.length > 0 ? <ShoppingBagIcon value={this.props.cartItems.length} onPress={() => { this.showCart() }} /> : null
@@ -122,25 +206,19 @@ class ApresentationDetailScreen extends Component {
             </View>
           )}
 
-          {Components.renderIf(
-            this.props.generics.length > 0,
+          {Components.renderIf(this.props.generics.length > 0,
             <View style={{ marginBottom: 16 }}>
               <View style={styles.containerLabel}>
                 <Text style={styles.label}>{"Genéricos e Similhares"}</Text>
               </View>
 
-              <List
-                horizontal={true}
+              <FlatList
                 style={styles.list}
-                dataArray={this.props.generics}
-                renderRow={generic => (
-                  <ListItem style={styles.listItem}>
-                    <ProductDescription apresentation={generic}
-                      onPress={() => {
-                        this.props.navigation.navigate({ key: 'apresentation_detail1', routeName: 'ApresentationDetail', params: { apresentation: generic } });
-                      }} />
-                  </ListItem>
-                )}
+                horizontal={true}
+                data={this.props.generics}
+                keyExtractor={(item, index) => item.id.toString()}
+                renderItem={this._renderItem}
+                ListFooterComponent={this.renderFooter()}
               />
             </View>
           )}
@@ -170,14 +248,26 @@ class ApresentationDetailScreen extends Component {
             <Text style={styles.tableValue}>{this.state.apresentation.classe_terapeutica}</Text>
           </View>
 
-          <View style={[styles.table, { backgroundColor: "#FAFAFA" }]}>
+          <View style={[styles.table, { backgroundColor: "#FAFAFA", marginBottom: 90 }]}>
             <Text style={styles.tableLabel} uppercase>
               {"Quantidade"}
             </Text>
             <Text style={styles.tableValue}>{this.state.apresentation.quantidade_rec}</Text>
           </View>
         </ScrollView>
-      </Container>
+
+        {Components.renderIf(this.props.cartItems.length > 0,
+          <BottomBar
+            buttonTitle="Ver propostas"
+            price={CartUtils.getValueTotal(this.props.cartItems)}
+            onButtonPress={() => { this._showDeliveryDialog(); }}
+          />
+        )}
+
+        {Components.renderIf(this.state.showDeliveryDialog,
+          this._renderDeliveryDialog()
+        )}
+      </View>
     );
   }
 }
@@ -185,8 +275,17 @@ class ApresentationDetailScreen extends Component {
 function mapStateToProps(state) {
   return {
     uf: state.locations.uf,
+    latitude: state.locations.latitude,
+    longitude: state.locations.longitude,
+    selected: state.products.selected,
+    client: state.clients.client,
     cartItems: state.carts.cartItems,
-    generics: state.generics.generics
+    order: state.orders.order,
+
+    generics: state.generics.generics,
+    isLoading: state.generics.isLoading,
+    nextPage: state.generics.next,
+    error: state.generics.error,
   };
 }
 

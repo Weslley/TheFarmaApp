@@ -52,7 +52,7 @@ export default (state = INITIAL_STATE, action) => {
     case UPDATE_ADDRESS_ERROR:
     case REMOVE_ADDRESS_ERROR:
     case LIST_ADDRESS_NEXT_PAGE_ERROR:
-      return { ...state, error: action.error };
+      return { ...state, error: action.error, isLoading: false };
 
     case CLEAR_ERROR:
       return { ...state, error: null, success: false };

@@ -90,7 +90,7 @@ class ListOrdersScreen extends Component {
 
     render() {
         return (
-            <View style={{ backgroundColor: "#FFFFFF" }}>
+            <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
 
                 <Header
                     title={"Minhas compras"}

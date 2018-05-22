@@ -22,7 +22,7 @@ export const getGenerics = function* (action) {
 
 export const getGenericsNextPage = function* (action) {
     try {
-        const response = yield call(axios.get, `${action.next}`);
+        const response = yield call(axios.get, `${action.params.url}`);
         yield put(responseSuccess(GET_GENERICS_NEXT_PAGE_SUCCESS, response.data));
     } catch(e) {
         yield put(responseError(GET_GENERICS_NEXT_PAGE_ERROR, e));
