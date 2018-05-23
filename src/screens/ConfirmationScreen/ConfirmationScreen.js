@@ -9,6 +9,8 @@ import { NavigationActions } from 'react-navigation';
 import { connect } from "react-redux";
 import { checkout, clearError, clearOrder } from "../../actions/orders";
 import { cleanCart } from "../../actions/carts";
+import { clearCreditCard } from "../../actions/creditCards";
+import { clearAddress } from "../../actions/addresses";
 
 import { Header } from "../../layout/Header";
 import { BottomBar } from "../../layout/Bar";
@@ -66,8 +68,8 @@ class ConfirmationScreen extends Component {
       }
 
       if (nextProps && nextProps.success === true) {
-        this.props.dispatch(cleanCart());
-        this.props.dispatch(clearOrder());
+        //this.props.dispatch(cleanCart());
+        //this.props.dispatch(clearOrder());
         this.setState({ showCheckoutSuccess: true });
         BackHandler.addEventListener('hardwareBackPress', this.nothing);
       }
@@ -83,6 +85,10 @@ class ConfirmationScreen extends Component {
 
   componentWillUnmount = () => {
     BackHandler.removeEventListener('hardwareBackPress', this.nothing);
+    this.props.dispatch(clearOrder());
+    this.props.dispatch(clearCreditCard());
+    this.props.dispatch(clearAddress());
+    this.props.dispatch(cleanCart());
   }
 
   /** Private functions */
@@ -207,7 +213,7 @@ class ConfirmationScreen extends Component {
             <Text style={styles.title}>{"Pagamento"}</Text>
             {Components.renderIfElse(this.props.order.forma_pagamento === 0,
               <View>
-                <CreditCardAdapter creditCard={this.props.creditCard} />
+                {Components.renderIf(this.props.creditCard, <CreditCardAdapter creditCard={this.props.creditCard} />)}
                 <View style={styles.containerParcel}>
                   <Text style={styles.parcelTitle} >{"Parcelas"}</Text>
                   <NBPicker
@@ -231,13 +237,13 @@ class ConfirmationScreen extends Component {
           </View>
 
           {Components.renderIfElse(this.props.address,
-            <View style={[styles.container, { marginBottom: 90 }]}>
+            <View style={[styles.container, { marginBottom: 90, borderBottomWidth: 0 }]}>
               <Text style={styles.title}>{"Endereço para entrega"}</Text>
               <View style={{ marginHorizontal: -24, paddingHorizontal: 24, backgroundColor: "#F8F8F8" }}>
                 <AddressAdapter address={this.props.address} />
               </View>
             </View>,
-            <View style={[styles.container, { marginBottom: 90 }]}>
+            <View style={[styles.container, { marginBottom: 90, borderBottomWidth: 0 }]}>
               <Text style={styles.title}>{"Endereço da farmácia"}</Text>
               <View style={{ marginHorizontal: -24, paddingHorizontal: 24, backgroundColor: "#F8F8F8" }}>
                 <AddressAdapter address={this.props.proposal.farmacia.endereco} />

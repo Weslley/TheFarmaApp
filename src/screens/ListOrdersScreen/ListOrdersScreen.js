@@ -64,7 +64,6 @@ class ListOrdersScreen extends Component {
     }
 
     onEndReached = ({ distanceFromEnd }) => {
-        console.log("NEXTPAGE");
         if (this.props.nextPage) {
             let params = { client: this.props.client, url: this.props.nextPage }
             this.props.dispatch(getOrdersNextPage(params));

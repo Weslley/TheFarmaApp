@@ -28,25 +28,23 @@ class ListProposalsScreen extends Component {
   };
 
   componentWillMount = () => {
-    console.log("Montando!");
+    console.log("Montando -> ListProposal");
     BackHandler.addEventListener('hardwareBackPress', this.nothing);
   }
 
   componentDidMount() {
-    console.log("Montou!");
+    console.log("Montou  -> ListProposal");
     this.loadPropostas = setInterval(() => this.getProposals(), 10000);
   }
 
   componentWillUnmount = () => {
+    console.log("Desmontou  -> ListProposal");
     clearInterval(this.loadPropostas);
     BackHandler.removeEventListener('hardwareBackPress', this.nothing);
   }
 
   /** Private functions */
-  nothing = () => {
-    console.log("Nothing!");
-    return true;
-  }
+  nothing = () => { return true; }
 
   onBack() {
     this.props.navigation.goBack(null);
@@ -105,7 +103,6 @@ class ListProposalsScreen extends Component {
   );
 
   render() {
-    console.log(this.props);
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
         <Header

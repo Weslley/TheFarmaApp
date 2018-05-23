@@ -131,10 +131,8 @@ class OrderScreen extends Component {
     }
 
     render() {
-        console.log(this.state);
         return (
             <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
-
                 <Header
                     title={`Ordem #${StringUtils.rjust('' + this.state.order.id, 9, '0')}`}
                     subtitle={"Todos os detalhes do seu pedido está aqui"}
@@ -143,11 +141,8 @@ class OrderScreen extends Component {
                             style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }} />
                     }
                 />
-
                 <ScrollView>
-
                     <View style={styles.container}>
-
                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
                             <Text style={styles.title}>{DateUtils.toDate(this.state.order.log.data_criacao)}</Text>
                             <Text style={styles.title}>{StatusPedido[this.state.order.status][1]}</Text>
@@ -187,7 +182,6 @@ class OrderScreen extends Component {
                             </LinearGradient>
                         </TouchableOpacity>
                     </View>
-
                 </ScrollView>
             </View>
         );

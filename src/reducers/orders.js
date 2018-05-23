@@ -45,7 +45,6 @@ export default (state = INITIAL_STATE, action) => {
         case CHECKOUT:
             return { ...state, isLoading: true, error: null, success: false };
 
-
         case LIST_ORDER_SUCCESS:
         case LIST_ORDER_NEXT_PAGE_SUCCESS:
             list = uniqBy(union(action.data.results, state.orders), "id");
@@ -64,8 +63,12 @@ export default (state = INITIAL_STATE, action) => {
         case UPDATE_ORDER:
             return { ...state, order: action.params.order, isLoading: false, error: null, success: false };
 
+        case GET_ORDER:
+            newOrder = state.order
+            newOrder.propostas = []
+            return { ...state, isLoading: true, order: newOrder, error: null, success: false };
+
         case GET_ORDER_SUCCESS:
-            newOrder = Object.assign(state.order, action.data)
             return { ...state, order: action.data, error: null, isLoading: false };
 
         case CREATE_ORDER_SUCCESS:

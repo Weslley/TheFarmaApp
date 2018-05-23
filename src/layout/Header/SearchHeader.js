@@ -15,7 +15,7 @@ import styles from './styles';
 class SearchHeader extends Component {
     static defaultProps = {
         separator: true,
-        style: { }
+        style: {}
     }
 
     constructor(props) {
@@ -50,6 +50,7 @@ class SearchHeader extends Component {
 
                 <Item>
                     <Input
+                        autoFocus={true}
                         style={{ fontFamily: "Roboto-Bold", fontSize: 24, paddingLeft: 0, marginLeft: 0 }}
                         placeholder="Nome do medicamento "
                         placeholderTextColor="#CCC"

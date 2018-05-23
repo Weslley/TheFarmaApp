@@ -142,7 +142,6 @@ class MedicineApresentationScreen extends Component {
   }
 
   onEndReached = ({ distanceFromEnd }) => {
-    console.log("NEXTPAGE");
     if (this.props.nextPage) {
       let params = { client: this.props.client, url: this.props.nextPage }
       this.props.dispatch(getApresentationsNextPage(params));

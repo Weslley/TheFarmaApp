@@ -5,10 +5,14 @@ import { TextMask } from "react-native-masked-text";
 import LinearGradient from "react-native-linear-gradient";
 import PropTypes from "prop-types";
 
-import styles from "./styles";
 import { Components } from "../../helpers";
+import styles from "./styles";
 
 class BottomBar extends Component {
+  static defaultProps = {
+    proposal: false
+  }
+
   constructor(props) {
     super(props);
     this.state = {};
@@ -19,7 +23,10 @@ class BottomBar extends Component {
         <View>
           {Components.renderIf(this.props.price,
             <View>
-              <Text style={styles.label}>Total aproximado</Text>
+              {Components.renderIfElse(this.props.proposal,
+                <Text style={styles.label}>Total</Text>,
+                <Text style={styles.label}>Total aproximado</Text>
+              )}
               <TextMask style={styles.price} value={this.props.price} type={"money"} options={{}} />
             </View>
           )}

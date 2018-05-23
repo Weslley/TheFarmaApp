@@ -95,7 +95,6 @@ class ListAddressScreen extends Component {
   );
 
   _selectAddress(address) {
-    console.log(address);
     this.props.dispatch(selectAddress(address))
   }
 

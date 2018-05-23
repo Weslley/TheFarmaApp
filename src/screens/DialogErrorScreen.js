@@ -78,13 +78,13 @@ class DialogErrorScreen extends Component {
           <TouchableOpacity style={{ marginBottom: 16 }} onPress={this.props.onPressButton}>
             <LinearGradient colors={["#00C7BD", "#009999"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.buttonMyOrders}>
               <Text style={styles.buttonMyOrdersText}>
-                {"meus cartões"}
+                {"Meus Cartões"}
               </Text>
             </LinearGradient>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.buttonHome} onPress={this.props.onPressClose}>
-            <Text style={styles.buttonHomeText}>{"fechar"}</Text>
+            <Text style={styles.buttonHomeText}>{"Fechar"}</Text>
           </TouchableOpacity>
         </View>
       </Container>

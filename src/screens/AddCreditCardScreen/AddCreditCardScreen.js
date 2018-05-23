@@ -2,11 +2,13 @@ import moment from "moment";
 
 import React, { Component } from "react";
 import { KeyboardAvoidingView, ScrollView, View, Image, TouchableOpacity, TextInput, Platform } from "react-native";
-import { Button, Text } from "native-base";
-import { TextInputMask, MaskService } from "react-native-masked-text";
 
 TextInput.defaultProps.selectionColor = "black";
 TextInput.defaultProps.underlineColorAndroid = 'black'
+
+import { Button, Text } from "native-base";
+import { TextInputMask, MaskService } from "react-native-masked-text";
+import { CardIOModule, CardIOUtilities } from 'react-native-awesome-card-io';
 
 import { connect } from "react-redux";
 import { getCreditCards, saveCreditCard, clearError } from "../../actions/creditCards";
@@ -84,9 +86,26 @@ class AddCreditCardScreen extends Component {
     }
   }
 
+  componentWillMount() {
+    if (Platform.OS === 'ios') {
+      CardIOUtilities.preload();
+    }
+  }
+
+
   /** Private functions */
   onBack() {
     this.props.navigation.goBack(null);
+  }
+
+  scanCard() {
+    CardIOModule
+      .scanCard({ suppressConfirmation: true })
+      .then(card => {
+        console.log(card);
+        this.setState({ numero_cartao: card.cardNumber })
+      })
+      .catch(() => { console.log("Cancelou"); })
   }
 
   clearFormErrors() {
@@ -98,6 +117,9 @@ class AddCreditCardScreen extends Component {
     this.setState({ numero_cartao: valueMask })
     let bandeira = this.getCreditCardLabel(valueMask.replace(/\D/g, ""));
     this.setState({ bandeira });
+    if (valueMask.length >= 14) {
+      this.iExpiredDate.focus();
+    }
   }
 
   onChangeValidade = value => {
@@ -107,6 +129,7 @@ class AddCreditCardScreen extends Component {
       mes_expiracao = "" + parseInt(valueMask.split("/")[0])
       ano_expiracao = "" + parseInt(valueMask.split("/")[1])
       this.setState({ mes_expiracao, ano_expiracao })
+      this.iCvv.focus();
     }
   }
 
@@ -155,11 +178,13 @@ class AddCreditCardScreen extends Component {
     this.clearFormErrors();
 
     if (this.state.numero_cartao == null || this.state.numero_cartao == "") {
+      this.iNumberCard.focus();
       this.setState({ numeroCartaoError: "Este campo é obrigatório" })
       return false;
     }
 
     if (this.state.bandeira == null || this.state.bandeira == "") {
+      this.iNumberCard.focus();
       this.setState({ numeroCartaoError: "Cartão inválido" })
       return false;
     }
@@ -169,19 +194,23 @@ class AddCreditCardScreen extends Component {
       let data = moment(`20${parts[1]}-${parts[0]}-01`);
       if (data.isValid()) {
         if (data.toDate().getTime() < new Date().getTime()) {
+          this.iExpiredDate.focus();
           this.setState({ validadeError: "Cartão vencido" })
           return false;
         }
       } else {
+        this.iExpiredDate.focus();
         this.setState({ validadeError: "Data inválida" })
         return false;
       }
     } else {
+      this.iExpiredDate.focus();
       this.setState({ validadeError: "Data inválida" })
       return false;
     }
 
     if (this.state.cvv == null || this.state.cvv == "") {
+      this.iCvv.focus();
       this.setState({ cvvError: "campo obrigatório" })
       return false;
     }
@@ -240,9 +269,10 @@ class AddCreditCardScreen extends Component {
                     <TextInput
                       maxLength={19}
                       autoFocus={true}
-                      keyboardType={"numeric"}
-                      style={[styles.input, { width: 230 }]}
                       multiline={false}
+                      keyboardType={"numeric"}
+                      ref={(c) => { this.iNumberCard = c; }}
+                      style={[styles.input, { width: 230 }]}
                       onChangeText={this.onChangeNumeroCartao}
                       value={this.state.numero_cartao}
                     />
@@ -250,7 +280,7 @@ class AddCreditCardScreen extends Component {
                       <View style={styles.flagContainer}>
                         <Text style={styles.flagText} uppercase={true}>{this.state.bandeira}</Text>
                       </View>,
-                      <TouchableOpacity onPress={() => { }} style={{ position: "absolute", right: 1 }}>
+                      <TouchableOpacity onPress={() => { this.scanCard() }} style={{ position: "absolute", right: 1 }}>
                         <Icon name="camera" size={25} color={"#000000"} />
                       </TouchableOpacity>
                     )}
@@ -267,17 +297,16 @@ class AddCreditCardScreen extends Component {
                   <Text style={styles.label}>{"Validade"}</Text>
                   <TextInput
                     maxLength={5}
-                    keyboardType={"numeric"}
-                    style={styles.input}
                     multiline={false}
+                    style={styles.input}
+                    keyboardType={"numeric"}
+                    ref={(c) => { this.iExpiredDate = c; }}
                     onChangeText={this.onChangeValidade}
                     value={this.state.validade}
                   />
-
                   {Components.renderIf(Platform.OS === 'ios',
                     <View style={{ borderBottomColor: '#000', borderWidth: 0.5, marginTop: 4, }} />
                   )}
-
                   {Components.renderIf(this.state.validadeError,
                     <Text style={styles.inputError} uppercase={false}>{this.state.validadeError}</Text>
                   )}
@@ -287,10 +316,11 @@ class AddCreditCardScreen extends Component {
                   <Text style={styles.label}>{"CVV"}</Text>
                   <TextInput
                     maxLength={3}
-                    keyboardType={"numeric"}
-                    style={styles.input}
                     multiline={false}
                     secureTextEntry={true}
+                    keyboardType={"numeric"}
+                    style={styles.input}
+                    ref={(c) => { this.iCvv = c; }}
                     onChangeText={(cvv) => this.setState({ cvv })}
                     value={this.state.cvv}
                   />

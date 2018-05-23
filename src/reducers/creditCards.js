@@ -60,7 +60,7 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, error: null, creditCard: null, success: false };
 
     case CLEAR_CREDIT_CARDS:
-      return { ...state, error: null, creditCards: null, success: false };
+      return { ...state, error: null, creditCards: [], success: false };
 
     default:
       return state;

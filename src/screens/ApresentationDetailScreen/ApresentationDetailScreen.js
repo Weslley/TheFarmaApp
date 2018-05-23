@@ -3,6 +3,10 @@ import { StatusBar, View, ScrollView, Image, TouchableOpacity, FlatList, Activit
 import { Text } from "native-base";
 
 import { connect } from "react-redux";
+import { createOrder } from "../../actions/orders";
+import { rankingView } from "../../actions/apresentations";
+import { getGenerics, clearError, clearGenerics } from "../../actions/generics";
+import { addItemToCart, removeItemToCart } from "../../actions/carts";
 
 import { Header } from "../../layout/Header";
 import { BottomBar } from "../../layout/Bar";
@@ -15,10 +19,6 @@ import { MenuItem } from '../../components/MenuItem';
 import { ButtonCustom } from "../../components/ButtonCustom";
 import { ProductDescription } from "../../components/Product";
 import { ApresentationDetailDescription } from "../../components/Product";
-
-import { rankingView } from "../../actions/apresentations";
-import { getGenerics, clearError, clearGenerics } from "../../actions/generics";
-import { addItemToCart, removeItemToCart } from "../../actions/carts";
 
 import { Components, CartUtils } from "../../helpers";
 import { TipoMedicamento } from "../../models/enums"
