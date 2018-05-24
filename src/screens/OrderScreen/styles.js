@@ -7,7 +7,6 @@ export default EStyleSheet.create({
     borderBottomColor: "#CCC"
   },
   title: {
-    marginBottom: 16,
     fontFamily: "Roboto-Bold",
     fontSize: 16,
     color: "rgba(0,0,0,0.80)"
@@ -32,7 +31,12 @@ export default EStyleSheet.create({
   },
   containerParcel: {
     width: "100%",
-    marginTop: 24
+    marginTop: 24,
+  },
+  row: {
+    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between"
   },
   parcelTitle: {
     fontFamily: "Roboto-Bold",

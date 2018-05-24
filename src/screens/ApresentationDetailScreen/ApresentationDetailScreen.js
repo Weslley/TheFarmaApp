@@ -113,7 +113,7 @@ class ApresentationDetailScreen extends Component {
       this.props.dispatch(createOrder(params));
       this.props.navigation.navigate({ key: 'list_proposals1', routeName: 'ListProposals', params: {} });
     } else {
-      this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: {} });
+      this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: { actionBack: 'ApresentationDetail' } });
     }
     this.setState({ showDeliveryDialog: false });
   }
@@ -122,7 +122,7 @@ class ApresentationDetailScreen extends Component {
     if (this.props.client) {
       this.props.navigation.navigate({ key: 'list_address1', routeName: 'ListAddress', params: { showBottomBar: true } });
     } else {
-      this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: {} });
+      this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: { actionBack: 'ApresentationDetail' } });
     }
     this.setState({ showDeliveryDialog: false });
   }

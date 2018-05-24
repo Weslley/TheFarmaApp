@@ -35,7 +35,8 @@ class PasswordScreen extends Component {
             email_error: null,
             celular_error: null,
             password_error: null,
-            showNetworkError: false
+            showNetworkError: false,
+            actionBack: null,
         };
     }
 
@@ -88,6 +89,7 @@ class PasswordScreen extends Component {
 
     componentWillMount() {
         const { state: { params } } = this.props.navigation;
+
         if (params) {
             if (params.nome) this.setState({ nome: params.nome })
             if (params.email) this.setState({ email: params.email })
@@ -95,10 +97,8 @@ class PasswordScreen extends Component {
             if (params.foto) this.setState({ foto: params.foto })
             if (params.data_nascimento) this.setState({ data_nascimento: params.data_nascimento })
             if (params.sexo) this.setState({ sexo: params.sexo })
+            if (params.actionBack) this.setState({ actionBack })
         }
-
-        this.setState({ password_error: null })
-        this.props.dispatch(clearError());
     }
 
     /** Private functions */

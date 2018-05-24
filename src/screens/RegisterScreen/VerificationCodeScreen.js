@@ -40,8 +40,8 @@ class VerificationCodeScreen extends Component {
             celular_error: null,
             codigo_sms_error: null,
             password_error: null,
-
-            showNetworkError: false
+            showNetworkError: false,
+            actionBack: null,
         };
     }
 
@@ -110,10 +110,8 @@ class VerificationCodeScreen extends Component {
             if (params.foto) this.setState({ foto: params.foto })
             if (params.data_nascimento) this.setState({ data_nascimento: params.data_nascimento })
             if (params.sexo) this.setState({ sexo: params.sexo })
+            if (params.actionBack) this.setState({ actionBack })
         }
-
-        this.setState({ nome_error: null, email_error: null, celular_error: null, password_error: null, codigo_sms_error: null })
-        this.props.dispatch(clearError());
     }
 
     componentDidMount() { }

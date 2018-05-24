@@ -23,6 +23,7 @@ class WelcomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      locationPermission: '',
       latitude: null,
       longitude: null,
       error: null,
@@ -122,15 +123,14 @@ class WelcomeScreen extends Component {
   }
 
   onSearch = () => {
+    console.log(this.state);
     if (this.state.locationPermission === 'authorized') {
       this.getLocation();
       this.props.navigation.navigate({ key: 'search_medicine1', routeName: 'SearchMedicine', params: {} });
     } else {
       Permissions.request('location').then(response => {
+        if (response === 'authorized') this.getLocation();
         this.setState({ locationPermission: response });
-        if (response === 'authorized') {
-          this.getLocation();
-        }
       });
     }
   };
@@ -179,7 +179,7 @@ class WelcomeScreen extends Component {
         />
 
         <View style={{ paddingHorizontal: 24 }}>
-          <TouchableOpacity style={styles.searchBar} onPress={this.onSearch}>
+          <TouchableOpacity style={styles.searchBar} onPress={() => { this.onSearch() }}>
             <Image source={require("../../assets/images/ic_search.png")} style={styles.icon} />
             <Text style={styles.text}>Qual medicamento você deseja?</Text>
             <Icon name="barcode" size={24} color={"#000"} style={styles.icon} />

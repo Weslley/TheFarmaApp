@@ -22,14 +22,16 @@ class OrderAdapter extends Component {
 
   _keyExtractor = (item, index) => item.apresentacao.id.toString();
 
-  _renderItem = ({ item }) => (
-    <OrderItemAdapter item={item} />
-  );
+  _renderItem = ({ item }) => {
+    if (item.status !== 4) {
+      return (<OrderItemAdapter item={item} />);
+    }
+  }
 
   render() {
     return (
       <View style={{}}>
-      
+
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
           <Text style={styles.text}>{DateUtils.toDate(this.props.order.log.data_criacao)}</Text>
           <Text style={styles.text}>{StatusPedido[this.props.order.status][1]}</Text>
@@ -45,7 +47,7 @@ class OrderAdapter extends Component {
 
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={[styles.text, {marginRight: 16}]}>{"Total"}</Text>
+            <Text style={[styles.text, { marginRight: 16 }]}>{"Total"}</Text>
             <TextMask style={styles.text} value={this.props.order.valor_total} type={"money"} options={{}} />
           </View>
         </View>

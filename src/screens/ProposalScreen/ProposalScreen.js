@@ -268,7 +268,7 @@ class ProposalScreen extends Component {
 
   render() {
     return (
-      <Container style={{ backgroundColor: "#FFFFFF" }}>
+      <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
         <ScrollView>
           <Header
             title={this.props.proposal.farmacia.nome_fantasia}
@@ -305,7 +305,7 @@ class ProposalScreen extends Component {
 
           {Components.renderIf(this.props.proposal && this.props.proposal.itens,
             <FlatList
-              style={{ paddingHorizontal: 24 }}
+              style={{ paddingHorizontal: 24, paddingBottom: 90 }}
               data={this.props.proposal.itens}
               keyExtractor={item => item.apresentacao.toString()}
               renderItem={this._renderItem}
@@ -329,7 +329,7 @@ class ProposalScreen extends Component {
           this._renderTrocoDialog()
         )}
 
-      </Container>
+      </View>
     );
   }
 }

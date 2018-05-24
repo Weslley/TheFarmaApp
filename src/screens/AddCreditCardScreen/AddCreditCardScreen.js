@@ -112,13 +112,49 @@ class AddCreditCardScreen extends Component {
     this.setState({ numeroCartaoError: null, validadeError: null, cvvError: null })
   }
 
+  setCurrentIndex(index) {
+    switch (index) {
+      case 0:
+        this.iNumberCard.focus();
+        this.setState({ currentIndex: 0 })
+        this.scrollView.scrollTo({ x: 10, y: 0, animated: true });
+        break
+      case 1:
+        this.iExpiredDate.focus();
+        this.setState({ currentIndex: 1 })
+        this.scrollView.scrollTo({ x: 100, y: 0, animated: true });
+        break
+      case 2:
+        this.iCvv.focus();
+        this.setState({ currentIndex: 2 })
+        this.scrollView.scrollTo({ x: 140, y: 0, animated: true });
+        break
+      default:
+        this.iNumberCard.focus();
+        this.setState({ currentIndex: 0 })
+        this.scrollView.scrollTo({ x: 1, y: 0, animated: true });
+        break
+    }
+  }
+
+  getImageCard() {
+
+    if (this.state.currentIndex === 0)
+      return (<Image style={{ width: 128, height: 88 }} source={require("../../assets/images/creditcard0.png")} />)
+    if (this.state.currentIndex === 1)
+      return (<Image style={{ width: 128, height: 88 }} source={require("../../assets/images/creditcard1.png")} />)
+    if (this.state.currentIndex === 2)
+      return (<Image style={{ width: 128, height: 88 }} source={require("../../assets/images/creditcard2.png")} />)
+
+  }
+
   onChangeNumeroCartao = value => {
     let valueMask = MaskService.toMask('credit-card', value);
     this.setState({ numero_cartao: valueMask })
     let bandeira = this.getCreditCardLabel(valueMask.replace(/\D/g, ""));
     this.setState({ bandeira });
-    if (valueMask.length >= 14) {
-      this.iExpiredDate.focus();
+    if (valueMask.length >= 19) {
+      this.setCurrentIndex(1);
     }
   }
 
@@ -129,12 +165,15 @@ class AddCreditCardScreen extends Component {
       mes_expiracao = "" + parseInt(valueMask.split("/")[0])
       ano_expiracao = "" + parseInt(valueMask.split("/")[1])
       this.setState({ mes_expiracao, ano_expiracao })
-      this.iCvv.focus();
+      this.setCurrentIndex(2);
     }
   }
 
   onChangeCVV = value => {
-
+    this.setState({ cvv: value })
+    if (value.length >= 3) {
+      this.setCurrentIndex(0);
+    }
   }
 
   getCreditCardLabel(cardNumber) {
@@ -178,14 +217,14 @@ class AddCreditCardScreen extends Component {
     this.clearFormErrors();
 
     if (this.state.numero_cartao == null || this.state.numero_cartao == "") {
-      this.iNumberCard.focus();
       this.setState({ numeroCartaoError: "Este campo é obrigatório" })
+      this.setCurrentIndex(0);
       return false;
     }
 
     if (this.state.bandeira == null || this.state.bandeira == "") {
-      this.iNumberCard.focus();
       this.setState({ numeroCartaoError: "Cartão inválido" })
+      this.setCurrentIndex(0);
       return false;
     }
 
@@ -194,24 +233,24 @@ class AddCreditCardScreen extends Component {
       let data = moment(`20${parts[1]}-${parts[0]}-01`);
       if (data.isValid()) {
         if (data.toDate().getTime() < new Date().getTime()) {
-          this.iExpiredDate.focus();
           this.setState({ validadeError: "Cartão vencido" })
+          this.setCurrentIndex(1);
           return false;
         }
       } else {
-        this.iExpiredDate.focus();
         this.setState({ validadeError: "Data inválida" })
+        this.setCurrentIndex(1);
         return false;
       }
     } else {
-      this.iExpiredDate.focus();
       this.setState({ validadeError: "Data inválida" })
+      this.setCurrentIndex(1);
       return false;
     }
 
-    if (this.state.cvv == null || this.state.cvv == "") {
-      this.iCvv.focus();
-      this.setState({ cvvError: "campo obrigatório" })
+    if ((this.state.cvv == null || this.state.cvv == "") || this.state.cvv.length < 3) {
+      this.setState({ cvvError: "Campo Inválido" })
+      this.setCurrentIndex(2);
       return false;
     }
 
@@ -259,10 +298,13 @@ class AddCreditCardScreen extends Component {
 
             <ScrollView>
               <View style={{ alignItems: "center", paddingVertical: 32 }}>
-                <Image style={{ width: 128, height: 88 }} source={require("../../assets/images/CreditCard.png")} />
+                {this.getImageCard()}
               </View>
 
-              <ScrollView horizontal={true}>
+              <ScrollView
+                horizontal={true}
+                ref={ref => this.scrollView = ref}>
+
                 <View style={[styles.item, { marginLeft: 24, maxHeight: 100 }]}>
                   <Text style={styles.label}>{"Número do cartão"}</Text>
                   <View style={{ flexDirection: "row", alignItems: 'center' }}>
@@ -293,7 +335,7 @@ class AddCreditCardScreen extends Component {
                   )}
                 </View>
 
-                <View style={[styles.item, { width: 90 }]}>
+                <View style={[styles.item, { width: 100 }]}>
                   <Text style={styles.label}>{"Validade"}</Text>
                   <TextInput
                     maxLength={5}
@@ -312,7 +354,7 @@ class AddCreditCardScreen extends Component {
                   )}
                 </View>
 
-                <View style={[styles.item, { width: 90 }]}>
+                <View style={[styles.item, { width: 100 }]}>
                   <Text style={styles.label}>{"CVV"}</Text>
                   <TextInput
                     maxLength={3}
@@ -321,7 +363,7 @@ class AddCreditCardScreen extends Component {
                     keyboardType={"numeric"}
                     style={styles.input}
                     ref={(c) => { this.iCvv = c; }}
-                    onChangeText={(cvv) => this.setState({ cvv })}
+                    onChangeText={this.onChangeCVV}
                     value={this.state.cvv}
                   />
 

@@ -24,7 +24,7 @@ export const getOrder = function* (action) {
         
         let order = response.data
         if (order.propostas)
-            order.propostas = orderBy(order.propostas, ['possui_todos_itens', 'valor_total'], ['asc', 'asc'])
+            order.propostas = orderBy(order.propostas, ['possui_todos_itens', 'valor_total'], ['desc', 'asc'])
 
         yield put(responseSuccess(GET_ORDER_SUCCESS, order));
     } catch (e) {

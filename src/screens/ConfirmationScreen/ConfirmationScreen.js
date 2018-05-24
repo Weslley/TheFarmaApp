@@ -196,9 +196,9 @@ class ConfirmationScreen extends Component {
             )}
 
             <View style={[styles.footerOrder, { marginBottom: 8, marginTop: 16 }]}>
-              <Text style={styles.footerOrderTitle}>{"Entrega"}</Text>
+              <Text style={styles.footerOrderTitle}>{"Frete"}</Text>
               {Components.renderIfElse(this.props.order.valor_frete === "0.00",
-                <Text style={styles.footerOrderText} >{"GRÁTIS"}</Text>,
+                <Text style={[styles.footerOrderText, { fontSize: 14 }]} >{"GRÁTIS"}</Text>,
                 <TextMask type={"money"} value={this.props.order.valor_frete} />
               )}
             </View>
@@ -214,20 +214,22 @@ class ConfirmationScreen extends Component {
             {Components.renderIfElse(this.props.order.forma_pagamento === 0,
               <View>
                 {Components.renderIf(this.props.creditCard, <CreditCardAdapter creditCard={this.props.creditCard} />)}
-                <View style={styles.containerParcel}>
-                  <Text style={styles.parcelTitle} >{"Parcelas"}</Text>
-                  <NBPicker
-                    mode={Platform.OS === 'ios' ? "dropdown" : 'dialog'}
-                    iosHeader="Selecione uma opção"
-                    iosIcon={<Icon name="ios-arrow-down" size={24} color={"#000"} />}
-                    headerBackButtonText="voltar"
-                    itemStyle={styles.nbItem}
-                    textStyle={styles.nbTextItem}
-                    selectedValue={this.state.numero_parcelas}
-                    onValueChange={(value, index) => this.setState({ numero_parcelas: value.id })}
-                  >
-                    {this._renderParcelsOptions()}
-                  </NBPicker>
+                <View style={[styles.containerParcel, styles.row]}>
+                  <Text style={[styles.parcelTitle, { width: '45%' }]} >{"Parcelas"}</Text>
+                  <View style={{ width: '55%' }}>
+                    <NBPicker
+                      mode={Platform.OS === 'ios' ? "dropdown" : 'dialog'}
+                      iosHeader="Selecione uma opção"
+                      iosIcon={<Icon name="ios-arrow-down" size={24} color={"#000"} />}
+                      headerBackButtonText="voltar"
+                      itemStyle={styles.nbItem}
+                      textStyle={styles.nbTextItem}
+                      selectedValue={this.state.numero_parcelas}
+                      onValueChange={(value, index) => this.setState({ numero_parcelas: value.id })}
+                    >
+                      {this._renderParcelsOptions()}
+                    </NBPicker>
+                  </View>
                 </View>
               </View>,
               <View>
