@@ -104,9 +104,16 @@ class ListCreditCardsScreen extends Component {
   );
 
   _renderItem = ({ item }) => (
-    <TouchableHighlight onPress={() => { this._selectCreditCard(item) }} style={styles.rowFront} underlayColor={'#F6F6F6'}>
-      <CreditCardAdapter creditCard={item} checked={(this.props.creditCard && item.id === this.props.creditCard.id)} />
-    </TouchableHighlight>
+    <TouchableOpacity
+      activeOpacity={1}
+      style={styles.rowFront}
+      onPress={() => { this._selectCreditCard(item) }}>
+      
+      <CreditCardAdapter
+        creditCard={item}
+        checked={(this.props.creditCard && item.id === this.props.creditCard.id)} />
+
+    </TouchableOpacity>
   );
 
   render() {
@@ -135,6 +142,7 @@ class ListCreditCardsScreen extends Component {
           <ScrollView>
             <SwipeListView
               useFlatList
+              disableRightSwipe={true}
               data={this.props.creditCards}
               keyExtractor={item => item.id.toString()}
               renderItem={this._renderItem}

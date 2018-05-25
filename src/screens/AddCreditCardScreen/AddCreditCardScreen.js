@@ -264,7 +264,7 @@ class AddCreditCardScreen extends Component {
       creditCard["numero_cartao"] = this.state.numero_cartao.replace(/\D/g, "");
       creditCard["mes_expiracao"] = this.state.mes_expiracao;
       creditCard["ano_expiracao"] = `20${this.state.ano_expiracao}`;
-      creditCard["bandeira"] = this.state.bandeira;
+      creditCard["bandeira"] = this.getCreditCardLabel(this.state.numero_cartao.replace(/\D/g, ""));
       creditCard["cvv"] = this.state.cvv;
       this.props.dispatch(saveCreditCard({ client: this.props.client, creditCard }));
     }

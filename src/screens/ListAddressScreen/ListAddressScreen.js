@@ -80,8 +80,8 @@ class ListAddressScreen extends Component {
   _removeAddress(address) {
     let params = { client: this.props.client, address }
     this.props.dispatch(removeAddress(params));
-    
-    setTimeout(() => { this.props.dispatch(getAddresses({ client: this.props.client }));}, 1000);
+
+    setTimeout(() => { this.props.dispatch(getAddresses({ client: this.props.client })); }, 1000);
   }
 
   _showAddress(address) {
@@ -89,9 +89,16 @@ class ListAddressScreen extends Component {
   }
 
   _renderItem = ({ item }) => (
-    <TouchableHighlight onPress={() => { this._selectAddress(item) }} style={styles.rowFront} underlayColor={'#F6F6F6'}>
-      <AddressAdapter address={item} checked={(this.props.address && item.id === this.props.address.id)} />
-    </TouchableHighlight>
+    <TouchableOpacity
+      activeOpacity={1}
+      style={styles.rowFront}
+      onPress={() => { this._selectAddress(item) }}>
+
+      <AddressAdapter
+        address={item}
+        checked={(this.props.address && item.id === this.props.address.id)} />
+
+    </TouchableOpacity>
   );
 
   _selectAddress(address) {
@@ -166,6 +173,7 @@ class ListAddressScreen extends Component {
           <ScrollView>
             <SwipeListView
               useFlatList
+              disableRightSwipe={true}
               data={this.props.addresses}
               keyExtractor={item => item.id.toString()}
               renderItem={this._renderItem}
