@@ -1,4 +1,5 @@
 import { takeEvery, takeLatest } from 'redux-saga/effects';
+
 //LOCATIONS
 import { getGeocode, getLocation } from '../services/saga/locations';
 import { REQUEST_GEOCODE, GET_LOCATION } from '../actions/locations';

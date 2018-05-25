@@ -34,7 +34,8 @@ class NameScreen extends Component {
             nome_error: null,
             emailError: null,
             celularError: null,
-            passwordError: null
+            passwordError: null,
+            actionBack: null
         };
     }
 
@@ -67,7 +68,7 @@ class NameScreen extends Component {
             if (nextProps.client && nextProps.client.nome !== '') {
                 const resetAction = NavigationActions.reset({
                     index: 0,
-                    actions: [NavigationActions.navigate({ routeName: 'Welcome', params: {} })],
+                    actions: [NavigationActions.navigate({ routeName: 'Welcome', params: { actionBack: this.state.actionBack } })],
                 });
                 this.props.navigation.dispatch(resetAction);
             }
@@ -86,6 +87,7 @@ class NameScreen extends Component {
             if (params.foto) this.setState({ foto: params.foto })
             if (params.data_nascimento) this.setState({ data_nascimento: params.data_nascimento })
             if (params.sexo) this.setState({ sexo: params.sexo })
+            if (params.actionBack) this.setState({ actionBack: params.actionBack })
         }
 
         this.setState({ nome_error: null })

@@ -7,6 +7,7 @@ export default EStyleSheet.create({
     borderBottomColor: "#CCC"
   },
   title: {
+    marginBottom: 16,
     fontFamily: "Roboto-Bold",
     fontSize: 16,
     color: "rgba(0,0,0,0.80)"

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { call, put } from 'redux-saga/effects';
+import { call, put, all } from 'redux-saga/effects';
 
 import { SERVER_API } from '../../config/server';
 import { list, save, remove } from '../realm/products';

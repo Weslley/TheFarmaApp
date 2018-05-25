@@ -77,7 +77,22 @@ class WelcomeScreen extends Component {
     let params = this.props.navigation.state.params;
     let actionBack = params ? params.actionBack : null;
     if (actionBack) {
-      this.props.navigation.navigate(actionBack);
+      switch (actionBack) {
+        case 'MedicineApresentations':
+          this.props.navigation.navigate({ key: 'MedicineApresentations1', routeName: 'MedicineApresentations' });
+          break;
+        case 'ApresentationDetail':
+          this.props.navigation.navigate({ key: 'cart1', routeName: 'Cart' });
+          break;
+        case 'Cart':
+          this.props.navigation.navigate({ key: 'cart1', routeName: 'Cart' });
+          break;
+        case 'ListOrders':
+          this.props.navigation.navigate({ key: 'list_orders1', routeName: 'ListOrders' });
+          break;
+        default:
+          break;
+      }
     }
   }
 
@@ -123,7 +138,6 @@ class WelcomeScreen extends Component {
   }
 
   onSearch = () => {
-    console.log(this.state);
     if (this.state.locationPermission === 'authorized') {
       this.getLocation();
       this.props.navigation.navigate({ key: 'search_medicine1', routeName: 'SearchMedicine', params: {} });

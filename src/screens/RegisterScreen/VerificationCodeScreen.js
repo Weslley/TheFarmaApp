@@ -84,13 +84,13 @@ class VerificationCodeScreen extends Component {
                 if (nextProps.client.nome) {
                     const resetAction = NavigationActions.reset({
                         index: 0,
-                        actions: [NavigationActions.navigate({ routeName: 'Welcome', params: {} })],
+                        actions: [NavigationActions.navigate({ routeName: 'Welcome', params: { actionBack: this.state.actionBack } })],
                     });
                     this.props.navigation.dispatch(resetAction);
                 } else {
                     const resetAction = NavigationActions.reset({
                         index: 0,
-                        actions: [NavigationActions.navigate({ routeName: 'Name', params: {} })],
+                        actions: [NavigationActions.navigate({ routeName: 'Name', params: { actionBack: this.state.actionBack } })],
                     });
                     this.props.navigation.dispatch(resetAction);
                 }
@@ -110,7 +110,7 @@ class VerificationCodeScreen extends Component {
             if (params.foto) this.setState({ foto: params.foto })
             if (params.data_nascimento) this.setState({ data_nascimento: params.data_nascimento })
             if (params.sexo) this.setState({ sexo: params.sexo })
-            if (params.actionBack) this.setState({ actionBack })
+            if (params.actionBack) this.setState({ actionBack: params.actionBack })
         }
     }
 

@@ -91,7 +91,7 @@ class OrderScreen extends Component {
             if (this.state.order.cartao) {
                 return (
                     <View style={styles.container}>
-                        <Text style={styles.title}>{"Pagamento"}</Text>
+                        <Text style={[styles.title]}>{"Pagamento"}</Text>
 
                         <View>
                             <CreditCardAdapter creditCard={this.state.order.cartao} />
@@ -128,7 +128,7 @@ class OrderScreen extends Component {
             address.cidade = { nome: this.state.order.cidade };
             return (
                 <View style={[styles.container]}>
-                    <Text style={[styles.title,{ marginBottom: 16 }]}>{"Endereço para entrega"}</Text>
+                    <Text style={[styles.title]}>{"Endereço para entrega"}</Text>
                     <View style={{ marginHorizontal: -24, paddingHorizontal: 24, backgroundColor: "#F8F8F8" }}>
                         <AddressAdapter address={address} />
                     </View>
@@ -139,8 +139,8 @@ class OrderScreen extends Component {
                 return (
                     <View style={[styles.container]}>
                         <View style={[styles.row, { marginBottom: 16 }]}>
-                            <Text style={styles.title}>{"Endereço da farmácia"}</Text>
-                            <View style={{ flexDirection: "row" }}>
+                            <Text style={[styles.title, { marginBottom: 0 }]}>{"Endereço da farmácia"}</Text>
+                            <View style={{ flexDirection: "row", marginRight: -24 }}>
                                 <MenuItem
                                     icon="call"
                                     onPress={() => { this._callPhone() }}
@@ -209,10 +209,10 @@ class OrderScreen extends Component {
                     {this._renderEndereco()}
 
                     <View style={[styles.container, { marginBottom: 90 }]}>
-                        <Text style={styles.title}>{"Alguma duvida ou problema?"}</Text>
+                        <Text style={styles.title}>{"Alguma dúvida ou problema?"}</Text>
                         <TouchableOpacity onPress={() => { }}>
                             <LinearGradient colors={["#00C7BD", "#009999"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ width: '100%', borderRadius: 8, paddingHorizontal: 28, paddingVertical: 14 }}>
-                                <Text style={styles.buttonText}>{'entrar em contato'}</Text>
+                                <Text style={styles.buttonText}>{'Entrar em contato'}</Text>
                             </LinearGradient>
                         </TouchableOpacity>
                     </View>

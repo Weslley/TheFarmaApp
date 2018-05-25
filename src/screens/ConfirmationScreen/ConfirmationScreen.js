@@ -84,11 +84,13 @@ class ConfirmationScreen extends Component {
   }
 
   componentWillUnmount = () => {
-    BackHandler.removeEventListener('hardwareBackPress', this.nothing);
-    this.props.dispatch(clearOrder());
-    this.props.dispatch(clearCreditCard());
-    this.props.dispatch(clearAddress());
-    this.props.dispatch(cleanCart());
+    if (this.props.success === true) {
+      BackHandler.removeEventListener('hardwareBackPress', this.nothing);
+      this.props.dispatch(clearOrder());
+      this.props.dispatch(clearCreditCard());
+      this.props.dispatch(clearAddress());
+      this.props.dispatch(cleanCart());
+    }
   }
 
   /** Private functions */
