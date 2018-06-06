@@ -4,8 +4,8 @@ import { takeEvery, takeLatest } from 'redux-saga/effects';
 import { getGeocode, getLocation } from '../services/saga/locations';
 import { REQUEST_GEOCODE, GET_LOCATION } from '../actions/locations';
 //PRODUCTS
-import { getByName, selectProduct, getHistory } from '../services/saga/products';
-import { SEARCH_PRODUCTS, SELECT_PRODUCT, GET_HISTORY } from '../actions/products';
+import { getByName, selectProduct, getHistory, getByBarcode } from '../services/saga/products';
+import { SEARCH_PRODUCTS, SELECT_PRODUCT, GET_HISTORY, SEARCH_PRODUCTS_BARCODE } from '../actions/products';
 //APRESENTATIONS
 import { getApresentations, getApresentationsNextPage, ranking } from '../services/saga/apresentations';
 import { GET_APRESENTATIONS, GET_APRESENTATIONS_NEXT_PAGE, RANKING_VIEW } from '../actions/apresentations';
@@ -39,6 +39,7 @@ const rootSaga = function* () {
     yield takeEvery(GET_DISTRICTS, getDistricts);
 
     yield takeLatest(SEARCH_PRODUCTS, getByName);
+    yield takeLatest(SEARCH_PRODUCTS_BARCODE, getByBarcode);
     yield takeEvery(GET_HISTORY, getHistory);
     yield takeEvery(SELECT_PRODUCT, selectProduct);
     yield takeEvery(GET_APRESENTATIONS, getApresentations);

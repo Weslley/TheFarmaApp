@@ -277,7 +277,7 @@ function mapStateToProps(state) {
     uf: state.locations.uf,
     latitude: state.locations.latitude,
     longitude: state.locations.longitude,
-    selected: state.products.selected,
+    
     client: state.clients.client,
     cartItems: state.carts.cartItems,
     order: state.orders.order,

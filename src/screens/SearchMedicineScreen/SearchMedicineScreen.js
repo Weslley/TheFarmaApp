@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import { View, ScrollView, ActivityIndicator, Image } from 'react-native';
+import { Dimensions, View, ScrollView, ActivityIndicator, Image, TouchableOpacity, FlatList } from 'react-native';
 import { Text, List, ListItem } from "native-base";
 import Snackbar from 'react-native-snackbar';
 
 import { connect } from 'react-redux';
 import { getLocation, updateLocation, getGeocodeAddress } from "../../actions/locations"
 
-import { selectProduct, getHistory } from '../../actions/products';
+import { selectProduct, getHistory, searchProductsByBarcode, clearError } from '../../actions/products';
 import { clearApresentations } from '../../actions/apresentations';
 
 import { Icon } from '../../components/Icon';
 import { MenuItem } from '../../components/MenuItem';
+import { BarcodeScanner } from '../../components/BarcodeScanner';
 
 import { Container } from '../../layout/Container';
 import { SearchHeader } from '../../layout/Header';
@@ -18,27 +19,19 @@ import { SearchHeader } from '../../layout/Header';
 import { Components } from '../../helpers';
 import styles from "./styles";
 
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
 class SearchMedicineScreen extends Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            showCamera: false
+        }
     }
 
     static navigationOptions = ({ navigation }) => {
-        let { state: { params } } = navigation;
-        return {
-            header: () => (
-                <SearchHeader
-                    menuLeft={
-                        <MenuItem
-                            icon="md-arrow-back"
-                            onPress={() => { navigation.goBack(null) }}
-                            style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
-                        />
-                    }
-                />
-            )
-        }
+        return { header: null }
     }
 
     componentWillReceiveProps = nextProps => {
@@ -47,6 +40,11 @@ class SearchMedicineScreen extends Component {
                 if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
                     Snackbar.show({ title: nextProps.error.message, duration: Snackbar.LENGTH_SHORT });
                 }
+            }
+
+            if (nextProps && nextProps.success === true && nextProps.apresentation !== null) {
+                this._showProductDetail(nextProps.apresentation)
+                this.props.dispatch(clearError());
             }
         } catch (e) {
             Snackbar.show({ title: e.message, duration: Snackbar.LENGTH_SHORT });
@@ -62,36 +60,109 @@ class SearchMedicineScreen extends Component {
     }
 
     /** Private functions */
+
+    onBack() {
+        this.props.navigation.goBack(null);
+    }
+
+    _showProductDetail(apresentation) {
+        this.props.navigation.navigate({ key: 'apresentation_detail1', routeName: 'ApresentationDetail', params: { apresentation } });
+    }
+
     onSelect = product => {
         this.props.dispatch(selectProduct(product));
         this.props.dispatch(clearApresentations());
         this.props.navigation.navigate({ key: 'MedicineApresentations1', routeName: 'MedicineApresentations', params: { title: product.nome, selected: product } });
     }
 
+    onSuccess(e) {
+        try {
+            console.log(e);
+            this.setState({ showCamera: false })
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    _renderItem = ({ item }) => (
+        <TouchableOpacity
+            style={[styles.itemContainer, { flexDirection: 'row', alignItems: 'center' }]}
+            onPress={() => { this.onSelect(item); }}
+        >
+            {Components.renderIfElse(this.props.isHistory,
+                <Icon name="history" size={16} color={"#000"} style={styles.itemIcon} />,
+                <Icon name="pills" size={16} color={"#000"} style={styles.itemIcon} />)}
+            <Text>{item.nome}</Text>
+        </TouchableOpacity>
+    )
+
     render() {
         return (
-            <Container>
-                {Components.renderIf(!this.props.isHistory, <Text uppercase style={styles.subheader}> Resultado da busca </Text>)}
-                {Components.renderIf(this.props.isLoading, <ActivityIndicator size="small" style={{ marginTop: 16 }} />)}
-                {this.props.products.length ?
-                    <List dataArray={this.props.products} renderRow={product => (
-                        <ListItem style={styles.itemContainer} onPress={() => { this.onSelect(product); }} >
-                            {Components.renderIfElse(this.props.isHistory,
-                                <Icon name="history" size={16} color={"#000"} style={styles.itemIcon} />,
-                                <Icon name="pills" size={16} color={"#000"} style={styles.itemIcon} />)}
-                            <Text>{product.nome}</Text>
-                        </ListItem>)}
-                    /> : null}
-            </Container>
+            <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+
+                <SearchHeader
+                    menuLeft={
+                        <MenuItem
+                            icon="md-arrow-back"
+                            onPress={() => { this.onBack() }}
+                            style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+                        />
+                    }
+                    menuRight={
+                        <MenuItem
+                            icon="barcode"
+                            onPress={() => { this.setState({ showCamera: true }) }}
+                            style={{ paddingRight: 24, paddingVertical: 12 }}
+                        />
+                    }
+                />
+
+                <ScrollView style={{ paddingHorizontal: 24 }}>
+                    {Components.renderIf(!this.props.isHistory, <Text uppercase style={styles.subheader}> Resultado da busca </Text>)}
+                    {Components.renderIf(this.props.isLoading, <ActivityIndicator size="small" style={{ marginTop: 16 }} />)}
+                    {Components.renderIf(this.props.products.length > 0,
+                        <FlatList
+                            style={{ paddingBottom: 90 }}
+                            data={this.props.products}
+                            keyExtractor={(item, index) => item.nome.toString()}
+                            renderItem={this._renderItem}
+                        />
+                    )}
+                </ScrollView>
+
+                {Components.renderIf(this.state.showCamera === true,
+                    <View style={{ flex: 1, backgroundColor: "#FFF", position: 'absolute', top: 0, bottom: 0, right: 0, left: 0 }}>
+                        <BarcodeScanner
+                            style={{ flex: 1 }}
+                            reactivateTimout={3000}
+                            showMarker={true}
+                            onRead={this.onSuccess.bind(this)}
+                            ref={(node) => { this.scanner = node }}
+                            topContent={
+                                <View style={{ padding: 32 }}>
+                                    <Text style={{ fontFamily: 'Roboto-Light', fontSize: 24, color: 'rgba(0,0,0,0.80)', textAlign: 'center', marginTop: 24, }}>
+                                        Posicione a câmera no<Text style={{ fontFamily: 'Roboto-Bold', fontSize: 24 }}>{" Código de barras"}</Text>.
+                                  </Text>
+                                </View>
+                            }
+                            bottomContent={<View style={{ padding: 32 }} />}
+                        />
+                    </View>
+                )}
+
+            </View>
         );
     }
 }
 
 function mapStateToProps(state) {
     return {
+        uf: state.locations.uf,
         isHistory: state.products.isHistory,
         isLoading: state.products.isLoading,
         products: state.products.loaded,
+        apresentation: state.products.apresentation,
+        success: state.products.success,
         error: state.products.error
     };
 }

@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
 import { debounce } from 'lodash';
-import { connect } from 'react-redux';
 
+import React, { Component } from 'react';
 import { View, Image, TextInput, TouchableOpacity, Platform } from 'react-native';
 import { Input, Item } from "native-base";
 
+import { connect } from 'react-redux';
 import { searchProducts, getHistory } from "../../actions/products";
 
 import { Icon } from "../../components/Icon";
