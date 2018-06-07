@@ -60,32 +60,30 @@ class ProposalScreen extends Component {
   }
 
   componentWillMount() {
-    console.log("Montando!");
+    console.log("Montando! -> Proposal");
   }
 
   componentDidMount() {
-    console.log("Montou!");
+    console.log("Montou! -> Proposal");
     BackHandler.addEventListener('hardwareBackPress', this.nothing);
   }
 
   componentWillUnmount = () => {
+    console.log("Desmontou! -> Proposal");
     BackHandler.removeEventListener('hardwareBackPress', this.nothing);
   }
 
   /** Private functions */
   onBack() {
-    console.log(this.props);
     this.props.navigation.navigate({ key: 'list_proposals1', routeName: 'ListProposals', params: { startQuery: true } });
     BackHandler.addEventListener('hardwareBackPress', this.nothing);
   }
 
   nothing() {
-    console.log("Nothing!");
     return true;
   }
 
   onChangeTroco = value => {
-    console.log(value);
     this.setState({ troco: value });
   }
 
@@ -211,7 +209,7 @@ class ProposalScreen extends Component {
                   bordered dark onPress={() => { this.setState({ showTrocoDialog: false }) }}>
                   <Text
                     style={[styles.buttonText, { flex: 1, textAlign: "center" }]}
-                    uppercase={false} >{"cancelar"}</Text>
+                    uppercase={false} >{"Cancelar"}</Text>
                 </Button>
 
                 <TouchableOpacity style={[styles.button, { borderColor: 'transparent' }]} onPress={() => { this._setTroco() }}>
@@ -270,7 +268,7 @@ class ProposalScreen extends Component {
 
   render() {
     return (
-      <Container style={{ backgroundColor: "#FFFFFF" }}>
+      <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
         <ScrollView>
           <Header
             title={this.props.proposal.farmacia.nome_fantasia}
@@ -307,7 +305,7 @@ class ProposalScreen extends Component {
 
           {Components.renderIf(this.props.proposal && this.props.proposal.itens,
             <FlatList
-              style={{ paddingHorizontal: 24 }}
+              style={{ paddingHorizontal: 24, paddingBottom: 90 }}
               data={this.props.proposal.itens}
               keyExtractor={item => item.apresentacao.toString()}
               renderItem={this._renderItem}
@@ -317,7 +315,8 @@ class ProposalScreen extends Component {
         </ScrollView>
 
         <BottomBar
-          buttonTitle="comprar"
+          proposal={true}
+          buttonTitle="Comprar"
           price={this.props.proposal.valor_total}
           onButtonPress={() => { this._showPaymentDialog(); }}
         />
@@ -330,7 +329,7 @@ class ProposalScreen extends Component {
           this._renderTrocoDialog()
         )}
 
-      </Container>
+      </View>
     );
   }
 }

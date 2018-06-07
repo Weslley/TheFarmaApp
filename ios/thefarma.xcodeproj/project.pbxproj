@@ -62,6 +62,7 @@
 		C96A304D561E46FEADFCA715 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2F421F17587C4ED89F040732 /* Roboto-Thin.ttf */; };
 		D65AE87167BB41FD808B19BF /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = BEFDC86662884B1AA586F032 /* libz.tbd */; };
 		DA9C4A7CF9B144A3BC08A6CC /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3EA0863774FB47F98EC56059 /* Roboto-Regular.ttf */; };
+		E2C607A0C4BB4FBCB4CC1576 /* libRNCardIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F808180D481C4C95BBFB6F3C /* libRNCardIO.a */; };
 		E5B954BB5A834CCB935EDBE1 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D89E5FC1CABE445DBBB9BBC7 /* Entypo.ttf */; };
 		E8C358A650C04B0D8B70588F /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A18A5536AC3E469DBB59FC7B /* Foundation.ttf */; };
 		EF5B13C4C3BF42D6A540C88A /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D5FBF1292D55469FAB7B097C /* FontAwesome.ttf */; };
@@ -386,6 +387,13 @@
 			remoteGlobalIDString = 5DBEB1501B18CEA900B34395;
 			remoteInfo = RNVectorIcons;
 		};
+		A0E24EB420C8B6EE0014A5DB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E746F1490224405D8F795222 /* RNCardIO.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNCardIO;
+		};
 		ADBDB9261DFEBF0700ED6528 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */;
@@ -442,7 +450,7 @@
 		A098BAE520C8A0E800B5AB1B /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		A098BAE720C8A0F500B5AB1B /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
 		A098BAEC20C8A60F00B5AB1B /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = "../../../../Downloads/FacebookSDKs-iOS-4/FBSDKCoreKit.framework"; sourceTree = "<group>"; };
-		A098BB1720C8A82A00B5AB1B /* thefarma.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = thefarma.app; path = "/Users/lucas/MEGAsync/thefarma/thefarma/ios/build/Debug-iphoneos/thefarma.app"; sourceTree = "<absolute>"; };
+		A0E24E3F20C8B2270014A5DB /* thefarma.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = thefarma.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A18A5536AC3E469DBB59FC7B /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/native-base/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		A91F47281F584A8BA94A6D49 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
@@ -458,8 +466,10 @@
 		D89E5FC1CABE445DBBB9BBC7 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/native-base/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		E0A543B0799847C280A0F259 /* Roboto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto.ttf; path = "../node_modules/native-base/Fonts/Roboto.ttf"; sourceTree = "<group>"; };
 		E27E9B31ADED4C079CB02D78 /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
+		E746F1490224405D8F795222 /* RNCardIO.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCardIO.xcodeproj; path = "../node_modules/react-native-awesome-card-io/ios/RNCardIO.xcodeproj"; sourceTree = "<group>"; };
 		F3F0EA3234524D55891D9C28 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		F7B987B12A9841089B81CFD3 /* Roboto-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Italic.ttf"; path = "../src/assets/fonts/Roboto-Italic.ttf"; sourceTree = "<group>"; };
+		F808180D481C4C95BBFB6F3C /* libRNCardIO.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCardIO.a; sourceTree = "<group>"; };
 		FAE1B5BD21E7480990C226C3 /* RobotoCondensed-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RobotoCondensed-Italic.ttf"; path = "../src/assets/fonts/RobotoCondensed-Italic.ttf"; sourceTree = "<group>"; };
 		FCC87DC537B940A283B7E0C4 /* ReactNativePermissions.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativePermissions.xcodeproj; path = "../node_modules/react-native-permissions/ios/ReactNativePermissions.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -494,6 +504,7 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				91D98EC65CDC4B8AB4DC034D /* libc++.tbd in Frameworks */,
 				D65AE87167BB41FD808B19BF /* libz.tbd in Frameworks */,
+				E2C607A0C4BB4FBCB4CC1576 /* libRNCardIO.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -652,6 +663,7 @@
 				2A173AB0454A45728E319759 /* RNSnackbar.xcodeproj */,
 				8842C5E1DA72432CBFF056D9 /* RNCamera.xcodeproj */,
 				BBC27158728F4997A08CB5FD /* RCTYouTube.xcodeproj */,
+				E746F1490224405D8F795222 /* RNCardIO.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -673,6 +685,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BC6601CB7DCC4C1797E6A0E9 /* Resources */,
 				A0DD57C520C748C800C78591 /* Recovered References */,
+				A0E24E3F20C8B2270014A5DB /* thefarma.app */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -698,6 +711,7 @@
 		A0DD57C520C748C800C78591 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
+				F808180D481C4C95BBFB6F3C /* libRNCardIO.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -747,6 +761,14 @@
 			isa = PBXGroup;
 			children = (
 				A0DD581E20C748CA00C78591 /* libRNSnackbar.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A0E24EB120C8B6ED0014A5DB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A0E24EB520C8B6EE0014A5DB /* libRNCardIO.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -818,7 +840,7 @@
 			);
 			name = thefarma;
 			productName = "Hello World";
-			productReference = A098BB1720C8A82A00B5AB1B /* thefarma.app */;
+			productReference = A0E24E3F20C8B2270014A5DB /* thefarma.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -918,6 +940,10 @@
 				{
 					ProductGroup = A02EC43720C74D2400FB8C16 /* Products */;
 					ProjectRef = 8842C5E1DA72432CBFF056D9 /* RNCamera.xcodeproj */;
+				},
+				{
+					ProductGroup = A0E24EB120C8B6ED0014A5DB /* Products */;
+					ProjectRef = E746F1490224405D8F795222 /* RNCardIO.xcodeproj */;
 				},
 				{
 					ProductGroup = A0DD580620C748CA00C78591 /* Products */;
@@ -1251,6 +1277,13 @@
 			remoteRef = A0DD582020C748CA00C78591 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		A0E24EB520C8B6EE0014A5DB /* libRNCardIO.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNCardIO.a;
+			remoteRef = A0E24EB420C8B6EE0014A5DB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1369,9 +1402,14 @@
 					"$(SRCROOT)/../node_modules/react-native-fbsdklogin/iOS",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-youtube/**",
+					"$(SRCROOT)/../node_modules/react-native-awesome-card-io/ios/**",
 				);
 				INFOPLIST_FILE = thefarma/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/thefarma\"",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1404,9 +1442,14 @@
 					"$(SRCROOT)/../node_modules/react-native-fbsdklogin/iOS",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-youtube/**",
+					"$(SRCROOT)/../node_modules/react-native-awesome-card-io/ios/**",
 				);
 				INFOPLIST_FILE = thefarma/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/thefarma\"",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

@@ -158,14 +158,11 @@ class AddAddressScreen extends Component {
       return false;
     }
 
-    if (this.state.cep == null || this.state.cep == "") {
-      this.setState({ cepError: "Este campo é obrigatório" })
-      return false;
-    }
-
-    if ((this.state.cep != null || this.state.cep == "") && StringUtils.removeMask(this.state.cep).length < 8) {
-      this.setState({ cepError: "Este campo é inválido" })
-      return false;
+    if (this.state.cep) {
+      if (StringUtils.removeMask(this.state.cep).length < 8) {
+        this.setState({ cepError: "Este campo é inválido" })
+        return false;
+      }
     }
 
     if (this.state.logradouro == null || this.state.logradouro == "") {

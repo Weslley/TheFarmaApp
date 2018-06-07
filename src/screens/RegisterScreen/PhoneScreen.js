@@ -34,6 +34,7 @@ class PhoneScreen extends Component {
             emailError: null,
             celularError: null,
             passwordError: null,
+            actionBack: null,
             showNetworkError: false
         };
     }
@@ -83,6 +84,7 @@ class PhoneScreen extends Component {
             if (params.foto) this.setState({ foto: params.foto })
             if (params.data_nascimento) this.setState({ data_nascimento: params.data_nascimento })
             if (params.sexo) this.setState({ sexo: params.sexo })
+            if (params.actionBack) this.setState({ actionBack: params.actionBack })
         }
 
         this.setState({ nomeError: null, emailError: null, celularError: null, passwordError: null })
@@ -117,9 +119,12 @@ class PhoneScreen extends Component {
 
     submit() {
         if (this.validForm()) {
+
             let params = {}
             params["login_type"] = 2;
             params["celular"] = StringUtils.removeMask(this.state.celular);
+            params["actionBack"] = this.state.actionBack
+            
             this.props.dispatch(login(params));
             this.props.navigation.navigate({ key: 'verification_code1', routeName: 'VerificationCode', params });
         }

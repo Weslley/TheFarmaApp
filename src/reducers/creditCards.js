@@ -33,7 +33,13 @@ export default (state = INITIAL_STATE, action) => {
 
     case LIST_CREDIT_CARD_SUCCESS:
     case LIST_CREDIT_CARD_NEXT_PAGE_SUCCESS:
-      return { ...state, isLoading: false, creditCards: action.data };
+      if (action.data && action.data.length === 1) creditCard = action.data[0]
+      return {
+        ...state,
+        isLoading: false,
+        creditCards: action.data,
+        creditCard: creditCard
+      };
 
     case SAVE_CREDIT_CARD_SUCCESS:
     case UPDATE_CREDIT_CARD_SUCCESS:
@@ -60,7 +66,7 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, error: null, creditCard: null, success: false };
 
     case CLEAR_CREDIT_CARDS:
-      return { ...state, error: null, creditCards: null, success: false };
+      return { ...state, error: null, creditCards: [], success: false };
 
     default:
       return state;

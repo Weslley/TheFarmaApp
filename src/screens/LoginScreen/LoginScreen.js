@@ -27,7 +27,8 @@ class LoginScreen extends Component {
 
             emailError: null,
             passwordError: null,
-            facebook_user: null
+            facebook_user: null,
+            actionBack: null,
         };
     }
 
@@ -37,29 +38,33 @@ class LoginScreen extends Component {
 
     componentWillReceiveProps = nextProps => {
         try {
-            if (nextProps && nextProps.error && nextProps.error.response && (nextProps.error.response.status == 400 || nextProps.error.response.status == 401)) {
-                if (nextProps.error.response.data.email) {
-                    this.setState({ emailError: nextProps.error.response.data.email[0] })
-                }
+            if (nextProps && nextProps.error) {
+                if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
+                    if (nextProps.error.response.data.email) {
+                        this.setState({ emailError: nextProps.error.response.data.email[0] })
+                    }
 
-                if (nextProps.error.response.data.facebook_id) {
-                    if (this.state.facebook_user) {
-                        let params = { login_type: 1, facebook_user: this.state.facebook_user }
-                        this.props.navigation.navigate({ key: 'email1', routeName: 'Email', params });
+                    if (nextProps.error.response.data.facebook_id) {
+                        if (this.state.facebook_user) {
+                            let params = { login_type: 1, facebook_user: this.state.facebook_user }
+                            this.props.navigation.navigate({ key: 'email1', routeName: 'Email', params });
+                        }
+                    }
+
+                    if (nextProps.error.response.data.non_field_errors) {
+                        Snackbar.show({ title: nextProps.error.response.data.non_field_errors[0], duration: Snackbar.LENGTH_SHORT, });
+                    }
+
+                    if (nextProps.error.response.data.detail) {
+                        Snackbar.show({ title: nextProps.error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
                     }
                 }
 
-                if (nextProps.error.response.data.non_field_errors) {
-                    Snackbar.show({ title: nextProps.error.response.data.non_field_errors[0], duration: Snackbar.LENGTH_SHORT, });
-                }
-
-                if (nextProps.error.response.data.detail) {
-                    Snackbar.show({
-                        title: nextProps.error.response.data.detail,
-                        duration: Snackbar.LENGTH_SHORT,
-                    });
+                if (nextProps.error.message && nextProps.error.message === 'Network Error') {
+                    this.setState({ showNetworkError: true });
                 }
             }
+
             if (nextProps && nextProps.client) {
                 this.onBack()
             }
@@ -69,13 +74,12 @@ class LoginScreen extends Component {
     }
 
     componentWillMount() {
-        this.setState({ emailError: null, passwordError: null })
-        this.props.dispatch(clearError());
+        let params = this.props.navigation.state.params;
+        let actionBack = params ? params.actionBack : null;
+        this.setState({ actionBack })
     }
 
-    componentWillUnmount() {
-        this.props.dispatch(clearError());
-    }
+    componentWillUnmount() { }
 
     /** Private functions */
     onBack() {
@@ -83,11 +87,11 @@ class LoginScreen extends Component {
     }
 
     loginEmail() {
-        this.props.navigation.navigate({ key: 'email1', routeName: 'Email', params: { login_type: 0 } });
+        this.props.navigation.navigate({ key: 'email1', routeName: 'Email', params: { login_type: 0, actionBack: this.state.actionBack } });
     }
 
     loginPhone() {
-        this.props.navigation.navigate({ key: 'phone1', routeName: 'Phone', params: { login_type: 2 } });
+        this.props.navigation.navigate({ key: 'phone1', routeName: 'Phone', params: { login_type: 2, actionBack: this.state.actionBack } });
     }
 
     loginFacebook() {
@@ -143,7 +147,7 @@ class LoginScreen extends Component {
                         <Text style={[styles.text, { fontSize: 20 }]} uppercase={false}>{"theFarma"}</Text>
                     </View>
 
-                    <View>
+                    <View style={{ marginBottom: 24 }}>
                         <Text style={styles.text} uppercase={false}>{"Logar com"}</Text>
 
                         <Button style={[styles.button]} transparent bordered iconLeft onPress={() => this.loginPhone()}>
@@ -160,10 +164,10 @@ class LoginScreen extends Component {
                             </View>
                         </Button>
 
-                        <Button style={[styles.button]} transparent bordered iconLeft onPress={() => this.loginFacebook()}>
+                        <Button style={[styles.button, { marginBottom: 0 }]} transparent bordered iconLeft onPress={() => this.loginFacebook()}>
                             <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: "flex-start" }} >
                                 <Icon name="social-facebook" style={[styles.buttonIcon, { marginLeft: 16 }]} />
-                                <Text style={styles.buttonText} uppercase={false}>{"Fabebook"}</Text>
+                                <Text style={styles.buttonText} uppercase={false}>{"Facebook"}</Text>
                             </View>
                         </Button>
                     </View>

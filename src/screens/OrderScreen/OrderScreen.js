@@ -5,6 +5,7 @@ import { TextInputMask, TextMask, MaskService } from "react-native-masked-text";
 
 import Snackbar from 'react-native-snackbar';
 import LinearGradient from "react-native-linear-gradient";
+import Communications from 'react-native-communications';
 
 import { NavigationActions } from 'react-navigation';
 
@@ -46,27 +47,43 @@ class OrderScreen extends Component {
         this.props.navigation.goBack(null);
     }
 
+    _showDrugstore() {
+        this.props.navigation.navigate({ key: 'drugstore1', routeName: 'Drugstore', params: { drugstore: this.state.order.farmacia } });
+    }
+
+    _callPhone() {
+        Communications.phonecall(this.state.order.farmacia.telefone, true);
+    }
+
+    _callMap() {
+        Communications.web(`https://www.google.com/maps/search/?api=1&query=${this.state.order.farmacia.latitude},${this.state.order.farmacia.longitude}`)
+    }
+
     _renderParcel() {
         let numero_parcelas = this.state.order.numero_parcelas;
         let valor = (this.state.order.valor_total / numero_parcelas).toFixed(2);
         let sValor = MaskService.toMask('money', valor);
         if (numero_parcelas === 1) {
             return (
-                <View>
-                    <Text>{`${sValor} à vista`}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={[styles.parcelTitle, { marginRight: 8 }]}>{`${sValor} à vista`}</Text>
+                    <Icon name="arrow-down-b" size={18} color={"#000"} />
                 </View>
             )
         } else {
             return (
-                <View>
-                    <Text>{`${numero_parcelas}X de ${sValor}`}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={[styles.parcelTitle, { marginRight: 8 }]}>{`${numero_parcelas}X de ${sValor}`}</Text>
+                    <Icon name="arrow-down-b" size={18} color={"#000"} />
                 </View>
             )
         }
     }
 
     _renderItem = ({ item }) => {
-        return (<OrderItemAdapter apresentation={item.apresentacao} item={item} />)
+        if (item.status !== 4) {
+            return (<OrderItemAdapter apresentation={item.apresentacao} item={item} />)
+        }
     };
 
     _renderPagamento() {
@@ -74,13 +91,15 @@ class OrderScreen extends Component {
             if (this.state.order.cartao) {
                 return (
                     <View style={styles.container}>
-                        <Text style={styles.title}>{"Pagamento"}</Text>
+                        <Text style={[styles.title]}>{"Pagamento"}</Text>
 
                         <View>
                             <CreditCardAdapter creditCard={this.state.order.cartao} />
-                            <View style={styles.containerParcel}>
+                            <View style={[styles.containerParcel, styles.row]}>
                                 <Text style={styles.parcelTitle} >{"Parcelas"}</Text>
-                                {this._renderParcel()}
+                                <View>
+                                    {this._renderParcel()}
+                                </View>
                             </View>
                         </View>
                     </View>
@@ -109,7 +128,7 @@ class OrderScreen extends Component {
             address.cidade = { nome: this.state.order.cidade };
             return (
                 <View style={[styles.container]}>
-                    <Text style={styles.title}>{"Endereço para entrega"}</Text>
+                    <Text style={[styles.title]}>{"Endereço para entrega"}</Text>
                     <View style={{ marginHorizontal: -24, paddingHorizontal: 24, backgroundColor: "#F8F8F8" }}>
                         <AddressAdapter address={address} />
                     </View>
@@ -119,7 +138,22 @@ class OrderScreen extends Component {
             if (this.state.order.farmacia) {
                 return (
                     <View style={[styles.container]}>
-                        <Text style={styles.title}>{"Endereço da farmácia"}</Text>
+                        <View style={[styles.row, { marginBottom: 16 }]}>
+                            <Text style={[styles.title, { marginBottom: 0 }]}>{"Endereço da farmácia"}</Text>
+                            <View style={{ flexDirection: "row", marginRight: -24 }}>
+                                <MenuItem
+                                    icon="call"
+                                    onPress={() => { this._callPhone() }}
+                                    style={{ paddingVertical: 5, paddingHorizontal: 12 }}
+                                />
+                                <MenuItem
+                                    icon="marker"
+                                    onPress={() => { this._callMap() }}
+                                    style={{ paddingVertical: 5, paddingHorizontal: 12 }}
+                                />
+                            </View>
+                        </View>
+
                         <View style={{ marginHorizontal: -24, paddingHorizontal: 24, backgroundColor: "#F8F8F8" }}>
                             <AddressAdapter address={this.state.order.farmacia.endereco} />
                         </View>
@@ -131,10 +165,8 @@ class OrderScreen extends Component {
     }
 
     render() {
-        console.log(this.state);
         return (
             <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
-
                 <Header
                     title={`Ordem #${StringUtils.rjust('' + this.state.order.id, 9, '0')}`}
                     subtitle={"Todos os detalhes do seu pedido está aqui"}
@@ -143,11 +175,8 @@ class OrderScreen extends Component {
                             style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }} />
                     }
                 />
-
                 <ScrollView>
-
                     <View style={styles.container}>
-
                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
                             <Text style={styles.title}>{DateUtils.toDate(this.state.order.log.data_criacao)}</Text>
                             <Text style={styles.title}>{StatusPedido[this.state.order.status][1]}</Text>
@@ -164,7 +193,7 @@ class OrderScreen extends Component {
                         <View style={[styles.footerOrder, { marginBottom: 8, marginTop: 16 }]}>
                             <Text style={styles.footerOrderTitle}>{"Frete"}</Text>
                             {Components.renderIfElse(this.state.order.valor_frete === "0.00",
-                                <Text style={styles.footerOrderText} >{"GRÁTIS"}</Text>,
+                                <Text style={[styles.footerOrderText, { fontSize: 14 }]} >{"GRÁTIS"}</Text>,
                                 <TextMask type={"money"} value={this.state.order.valor_frete} />
                             )}
                         </View>
@@ -180,14 +209,13 @@ class OrderScreen extends Component {
                     {this._renderEndereco()}
 
                     <View style={[styles.container, { marginBottom: 90 }]}>
-                        <Text style={styles.title}>{"Alguma duvida ou problema?"}</Text>
+                        <Text style={styles.title}>{"Alguma dúvida ou problema?"}</Text>
                         <TouchableOpacity onPress={() => { }}>
                             <LinearGradient colors={["#00C7BD", "#009999"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ width: '100%', borderRadius: 8, paddingHorizontal: 28, paddingVertical: 14 }}>
-                                <Text style={styles.buttonText}>{'entrar em contato'}</Text>
+                                <Text style={styles.buttonText}>{'Entrar em contato'}</Text>
                             </LinearGradient>
                         </TouchableOpacity>
                     </View>
-
                 </ScrollView>
             </View>
         );

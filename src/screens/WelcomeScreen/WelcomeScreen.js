@@ -23,6 +23,7 @@ class WelcomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      locationPermission: '',
       latitude: null,
       longitude: null,
       error: null,
@@ -76,7 +77,22 @@ class WelcomeScreen extends Component {
     let params = this.props.navigation.state.params;
     let actionBack = params ? params.actionBack : null;
     if (actionBack) {
-      this.props.navigation.navigate(actionBack);
+      switch (actionBack) {
+        case 'MedicineApresentations':
+          this.props.navigation.navigate({ key: 'MedicineApresentations1', routeName: 'MedicineApresentations' });
+          break;
+        case 'ApresentationDetail':
+          this.props.navigation.navigate({ key: 'cart1', routeName: 'Cart' });
+          break;
+        case 'Cart':
+          this.props.navigation.navigate({ key: 'cart1', routeName: 'Cart' });
+          break;
+        case 'ListOrders':
+          this.props.navigation.navigate({ key: 'list_orders1', routeName: 'ListOrders' });
+          break;
+        default:
+          break;
+      }
     }
   }
 
@@ -127,10 +143,8 @@ class WelcomeScreen extends Component {
       this.props.navigation.navigate({ key: 'search_medicine1', routeName: 'SearchMedicine', params: {} });
     } else {
       Permissions.request('location').then(response => {
+        if (response === 'authorized') this.getLocation();
         this.setState({ locationPermission: response });
-        if (response === 'authorized') {
-          this.getLocation();
-        }
       });
     }
   };
@@ -179,7 +193,7 @@ class WelcomeScreen extends Component {
         />
 
         <View style={{ paddingHorizontal: 24 }}>
-          <TouchableOpacity style={styles.searchBar} onPress={this.onSearch}>
+          <TouchableOpacity style={styles.searchBar} onPress={() => { this.onSearch() }}>
             <Image source={require("../../assets/images/ic_search.png")} style={styles.icon} />
             <Text style={styles.text}>Qual medicamento você deseja?</Text>
             <Icon name="barcode" size={24} color={"#000"} style={styles.icon} />

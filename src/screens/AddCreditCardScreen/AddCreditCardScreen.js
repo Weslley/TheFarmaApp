@@ -2,11 +2,13 @@ import moment from "moment";
 
 import React, { Component } from "react";
 import { KeyboardAvoidingView, ScrollView, View, Image, TouchableOpacity, TextInput, Platform } from "react-native";
-import { Button, Text } from "native-base";
-import { TextInputMask, MaskService } from "react-native-masked-text";
 
 TextInput.defaultProps.selectionColor = "black";
 TextInput.defaultProps.underlineColorAndroid = 'black'
+
+import { Button, Text } from "native-base";
+import { TextInputMask, MaskService } from "react-native-masked-text";
+import { CardIOModule, CardIOUtilities } from 'react-native-awesome-card-io';
 
 import { connect } from "react-redux";
 import { getCreditCards, saveCreditCard, clearError } from "../../actions/creditCards";
@@ -84,13 +86,66 @@ class AddCreditCardScreen extends Component {
     }
   }
 
+  componentWillMount() {
+    if (Platform.OS === 'ios') {
+      CardIOUtilities.preload();
+    }
+  }
+
+
   /** Private functions */
   onBack() {
     this.props.navigation.goBack(null);
   }
 
+  scanCard() {
+    CardIOModule
+      .scanCard({ suppressConfirmation: true })
+      .then(card => {
+        console.log(card);
+        this.setState({ numero_cartao: card.cardNumber })
+      })
+      .catch(() => { console.log("Cancelou"); })
+  }
+
   clearFormErrors() {
     this.setState({ numeroCartaoError: null, validadeError: null, cvvError: null })
+  }
+
+  setCurrentIndex(index) {
+    switch (index) {
+      case 0:
+        this.iNumberCard.focus();
+        this.setState({ currentIndex: 0 })
+        this.scrollView.scrollTo({ x: 10, y: 0, animated: true });
+        break
+      case 1:
+        this.iExpiredDate.focus();
+        this.setState({ currentIndex: 1 })
+        this.scrollView.scrollTo({ x: 100, y: 0, animated: true });
+        break
+      case 2:
+        this.iCvv.focus();
+        this.setState({ currentIndex: 2 })
+        this.scrollView.scrollTo({ x: 140, y: 0, animated: true });
+        break
+      default:
+        this.iNumberCard.focus();
+        this.setState({ currentIndex: 0 })
+        this.scrollView.scrollTo({ x: 1, y: 0, animated: true });
+        break
+    }
+  }
+
+  getImageCard() {
+
+    if (this.state.currentIndex === 0)
+      return (<Image style={{ width: 128, height: 88 }} source={require("../../assets/images/creditcard0.png")} />)
+    if (this.state.currentIndex === 1)
+      return (<Image style={{ width: 128, height: 88 }} source={require("../../assets/images/creditcard1.png")} />)
+    if (this.state.currentIndex === 2)
+      return (<Image style={{ width: 128, height: 88 }} source={require("../../assets/images/creditcard2.png")} />)
+
   }
 
   onChangeNumeroCartao = value => {
@@ -98,6 +153,9 @@ class AddCreditCardScreen extends Component {
     this.setState({ numero_cartao: valueMask })
     let bandeira = this.getCreditCardLabel(valueMask.replace(/\D/g, ""));
     this.setState({ bandeira });
+    if (valueMask.length >= 19) {
+      this.setCurrentIndex(1);
+    }
   }
 
   onChangeValidade = value => {
@@ -107,11 +165,15 @@ class AddCreditCardScreen extends Component {
       mes_expiracao = "" + parseInt(valueMask.split("/")[0])
       ano_expiracao = "" + parseInt(valueMask.split("/")[1])
       this.setState({ mes_expiracao, ano_expiracao })
+      this.setCurrentIndex(2);
     }
   }
 
   onChangeCVV = value => {
-
+    this.setState({ cvv: value })
+    if (value.length >= 3) {
+      this.setCurrentIndex(0);
+    }
   }
 
   getCreditCardLabel(cardNumber) {
@@ -156,11 +218,13 @@ class AddCreditCardScreen extends Component {
 
     if (this.state.numero_cartao == null || this.state.numero_cartao == "") {
       this.setState({ numeroCartaoError: "Este campo é obrigatório" })
+      this.setCurrentIndex(0);
       return false;
     }
 
     if (this.state.bandeira == null || this.state.bandeira == "") {
       this.setState({ numeroCartaoError: "Cartão inválido" })
+      this.setCurrentIndex(0);
       return false;
     }
 
@@ -170,19 +234,23 @@ class AddCreditCardScreen extends Component {
       if (data.isValid()) {
         if (data.toDate().getTime() < new Date().getTime()) {
           this.setState({ validadeError: "Cartão vencido" })
+          this.setCurrentIndex(1);
           return false;
         }
       } else {
         this.setState({ validadeError: "Data inválida" })
+        this.setCurrentIndex(1);
         return false;
       }
     } else {
       this.setState({ validadeError: "Data inválida" })
+      this.setCurrentIndex(1);
       return false;
     }
 
-    if (this.state.cvv == null || this.state.cvv == "") {
-      this.setState({ cvvError: "campo obrigatório" })
+    if ((this.state.cvv == null || this.state.cvv == "") || this.state.cvv.length < 3) {
+      this.setState({ cvvError: "Campo Inválido" })
+      this.setCurrentIndex(2);
       return false;
     }
 
@@ -196,7 +264,7 @@ class AddCreditCardScreen extends Component {
       creditCard["numero_cartao"] = this.state.numero_cartao.replace(/\D/g, "");
       creditCard["mes_expiracao"] = this.state.mes_expiracao;
       creditCard["ano_expiracao"] = `20${this.state.ano_expiracao}`;
-      creditCard["bandeira"] = this.state.bandeira;
+      creditCard["bandeira"] = this.getCreditCardLabel(this.state.numero_cartao.replace(/\D/g, ""));
       creditCard["cvv"] = this.state.cvv;
       this.props.dispatch(saveCreditCard({ client: this.props.client, creditCard }));
     }
@@ -230,19 +298,23 @@ class AddCreditCardScreen extends Component {
 
             <ScrollView>
               <View style={{ alignItems: "center", paddingVertical: 32 }}>
-                <Image style={{ width: 128, height: 88 }} source={require("../../assets/images/CreditCard.png")} />
+                {this.getImageCard()}
               </View>
 
-              <ScrollView horizontal={true}>
+              <ScrollView
+                horizontal={true}
+                ref={ref => this.scrollView = ref}>
+
                 <View style={[styles.item, { marginLeft: 24, maxHeight: 100 }]}>
                   <Text style={styles.label}>{"Número do cartão"}</Text>
                   <View style={{ flexDirection: "row", alignItems: 'center' }}>
                     <TextInput
                       maxLength={19}
                       autoFocus={true}
-                      keyboardType={"numeric"}
-                      style={[styles.input, { width: 230 }]}
                       multiline={false}
+                      keyboardType={"numeric"}
+                      ref={(c) => { this.iNumberCard = c; }}
+                      style={[styles.input, { width: 230 }]}
                       onChangeText={this.onChangeNumeroCartao}
                       value={this.state.numero_cartao}
                     />
@@ -250,7 +322,7 @@ class AddCreditCardScreen extends Component {
                       <View style={styles.flagContainer}>
                         <Text style={styles.flagText} uppercase={true}>{this.state.bandeira}</Text>
                       </View>,
-                      <TouchableOpacity onPress={() => { }} style={{ position: "absolute", right: 1 }}>
+                      <TouchableOpacity onPress={() => { this.scanCard() }} style={{ position: "absolute", right: 1 }}>
                         <Icon name="camera" size={25} color={"#000000"} />
                       </TouchableOpacity>
                     )}
@@ -263,35 +335,35 @@ class AddCreditCardScreen extends Component {
                   )}
                 </View>
 
-                <View style={[styles.item, { width: 90 }]}>
+                <View style={[styles.item, { width: 100 }]}>
                   <Text style={styles.label}>{"Validade"}</Text>
                   <TextInput
                     maxLength={5}
-                    keyboardType={"numeric"}
-                    style={styles.input}
                     multiline={false}
+                    style={styles.input}
+                    keyboardType={"numeric"}
+                    ref={(c) => { this.iExpiredDate = c; }}
                     onChangeText={this.onChangeValidade}
                     value={this.state.validade}
                   />
-
                   {Components.renderIf(Platform.OS === 'ios',
                     <View style={{ borderBottomColor: '#000', borderWidth: 0.5, marginTop: 4, }} />
                   )}
-
                   {Components.renderIf(this.state.validadeError,
                     <Text style={styles.inputError} uppercase={false}>{this.state.validadeError}</Text>
                   )}
                 </View>
 
-                <View style={[styles.item, { width: 90 }]}>
+                <View style={[styles.item, { width: 100 }]}>
                   <Text style={styles.label}>{"CVV"}</Text>
                   <TextInput
                     maxLength={3}
-                    keyboardType={"numeric"}
-                    style={styles.input}
                     multiline={false}
                     secureTextEntry={true}
-                    onChangeText={(cvv) => this.setState({ cvv })}
+                    keyboardType={"numeric"}
+                    style={styles.input}
+                    ref={(c) => { this.iCvv = c; }}
+                    onChangeText={this.onChangeCVV}
                     value={this.state.cvv}
                   />
 

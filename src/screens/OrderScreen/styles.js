@@ -32,7 +32,12 @@ export default EStyleSheet.create({
   },
   containerParcel: {
     width: "100%",
-    marginTop: 24
+    marginTop: 24,
+  },
+  row: {
+    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between"
   },
   parcelTitle: {
     fontFamily: "Roboto-Bold",

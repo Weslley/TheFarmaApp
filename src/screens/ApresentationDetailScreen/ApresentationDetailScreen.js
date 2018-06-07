@@ -3,6 +3,10 @@ import { StatusBar, View, ScrollView, Image, TouchableOpacity, FlatList, Activit
 import { Text } from "native-base";
 
 import { connect } from "react-redux";
+import { createOrder } from "../../actions/orders";
+import { rankingView } from "../../actions/apresentations";
+import { getGenerics, clearError, clearGenerics } from "../../actions/generics";
+import { addItemToCart, removeItemToCart } from "../../actions/carts";
 
 import { Header } from "../../layout/Header";
 import { BottomBar } from "../../layout/Bar";
@@ -15,10 +19,6 @@ import { MenuItem } from '../../components/MenuItem';
 import { ButtonCustom } from "../../components/ButtonCustom";
 import { ProductDescription } from "../../components/Product";
 import { ApresentationDetailDescription } from "../../components/Product";
-
-import { rankingView } from "../../actions/apresentations";
-import { getGenerics, clearError, clearGenerics } from "../../actions/generics";
-import { addItemToCart, removeItemToCart } from "../../actions/carts";
 
 import { Components, CartUtils } from "../../helpers";
 import { TipoMedicamento } from "../../models/enums"
@@ -113,7 +113,7 @@ class ApresentationDetailScreen extends Component {
       this.props.dispatch(createOrder(params));
       this.props.navigation.navigate({ key: 'list_proposals1', routeName: 'ListProposals', params: {} });
     } else {
-      this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: {} });
+      this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: { actionBack: 'ApresentationDetail' } });
     }
     this.setState({ showDeliveryDialog: false });
   }
@@ -122,7 +122,7 @@ class ApresentationDetailScreen extends Component {
     if (this.props.client) {
       this.props.navigation.navigate({ key: 'list_address1', routeName: 'ListAddress', params: { showBottomBar: true } });
     } else {
-      this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: {} });
+      this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: { actionBack: 'ApresentationDetail' } });
     }
     this.setState({ showDeliveryDialog: false });
   }
@@ -277,7 +277,7 @@ function mapStateToProps(state) {
     uf: state.locations.uf,
     latitude: state.locations.latitude,
     longitude: state.locations.longitude,
-    selected: state.products.selected,
+    
     client: state.clients.client,
     cartItems: state.carts.cartItems,
     order: state.orders.order,

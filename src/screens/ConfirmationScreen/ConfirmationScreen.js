@@ -9,6 +9,8 @@ import { NavigationActions } from 'react-navigation';
 import { connect } from "react-redux";
 import { checkout, clearError, clearOrder } from "../../actions/orders";
 import { cleanCart } from "../../actions/carts";
+import { clearCreditCard } from "../../actions/creditCards";
+import { clearAddress } from "../../actions/addresses";
 
 import { Header } from "../../layout/Header";
 import { BottomBar } from "../../layout/Bar";
@@ -66,8 +68,8 @@ class ConfirmationScreen extends Component {
       }
 
       if (nextProps && nextProps.success === true) {
-        this.props.dispatch(cleanCart());
-        this.props.dispatch(clearOrder());
+        //this.props.dispatch(cleanCart());
+        //this.props.dispatch(clearOrder());
         this.setState({ showCheckoutSuccess: true });
         BackHandler.addEventListener('hardwareBackPress', this.nothing);
       }
@@ -82,7 +84,13 @@ class ConfirmationScreen extends Component {
   }
 
   componentWillUnmount = () => {
-    BackHandler.removeEventListener('hardwareBackPress', this.nothing);
+    if (this.props.success === true) {
+      BackHandler.removeEventListener('hardwareBackPress', this.nothing);
+      this.props.dispatch(clearOrder());
+      this.props.dispatch(clearCreditCard());
+      this.props.dispatch(clearAddress());
+      this.props.dispatch(cleanCart());
+    }
   }
 
   /** Private functions */
@@ -190,9 +198,9 @@ class ConfirmationScreen extends Component {
             )}
 
             <View style={[styles.footerOrder, { marginBottom: 8, marginTop: 16 }]}>
-              <Text style={styles.footerOrderTitle}>{"Entrega"}</Text>
+              <Text style={styles.footerOrderTitle}>{"Frete"}</Text>
               {Components.renderIfElse(this.props.order.valor_frete === "0.00",
-                <Text style={styles.footerOrderText} >{"GRÁTIS"}</Text>,
+                <Text style={[styles.footerOrderText, { fontSize: 14 }]} >{"GRÁTIS"}</Text>,
                 <TextMask type={"money"} value={this.props.order.valor_frete} />
               )}
             </View>
@@ -207,21 +215,23 @@ class ConfirmationScreen extends Component {
             <Text style={styles.title}>{"Pagamento"}</Text>
             {Components.renderIfElse(this.props.order.forma_pagamento === 0,
               <View>
-                <CreditCardAdapter creditCard={this.props.creditCard} />
-                <View style={styles.containerParcel}>
-                  <Text style={styles.parcelTitle} >{"Parcelas"}</Text>
-                  <NBPicker
-                    mode={Platform.OS === 'ios' ? "dropdown" : 'dialog'}
-                    iosHeader="Selecione uma opção"
-                    iosIcon={<Icon name="ios-arrow-down" size={24} color={"#000"} />}
-                    headerBackButtonText="voltar"
-                    itemStyle={styles.nbItem}
-                    textStyle={styles.nbTextItem}
-                    selectedValue={this.state.numero_parcelas}
-                    onValueChange={(value, index) => this.setState({ numero_parcelas: value.id })}
-                  >
-                    {this._renderParcelsOptions()}
-                  </NBPicker>
+                {Components.renderIf(this.props.creditCard, <CreditCardAdapter creditCard={this.props.creditCard} />)}
+                <View style={[styles.containerParcel, styles.row]}>
+                  <Text style={[styles.parcelTitle, { width: '45%' }]} >{"Parcelas"}</Text>
+                  <View style={{ width: '55%' }}>
+                    <NBPicker
+                      mode={Platform.OS === 'ios' ? "dropdown" : 'dialog'}
+                      iosHeader="Selecione uma opção"
+                      iosIcon={<Icon name="ios-arrow-down" size={24} color={"#000"} />}
+                      headerBackButtonText="voltar"
+                      itemStyle={styles.nbItem}
+                      textStyle={styles.nbTextItem}
+                      selectedValue={this.state.numero_parcelas}
+                      onValueChange={(value, index) => this.setState({ numero_parcelas: value.id })}
+                    >
+                      {this._renderParcelsOptions()}
+                    </NBPicker>
+                  </View>
                 </View>
               </View>,
               <View>
@@ -231,13 +241,13 @@ class ConfirmationScreen extends Component {
           </View>
 
           {Components.renderIfElse(this.props.address,
-            <View style={[styles.container, { marginBottom: 90 }]}>
+            <View style={[styles.container, { marginBottom: 90, borderBottomWidth: 0 }]}>
               <Text style={styles.title}>{"Endereço para entrega"}</Text>
               <View style={{ marginHorizontal: -24, paddingHorizontal: 24, backgroundColor: "#F8F8F8" }}>
                 <AddressAdapter address={this.props.address} />
               </View>
             </View>,
-            <View style={[styles.container, { marginBottom: 90 }]}>
+            <View style={[styles.container, { marginBottom: 90, borderBottomWidth: 0 }]}>
               <Text style={styles.title}>{"Endereço da farmácia"}</Text>
               <View style={{ marginHorizontal: -24, paddingHorizontal: 24, backgroundColor: "#F8F8F8" }}>
                 <AddressAdapter address={this.props.proposal.farmacia.endereco} />

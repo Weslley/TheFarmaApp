@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
 import { debounce } from 'lodash';
-import { connect } from 'react-redux';
 
+import React, { Component } from 'react';
 import { View, Image, TextInput, TouchableOpacity, Platform } from 'react-native';
 import { Input, Item } from "native-base";
 
+import { connect } from 'react-redux';
 import { searchProducts, getHistory } from "../../actions/products";
 
 import { Icon } from "../../components/Icon";
@@ -15,7 +15,7 @@ import styles from './styles';
 class SearchHeader extends Component {
     static defaultProps = {
         separator: true,
-        style: { }
+        style: {}
     }
 
     constructor(props) {
@@ -50,6 +50,7 @@ class SearchHeader extends Component {
 
                 <Item>
                     <Input
+                        autoFocus={true}
                         style={{ fontFamily: "Roboto-Bold", fontSize: 24, paddingLeft: 0, marginLeft: 0 }}
                         placeholder="Nome do medicamento "
                         placeholderTextColor="#CCC"

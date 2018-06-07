@@ -1,3 +1,5 @@
+import { uniqBy, union, sortBy, orderBy } from 'lodash';
+
 import axios from 'axios';
 import { call, put } from 'redux-saga/effects';
 import { SERVER_API } from '../../config/server';
@@ -19,7 +21,12 @@ export const getOrder = function* (action) {
     try {
         let config = { headers: { 'Authorization': 'Token ' + action.params.client.token } }
         const response = yield call(axios.get, `${SERVER_API}/pedidos/${action.params.order.id}/`, config);
-        yield put(responseSuccess(GET_ORDER_SUCCESS, response.data));
+        
+        let order = response.data
+        if (order.propostas)
+            order.propostas = orderBy(order.propostas, ['possui_todos_itens', 'valor_total'], ['desc', 'asc'])
+
+        yield put(responseSuccess(GET_ORDER_SUCCESS, order));
     } catch (e) {
         yield put(responseError(GET_ORDER_ERROR, e));
     }

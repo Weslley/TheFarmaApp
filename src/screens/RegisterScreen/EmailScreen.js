@@ -25,7 +25,9 @@ class EmailScreen extends Component {
             password: "",
             email_error: null,
             password_error: null,
-            facebook_user: null
+            facebook_user: null,
+            showNetworkError: false,
+            actionBack: null,
         };
     }
 
@@ -50,6 +52,10 @@ class EmailScreen extends Component {
                         Snackbar.show({ title: nextProps.error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
                     }
                 }
+
+                if (nextProps.error.message && nextProps.error.message === 'Network Error') {
+                    this.setState({ showNetworkError: true });
+                }
             }
 
         } catch (e) {
@@ -62,6 +68,7 @@ class EmailScreen extends Component {
         if (params) {
             if (params.login_type) this.setState({ login_type: params.login_type })
             if (params.facebook_user) this.setState({ facebook_user: params.facebook_user })
+            if (params.actionBack) this.setState({ actionBack: params.actionBack })
         }
 
         this.setState({ email_error: null })
@@ -93,8 +100,10 @@ class EmailScreen extends Component {
 
     submit() {
         if (this.validForm()) {
+            
             let params = {}
             params["email"] = this.state.email;
+            params["actionBack"] = this.state.actionBack
 
             if (this.state.login_type === 0) {
                 this.props.navigation.navigate({ key: 'password1', routeName: 'Password', params });

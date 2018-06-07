@@ -21,21 +21,27 @@ export default (state = INITIAL_STATE, action) => {
   let list = [];
   let index = null;
   switch (action.type) {
+
     case SELECT_ADDRESS:
       return { ...state, address: action.params };
+
     case LIST_ADDRESS:
     case SAVE_ADDRESS:
     case UPDATE_ADDRESS:
     case REMOVE_ADDRESS:
     case LIST_ADDRESS_NEXT_PAGE:
       return { ...state, isLoading: true, success: false };
+
     case LIST_ADDRESS_SUCCESS:
     case LIST_ADDRESS_NEXT_PAGE_SUCCESS:
+      if (action.data && action.data.length === 1) address = action.data[0]
       return {
         ...state,
         isLoading: false,
-        addresses: action.data
+        addresses: action.data,
+        address: address
       };
+
     case SAVE_ADDRESS_SUCCESS:
     case UPDATE_ADDRESS_SUCCESS:
       return { ...state, address: action.data, success: true };
@@ -59,7 +65,7 @@ export default (state = INITIAL_STATE, action) => {
     case CLEAR_ADDRESS:
       return { ...state, error: null, address: null, success: false };
     case CLEAR_ADDRESSES:
-      return { ...state, error: null, addresses: null, success: false };
+      return { ...state, error: null, addresses: [], success: false };
     default:
       return state;
   }
