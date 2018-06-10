@@ -12,7 +12,8 @@ export default EStyleSheet.create({
   label: {
     fontFamily: "Roboto-Regular",
     fontSize: 12,
-    color: "rgba(0,0,0,0.80)"
+    color: "rgba(0,0,0,0.80)",
+    marginBottom: 4
   },
   input: {
     width: '100%',

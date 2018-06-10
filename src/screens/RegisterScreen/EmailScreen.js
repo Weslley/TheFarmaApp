@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, KeyboardAvoidingView, ScrollView, Text, Imagem, TextInput, Image, TouchableOpacity, Platform } from "react-native";
+import { View, KeyboardAvoidingView, ScrollView, Text, Imagem, TextInput, Image, TouchableOpacity, Platform, Keyboard } from "react-native";
 import Snackbar from 'react-native-snackbar';
 import LinearGradient from "react-native-linear-gradient";
 
@@ -100,7 +100,7 @@ class EmailScreen extends Component {
 
     submit() {
         if (this.validForm()) {
-            
+
             let params = {}
             params["email"] = this.state.email;
             params["actionBack"] = this.state.actionBack

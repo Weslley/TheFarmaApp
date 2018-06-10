@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, KeyboardAvoidingView, ScrollView, Text, Imagem, TextInput, Image, TouchableOpacity } from "react-native";
+import { View, KeyboardAvoidingView, ScrollView, Text, Imagem, TextInput, Image, TouchableOpacity, Keyboard } from "react-native";
 import Snackbar from 'react-native-snackbar';
 import LinearGradient from "react-native-linear-gradient";
 import { TextInputMask, MaskService } from "react-native-masked-text";
@@ -119,6 +119,8 @@ class PhoneScreen extends Component {
 
     submit() {
         if (this.validForm()) {
+
+            Keyboard.dismiss()
 
             let params = {}
             params["login_type"] = 2;

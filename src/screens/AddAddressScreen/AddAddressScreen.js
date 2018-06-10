@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, Image, TextInput, Picker, Platform } from "react-native";
+import { View, ScrollView, KeyboardAvoidingView, Image, TextInput, Picker, Platform } from "react-native";
 import { Button, Text, Picker as NBPicker } from "native-base";
 import { TextInputMask, MaskService } from "react-native-masked-text";
 
@@ -229,8 +229,10 @@ class AddAddressScreen extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
-        <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+      <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : null} enabled>
+
           <Header
             title={"Novo Endereço"}
             subtitle={"Prencha as informações do endereço"}
@@ -246,7 +248,7 @@ class AddAddressScreen extends Component {
 
           <ScrollView style={{ paddingHorizontal: 24, paddingTop: 18 }}>
             <View floatingLabel style={styles.formitem}>
-              <Text style={styles.label}>Nome</Text>
+              <Text style={[styles.label, Platform.OS === 'ios' ? { marginBottom: 16 } : {}]}>Nome</Text>
               <TextInput
                 style={styles.input}
                 placeholderTextColor="#CCC"
@@ -264,7 +266,7 @@ class AddAddressScreen extends Component {
             </View>
 
             <View floatingLabel style={styles.formitem}>
-              <Text style={styles.label} >CEP</Text>
+              <Text style={[styles.label, Platform.OS === 'ios' ? { marginBottom: 16 } : {}]} >CEP</Text>
               <TextInput
                 maxLength={9}
                 keyboardType={"numeric"}
@@ -283,7 +285,7 @@ class AddAddressScreen extends Component {
             </View>
 
             <View floatingLabel style={styles.formitem}>
-              <Text style={styles.label} style={styles.label}>Cidade</Text>
+              <Text style={[styles.label, Platform.OS === 'ios' ? { marginBottom: 16 } : {}]}>Cidade</Text>
               <NBPicker
                 mode={Platform.OS === 'ios' ? "dropdown" : 'dialog'}
                 iosHeader="Selecione uma cidade"
@@ -302,7 +304,7 @@ class AddAddressScreen extends Component {
             </View>
 
             <View floatingLabel style={styles.formitem}>
-              <Text style={styles.label} style={styles.label}>Bairro</Text>
+              <Text style={[styles.label, Platform.OS === 'ios' ? { marginBottom: 16 } : {}]}>Bairro</Text>
               <NBPicker
                 mode={Platform.OS === 'ios' ? "dropdown" : 'dialog'}
                 iosHeader="Selecione um bairro"
@@ -321,7 +323,7 @@ class AddAddressScreen extends Component {
             </View>
 
             <View floatingLabel style={styles.formitem}>
-              <Text style={styles.label}>Logradouro</Text>
+              <Text style={[styles.label, Platform.OS === 'ios' ? { marginBottom: 16 } : {}]}>Logradouro</Text>
               <TextInput
                 style={styles.input}
                 placeholderTextColor="#CCC"
@@ -338,7 +340,7 @@ class AddAddressScreen extends Component {
             </View>
 
             <View floatingLabel style={styles.formitem}>
-              <Text style={styles.label}>Número</Text>
+              <Text style={[styles.label, Platform.OS === 'ios' ? { marginBottom: 16 } : {}]}>Número</Text>
               <TextInput
                 keyboardType={"numeric"}
                 style={styles.input}
@@ -356,7 +358,7 @@ class AddAddressScreen extends Component {
             </View>
 
             <View floatingLabel style={[styles.formitem, { marginBottom: 64 }]}>
-              <Text style={styles.label}>Complemento</Text>
+              <Text style={[styles.label, Platform.OS === 'ios' ? { marginBottom: 16 } : {}]}>Complemento</Text>
               <TextInput
                 style={styles.input}
                 placeholderTextColor="#CCC"
@@ -373,7 +375,7 @@ class AddAddressScreen extends Component {
             </View>
 
           </ScrollView>
-        </View >
+        </KeyboardAvoidingView>
 
         {Components.renderIf(this.props.isLoading === true,
           <View style={{ flex: 1, backgroundColor: "rgba(255,255,255,0.8)", position: 'absolute', top: 0, bottom: 0, right: 0, left: 0 }}>

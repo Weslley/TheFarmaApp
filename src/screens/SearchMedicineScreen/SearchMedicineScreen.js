@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { Dimensions, View, ScrollView, ActivityIndicator, Image, TouchableOpacity, FlatList } from 'react-native';
-import { Text, List, ListItem } from "native-base";
+import { Text, Button } from "native-base";
 import Snackbar from 'react-native-snackbar';
 
 import { connect } from 'react-redux';
 import { getLocation, updateLocation, getGeocodeAddress } from "../../actions/locations"
 
-import { selectProduct, getHistory, searchProductsByBarcode, clearError } from '../../actions/products';
+import { searchProducts, selectProduct, getHistory, searchProductsByBarcode, clearError } from '../../actions/products';
 import { clearApresentations } from '../../actions/apresentations';
 
 import { Icon } from '../../components/Icon';
@@ -44,6 +44,14 @@ class SearchMedicineScreen extends Component {
 
             if (nextProps && nextProps.success === true && nextProps.apresentation !== null) {
                 this._showProductDetail(nextProps.apresentation)
+                /*
+                let product = {
+                    nome: nextProps.apresentation.produto.nome,
+                    ids: [nextProps.apresentation.produto.id]
+                }
+                this.props.dispatch(selectProduct(product));
+                */
+                this.props.dispatch(searchProducts(this.props.uf, nextProps.apresentation.produto.nome));
                 this.props.dispatch(clearError());
             }
         } catch (e) {
@@ -79,6 +87,8 @@ class SearchMedicineScreen extends Component {
         try {
             console.log(e);
             this.setState({ showCamera: false })
+            let params = { uf: this.props.uf, query: e.data }
+            this.props.dispatch(searchProductsByBarcode(params))
         } catch (error) {
             console.error(error);
         }
@@ -141,11 +151,17 @@ class SearchMedicineScreen extends Component {
                             topContent={
                                 <View style={{ padding: 32 }}>
                                     <Text style={{ fontFamily: 'Roboto-Light', fontSize: 24, color: 'rgba(0,0,0,0.80)', textAlign: 'center', marginTop: 24, }}>
-                                        Posicione a câmera no<Text style={{ fontFamily: 'Roboto-Bold', fontSize: 24 }}>{" Código de barras"}</Text>.
+                                        Aponte a câmera para o <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 24 }}>{" código de barras"}</Text>.
                                   </Text>
                                 </View>
                             }
-                            bottomContent={<View style={{ padding: 32 }} />}
+                            bottomContent={
+                                <View style={{ padding: 32, width: '100%' }}>
+                                    <Button style={[styles.button]} bordered dark onPress={() => { this.setState({ showCamera: false }) }}>
+                                        <Text style={[styles.buttonText]} uppercase={false} >{"Cancelar"}</Text>
+                                    </Button>
+                                </View>
+                            }
                         />
                     </View>
                 )}

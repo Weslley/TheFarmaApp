@@ -1,5 +1,4 @@
 import EStyleSheet from "react-native-extended-stylesheet";
-
 export default EStyleSheet.create({
     container: {
         flex: 1,
@@ -26,5 +25,15 @@ export default EStyleSheet.create({
         width: 16,
         height: 16,
         marginRight: 16
-    }
+    },
+    button: { width: '100%' },
+    buttonDisabled: { opacity: 0.32 },
+    buttonEnabled: {},
+    buttonText: {
+        flex: 1,
+        textAlign: "center",
+        fontFamily: "Roboto-Bold",
+        fontSize: 16,
+        color: "rgba(0,0,0,0.80)",
+    },
 });

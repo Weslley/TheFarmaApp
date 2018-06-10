@@ -32,15 +32,15 @@ export const getByName = function* (action) {
 
 export const getByBarcode = function* (action) {
     try {
-        const response = yield call(axios.get, `${SERVER_API}/produtos/v2/${action.params.uf}/?codigo_barras=${action.params.query}`);
-        if (response.data.results && response.data.results.apresentacoes) {
-            let apresentation = response.data.results.apresentacoes.find(i => `${i.codigo_barras}` === `${action.params.query}`);
+        const response = yield call(axios.get, `${SERVER_API}/produtos/${action.params.uf}/?codigo_barras=${action.params.query}`);
+        if (response.data.results[0] && response.data.results[0].apresentacoes) {
+            apresentation = response.data.results[0].apresentacoes.find(i => `${i.codigo_barras}` === `${action.params.query}`);
             apresentation["produto"] = {
-                id: response.data.results.id,
-                nome: response.data.results.nome,
-                fabricante: response.data.results.fabricante,
-                tipo: response.data.results.tipo,
-                principio_ativo: response.data.results.principio_ativo
+                id: response.data.results[0].id,
+                nome: response.data.results[0].nome,
+                fabricante: response.data.results[0].fabricante,
+                tipo: response.data.results[0].tipo,
+                principio_ativo: response.data.results[0].principio_ativo
             }
         }
         yield put(responseSuccess(SEARCH_PRODUCTS_BARCODE_SUCCESS, apresentation));

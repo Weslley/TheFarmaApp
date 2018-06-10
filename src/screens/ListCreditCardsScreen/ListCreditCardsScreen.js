@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { View, ScrollView, Image, TouchableOpacity, TouchableHighlight } from "react-native";
+import { View, ScrollView, Image, TouchableOpacity, TouchableHighlight, FlatList } from "react-native";
 import { Text } from "native-base";
 import Snackbar from 'react-native-snackbar';
-import { SwipeListView } from 'react-native-swipe-list-view';
+import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
 
 import { connect } from "react-redux";
 import { logout } from "../../actions/clients";
@@ -25,7 +25,8 @@ class ListCreditCardsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showBottomBar: false
+      showBottomBar: false,
+      scroll: true
     };
   }
 
@@ -108,12 +109,42 @@ class ListCreditCardsScreen extends Component {
       activeOpacity={1}
       style={styles.rowFront}
       onPress={() => { this._selectCreditCard(item) }}>
-      
+
       <CreditCardAdapter
         creditCard={item}
         checked={(this.props.creditCard && item.id === this.props.creditCard.id)} />
 
     </TouchableOpacity>
+  );
+
+  _renderItemV2 = ({ item }) => (
+    <SwipeRow
+      disableRightSwipe={true}
+      rightOpenValue={-75}
+      onRowOpen={() => this.setState({ scroll: false })}
+      onRowDidClose={() => this.setState({ scroll: true })}
+    >
+
+      <View style={styles.rowBack}>
+        <TouchableOpacity
+          style={[styles.backRightBtn, styles.backRightBtnRight]}
+          onPress={() => { this._removeCreditCard(item) }} >
+          <Icon name="trash" size={24} style={{ color: "#FFF" }} />
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity
+        activeOpacity={1}
+        style={styles.rowFront}
+        onPress={() => { this._selectCreditCard(item) }}>
+
+        <CreditCardAdapter
+          creditCard={item}
+          checked={(this.props.creditCard && item.id === this.props.creditCard.id)} />
+
+      </TouchableOpacity>
+
+    </SwipeRow>
   );
 
   render() {
@@ -139,17 +170,14 @@ class ListCreditCardsScreen extends Component {
             }
           />
 
-          <ScrollView>
-            <SwipeListView
-              useFlatList
-              disableRightSwipe={true}
-              data={this.props.creditCards}
-              keyExtractor={item => item.id.toString()}
-              renderItem={this._renderItem}
-              renderHiddenItem={this._renderActions}
-              rightOpenValue={-75}
-            />
-          </ScrollView>
+          <FlatList
+            scrollEnabled={ false }
+            style={{ marginBottom: 64 }}
+            data={this.props.creditCards}
+            keyExtractor={item => item.id.toString()}
+            renderItem={this._renderItemV2}
+          />
+
         </View>
 
         {Components.renderIf(this.props.creditCards && this.props.creditCards.length === 0 && this.props.isLoading === true,

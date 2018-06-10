@@ -30,7 +30,8 @@ class ListAddressScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showBottomBar: false
+      showBottomBar: false,
+      scroll: true
     };
   }
 
@@ -172,6 +173,9 @@ class ListAddressScreen extends Component {
 
           <ScrollView>
             <SwipeListView
+              scrollEnabled={this.state.scroll}
+              onRowOpen={() => this.setState({ scroll: false })}
+              onRowDidClose={() => this.setState({ scroll: true })}
               useFlatList
               disableRightSwipe={true}
               data={this.props.addresses}

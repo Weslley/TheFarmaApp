@@ -114,7 +114,9 @@ class VerificationCodeScreen extends Component {
         }
     }
 
-    componentDidMount() { }
+    componentDidMount() { 
+        this.confirmCode._setFocus(0);
+    }
 
     /** Private functions */
     onBack() {
@@ -177,7 +179,7 @@ class VerificationCodeScreen extends Component {
 
     render() {
         return (
-            <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+            <KeyboardAvoidingView style={{ flex: 1 }} behavior='padding' enabled>
 
                 <Image
                     resizeMode={"cover"}
@@ -202,8 +204,9 @@ class VerificationCodeScreen extends Component {
                         <ConfirmationCodeInput
                             size={50}
                             codeLength={4}
-                            ref="codeInput"
+                            ref={(c) => { this.confirmCode = c }}
                             className={'border-b'}
+                            autoFocus={true}
                             secureTextEntry
                             keyboardType="phone-pad"
                             activeColor='#7ED321'

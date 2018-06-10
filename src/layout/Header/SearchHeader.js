@@ -59,9 +59,11 @@ class SearchHeader extends Component {
                         value={this.state.query}
                         underlineColorAndroid="transparent" />
 
-                    <TouchableOpacity onPress={this.onClearSearch}>
-                        <Icon style={{ color: "#000", fontSize: 30 }} name="ios-close-empty" />
-                    </TouchableOpacity>
+                    {Components.renderIf(this.state.query,
+                        <TouchableOpacity onPress={this.onClearSearch}>
+                            <Icon style={{ color: "#000", fontSize: 30 }} name="ios-close-empty" />
+                        </TouchableOpacity>
+                    )}
                 </Item>
             </View>
         );

@@ -52,6 +52,10 @@ class PasswordScreen extends Component {
                         this.setState({ password_error: nextProps.error.response.data.senha[0] })
                     }
 
+                    if (nextProps.error.response.data.password) {
+                        this.setState({ password_error: nextProps.error.response.data.password[0] })
+                    }
+
                     if (nextProps.error.response.data.non_field_errors) {
                         Snackbar.show({ title: nextProps.error.response.data.non_field_errors[0], duration: Snackbar.LENGTH_SHORT });
                     }
@@ -160,11 +164,6 @@ class PasswordScreen extends Component {
                             onChangeText={(password) => this.setState({ password })}
                             value={this.state.password}
                         />
-
-                        {Components.renderIf(Platform.OS === 'ios',
-                            <View style={{ borderBottomColor: '#000', borderWidth: 0.5, marginTop: 4, marginBottom: 8 }} />
-                        )}
-
                         {Components.renderIf(this.state.password_error,
                             <Text style={[styles.inputError, { color: "#F0166D" }]}>{this.state.password_error}</Text>
                         )}

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, Image, TouchableOpacity, FlatList, TextInput, Platform, BackHandler } from "react-native";
+import { View, ScrollView, KeyboardAvoidingView, Image, TouchableOpacity, FlatList, TextInput, Platform, BackHandler } from "react-native";
 import { Container, Text, Button, Item, Input } from "native-base";
 import { TextInputMask, MaskService } from "react-native-masked-text";
 import Snackbar from 'react-native-snackbar';
@@ -269,66 +269,67 @@ class ProposalScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
-        <ScrollView>
-          <Header
-            title={this.props.proposal.farmacia.nome_fantasia}
-            subtitle={`Fazemos entrega até ${this.props.proposal.farmacia.horario_funcionamento}`}
-            menuLeft={
-              <MenuItem
-                icon="md-arrow-back"
-                style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
-                onPress={() => { this.onBack() }}
-              />
-            }
-            menuRight={
-              <View style={{ flexDirection: "row" }}>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : null} enabled>
+          <ScrollView>
+            <Header
+              title={this.props.proposal.farmacia.nome_fantasia}
+              subtitle={`Fazemos entrega até ${this.props.proposal.farmacia.horario_funcionamento}`}
+              menuLeft={
                 <MenuItem
-                  icon="call"
-                  onPress={() => { this._callPhone() }}
-                  style={{ paddingVertical: 12, paddingHorizontal: 12 }}
+                  icon="md-arrow-back"
+                  style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+                  onPress={() => { this.onBack() }}
                 />
-                <MenuItem
-                  icon="marker"
-                  onPress={() => { this._callMap() }}
-                  style={{ paddingVertical: 12, paddingHorizontal: 12 }}
-                />
+              }
+              menuRight={
+                <View style={{ flexDirection: "row" }}>
+                  <MenuItem
+                    icon="call"
+                    onPress={() => { this._callPhone() }}
+                    style={{ paddingVertical: 12, paddingHorizontal: 12 }}
+                  />
+                  <MenuItem
+                    icon="marker"
+                    onPress={() => { this._callMap() }}
+                    style={{ paddingVertical: 12, paddingHorizontal: 12 }}
+                  />
+                </View>
+              }
+              footer={this._renderHeaderFooter()}
+            />
+
+            {Components.renderIf((!this.props.proposal.possui_todos_itens && !this.state.onScrollList),
+              <View style={{ backgroundColor: "#FF1967", marginTop: 4, paddingVertical: 14, paddingHorizontal: 24 }}>
+                <Text style={{ fontFamily: "Roboto-Regular", fontSize: 16, color: "#FFFFFF" }}>{"Essa farmacia não tem todos os itens"}</Text>
               </View>
-            }
-            footer={this._renderHeaderFooter()}
+            )}
+
+            {Components.renderIf(this.props.proposal && this.props.proposal.itens,
+              <FlatList
+                style={{ paddingHorizontal: 24, paddingBottom: 90 }}
+                data={this.props.proposal.itens}
+                keyExtractor={item => item.apresentacao.toString()}
+                renderItem={this._renderItem}
+              />
+            )}
+
+          </ScrollView>
+
+          <BottomBar
+            proposal={true}
+            buttonTitle="Comprar"
+            price={this.props.proposal.valor_total}
+            onButtonPress={() => { this._showPaymentDialog(); }}
           />
 
-          {Components.renderIf((!this.props.proposal.possui_todos_itens && !this.state.onScrollList),
-            <View style={{ backgroundColor: "#FF1967", marginTop: 4, paddingVertical: 14, paddingHorizontal: 24 }}>
-              <Text style={{ fontFamily: "Roboto-Regular", fontSize: 16, color: "#FFFFFF" }}>{"Essa farmacia não tem todos os itens"}</Text>
-            </View>
+          {Components.renderIf(this.state.showPaymentDialog,
+            this._renderPaymentDialog()
           )}
 
-          {Components.renderIf(this.props.proposal && this.props.proposal.itens,
-            <FlatList
-              style={{ paddingHorizontal: 24, paddingBottom: 90 }}
-              data={this.props.proposal.itens}
-              keyExtractor={item => item.apresentacao.toString()}
-              renderItem={this._renderItem}
-            />
+          {Components.renderIf(this.state.showTrocoDialog,
+            this._renderTrocoDialog()
           )}
-
-        </ScrollView>
-
-        <BottomBar
-          proposal={true}
-          buttonTitle="Comprar"
-          price={this.props.proposal.valor_total}
-          onButtonPress={() => { this._showPaymentDialog(); }}
-        />
-
-        {Components.renderIf(this.state.showPaymentDialog,
-          this._renderPaymentDialog()
-        )}
-
-        {Components.renderIf(this.state.showTrocoDialog,
-          this._renderTrocoDialog()
-        )}
-
+        </KeyboardAvoidingView>
       </View>
     );
   }

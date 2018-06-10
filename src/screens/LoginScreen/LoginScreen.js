@@ -152,7 +152,7 @@ class LoginScreen extends Component {
 
                         <Button style={[styles.button]} transparent bordered iconLeft onPress={() => this.loginPhone()}>
                             <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: "flex-start" }} >
-                                <Icon name="call" style={[styles.buttonIcon, { marginLeft: 16 }]} />
+                                <Icon name="call-o" style={[styles.buttonIcon, { marginLeft: 16 }]} />
                                 <Text style={styles.buttonText} uppercase={false}>{"Telefone"}</Text>
                             </View>
                         </Button>
@@ -166,7 +166,7 @@ class LoginScreen extends Component {
 
                         <Button style={[styles.button, { marginBottom: 0 }]} transparent bordered iconLeft onPress={() => this.loginFacebook()}>
                             <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: "flex-start" }} >
-                                <Icon name="social-facebook" style={[styles.buttonIcon, { marginLeft: 16 }]} />
+                                <Icon name="social-facebook" style={[styles.buttonIcon, { marginLeft: 24 }]} />
                                 <Text style={styles.buttonText} uppercase={false}>{"Facebook"}</Text>
                             </View>
                         </Button>
