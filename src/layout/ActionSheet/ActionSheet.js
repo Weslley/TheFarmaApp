@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Modal, Platform, ActionSheetIOS, TouchableOpacity } from "react-native";
+import { View, KeyboardAvoidingView, Modal, Platform, ActionSheetIOS, TouchableOpacity } from "react-native";
 
 import { Text } from "native-base";
 import { Components } from "../../helpers";
@@ -65,7 +65,7 @@ class ActionSheet extends Component {
           this.setState({ modalVisible: false });
         }}>
 
-        <View style={{ flex: 1 }}>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : null} enabled>
           <TouchableOpacity
             activeOpacity={1}
             style={{ backgroundColor: "rgba(0,0,0,0.4)", flex: 1, justifyContent: "flex-end" }}
@@ -78,7 +78,7 @@ class ActionSheet extends Component {
               {this.props.content}
             </TouchableOpacity>
           </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     );
   }

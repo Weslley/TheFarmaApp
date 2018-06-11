@@ -45,13 +45,16 @@ export default EStyleSheet.create({
         color: 'rgba(0,0,0,0.80)'
     },
     avatarContainer: {
+        width: 48,
+        height: 48,
+        borderRadius: 100,
+        overflow: 'hidden',
         alignItems: "center",
         justifyContent: "center"
     },
     avatar: {
         width: 48,
         height: 48,
-        borderRadius: 100,
     },
     separator: {
         marginTop: 8,

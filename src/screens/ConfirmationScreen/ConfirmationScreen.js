@@ -227,7 +227,7 @@ class ConfirmationScreen extends Component {
                       itemStyle={styles.nbItem}
                       textStyle={styles.nbTextItem}
                       selectedValue={this.state.numero_parcelas}
-                      onValueChange={(value, index) => this.setState({ numero_parcelas: value.id })}
+                      onValueChange={(value, index) => this.setState({ numero_parcelas: value })}
                     >
                       {this._renderParcelsOptions()}
                     </NBPicker>

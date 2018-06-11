@@ -40,10 +40,10 @@ export default EStyleSheet.create({
         justifyContent: "center",
         borderRadius: 100,
         backgroundColor: "#ccc",
+        overflow: 'hidden'
     },
     avatar: {
         width: 24,
         height: 24,
-        borderRadius: 100,
     }
 });
