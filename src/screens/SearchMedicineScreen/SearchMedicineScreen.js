@@ -40,18 +40,20 @@ class SearchMedicineScreen extends Component {
                 if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
                     Snackbar.show({ title: nextProps.error.message, duration: Snackbar.LENGTH_SHORT });
                 }
+
+                if (nextProps.error.message && nextProps.error.message === 'Network Error') {
+                    Snackbar.show({ title: 'Sem conexão com a internet', duration: Snackbar.LENGTH_SHORT });
+                }
             }
 
             if (nextProps && nextProps.success === true && nextProps.apresentation !== null) {
                 this._showProductDetail(nextProps.apresentation)
-                /*
                 let product = {
                     nome: nextProps.apresentation.produto.nome,
                     ids: [nextProps.apresentation.produto.id]
                 }
                 this.props.dispatch(selectProduct(product));
-                */
-                this.props.dispatch(searchProducts(this.props.uf, nextProps.apresentation.produto.nome));
+                this.props.dispatch(searchProducts(this.props.uf, product.nome));
                 this.props.dispatch(clearError());
             }
         } catch (e) {

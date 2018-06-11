@@ -157,6 +157,14 @@ class WelcomeScreen extends Component {
     this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: {} });
   }
 
+  getPhoto() {
+    if (this.props.client && this.props.client.foto) {
+      return { uri: this.props.client.foto }
+    } else {
+      return require("../../assets/images/avatar.png");
+    }
+  }
+
   render() {
     return (
       <KeyboardAvoidingView style={{ flex: 1 }}>
@@ -177,12 +185,8 @@ class WelcomeScreen extends Component {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <TouchableOpacity onPress={() => { this.showMenuScreen() }} style={{ padding: 12, }}>
                 <View style={styles.avatarContainer}>
-                  {Components.renderIfElse(this.props.client && this.props.client.foto,
-                    <Image
-                      style={styles.avatar}
-                      resizeMode="contain"
-                      source={(this.props.client && this.props.client.foto) ? { uri: this.props.client.foto } : require("../../assets/images/avatar.png")}
-                    />,
+                  {Components.renderIfElse(this.props.client && this.props.client.foto !== null,
+                    <Image style={styles.avatar} resizeMode="contain" source={this.getPhoto()} />,
                     <Icon name="md-person" color={"#000"} size={16} style={{ width: 16, height: 16, textAlign: 'center' }} />
                   )}
                 </View>
