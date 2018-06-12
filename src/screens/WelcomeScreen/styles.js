@@ -9,7 +9,7 @@ export default EStyleSheet.create({
         width: null,
         height: null,
         position: "absolute",
-        opacity: 0.5,
+        opacity: 1,
         left: 0,
         right: 0,
         top: 0,

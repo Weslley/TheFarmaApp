@@ -35,6 +35,14 @@ class MenuScreen extends Component {
     this.props.dispatch(logout());
   }
 
+  getPhoto(){
+    if(this.props.client && this.props.client.foto!=null){
+      return { uri: this.props.client.foto }
+    }else{
+      return null
+    }
+  }
+
   render() {
     return (
       <Container style={{ backgroundColor: "#FFFFFF" }}>
@@ -42,7 +50,7 @@ class MenuScreen extends Component {
         <Header
           title={this.props.client.nome}
           subtitle={"Visualizar e editar o seu perfil"}
-          avatar={{ uri: this.props.client.foto } || require("../../assets/images/avatar.png")}
+          avatar={ this.getPhoto() }
           menuLeft={
             <MenuItem
               icon="md-arrow-back"

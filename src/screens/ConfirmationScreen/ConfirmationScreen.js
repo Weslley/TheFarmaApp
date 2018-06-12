@@ -81,6 +81,11 @@ class ConfirmationScreen extends Component {
 
   componentWillMount = () => {
     BackHandler.addEventListener('hardwareBackPress', this.nothing);
+    this.setState({numero_parcelas: 1})
+  }
+
+  componentDidMount(){
+    this.setState({numero_parcelas: 1})
   }
 
   componentWillUnmount = () => {
@@ -149,7 +154,7 @@ class ConfirmationScreen extends Component {
     for (i = 1; i <= max; i++) {
       let valor = (this.props.proposal.valor_total / i).toFixed(2);
       let sValor = MaskService.toMask('money', valor);
-      if (i == 1) {
+      if (i === 1) {
         parcelas.push({ id: i, label: `${sValor} à vista` })
       } else {
         parcelas.push({ id: i, label: `${i}X de ${sValor}` })
@@ -157,7 +162,7 @@ class ConfirmationScreen extends Component {
     }
 
     let options = parcelas.map((p) => {
-      return (<NBPicker.Item label={`${p.label}`} key={"p" + i.id} value={i.id} />)
+      return (<NBPicker.Item label={`${p.label}`} key={"p" + p.id} value={p.id} />)
     })
     return options;
   }
@@ -226,7 +231,7 @@ class ConfirmationScreen extends Component {
                       headerBackButtonText="voltar"
                       itemStyle={styles.nbItem}
                       textStyle={styles.nbTextItem}
-                      selectedValue={this.state.numero_parcelas}
+                      selectedValue={ this.state.numero_parcelas }
                       onValueChange={(value, index) => this.setState({ numero_parcelas: value })}
                     >
                       {this._renderParcelsOptions()}

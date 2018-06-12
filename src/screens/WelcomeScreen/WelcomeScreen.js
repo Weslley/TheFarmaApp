@@ -116,15 +116,16 @@ class WelcomeScreen extends Component {
 
   /** Private functions */
   getTitle() {
+    let msg = "Bom dia"
+    let now = new Date().getHours();
+      if (now >= 6 && now < 12) { msg = `Bom dia`; }
+      if (now >= 12 && now < 19) { msg = `Boa tarde`; }
+      if (now >= 19 || now < 5) { msg = `Boa noite`; }
+
     let clientName = this.props.client ? this.props.client.nome : "";
     clientName = clientName.split(" ")[0]
-    if (clientName) {
-      let now = new Date().getHours();
-      if (now >= 6 && now < 12) { return `Bom dia, ${clientName}`; }
-      if (now >= 12 && now < 19) { return `Boa tarde, ${clientName}`; }
-      if (now >= 19 || now < 5) { return `Boa noite, ${clientName}`; }
-    }
-    return "Olá";
+    if (clientName) msg = msg + `, ${clientName}`
+    return msg;
   }
 
   getLocation() {
