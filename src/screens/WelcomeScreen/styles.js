@@ -21,9 +21,9 @@ export default EStyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "rgba(0, 0, 0, .04)",
-        marginTop: 24,
+        marginTop: 16,
         paddingHorizontal: 12,
-        paddingVertical: 16,
+        paddingVertical: 12,
         borderRadius: 26
     },
     text: {

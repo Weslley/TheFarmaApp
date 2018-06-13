@@ -191,7 +191,9 @@ class ApresentationDetailScreen extends Component {
               />
             }
             menuRight={
-              this.props.cartItems.length > 0 ? <ShoppingBagIcon value={this.props.cartItems.length} onPress={() => { this.showCart() }} /> : null
+              <View style={{ paddingRight: 12 }}>
+                <ShoppingBagIcon value={this.props.cartItems.length} onPress={() => { this.showCart() }} />
+              </View>
             }
           />
 

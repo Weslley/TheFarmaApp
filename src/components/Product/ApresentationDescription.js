@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, TouchableOpacity, Image } from "react-native";
-import { Text, Button, Thumbnail } from "native-base";
+import { Text, Thumbnail } from "native-base";
 import { TextMask } from "react-native-masked-text";
 
 import { Icon } from "../../components/Icon";

@@ -181,10 +181,9 @@ class MedicineApresentationScreen extends Component {
               style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }} />
           }
           menuRight={
-            <ShoppingBagIcon
-              value={this.getCartSize()}
-              onPress={() => { this.showCart() }}
-            />
+            <View style={{ paddingRight: 12 }}>
+              <ShoppingBagIcon value={this.getCartSize()} onPress={() => { this.showCart() }} />
+            </View>
           }
         />
 

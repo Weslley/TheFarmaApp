@@ -192,7 +192,9 @@ class WelcomeScreen extends Component {
                   )}
                 </View>
               </TouchableOpacity>
-              <ShoppingBagIcon value={this.props.cartItems.length} onPress={() => { this.showCart() }} />
+              <View style={{ paddingRight: 12 }}>
+                <ShoppingBagIcon value={this.props.cartItems.length} onPress={() => { this.showCart() }} />
+              </View>
             </View>
           }
         />
