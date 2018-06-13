@@ -1,26 +1,24 @@
 import React, { Component } from "react";
-import { View, ScrollView, TouchableOpacity, FlatList, Picker, Platform, BackHandler } from "react-native";
-import { Button, Text, Picker as NBPicker } from "native-base";
-import { TextInputMask, TextMask, MaskService } from "react-native-masked-text";
+import { View, ScrollView, TouchableOpacity, FlatList, Linking } from "react-native";
+import { Text } from "native-base";
+import { TextMask, MaskService } from "react-native-masked-text";
 
 import Snackbar from 'react-native-snackbar';
 import LinearGradient from "react-native-linear-gradient";
 import Communications from 'react-native-communications';
 
-import { NavigationActions } from 'react-navigation';
-
 import { Header } from "../../layout/Header";
-import { BottomBar } from "../../layout/Bar";
 
 import { Icon } from "../../components/Icon";
-import { Loading } from "../../components/Loading"
 import { MenuItem } from "../../components/MenuItem";
 import { OrderItemAdapter } from "../../components/Product/";
 import { AddressAdapter } from "../../components/Address";
 import { CreditCardAdapter } from "../../components/CreditCard";
 
 import { StatusPedido } from "../../models/enums"
-import { Components, CartUtils, StringUtils, Date as DateUtils } from "../../helpers";
+import { Components, StringUtils, Date as DateUtils } from "../../helpers";
+
+import { SUPPORT_LINK } from "../../config/server";
 import styles from "./styles";
 
 class OrderScreen extends Component {
@@ -45,6 +43,15 @@ class OrderScreen extends Component {
     /** Private functions */
     onBack() {
         this.props.navigation.goBack(null);
+    }
+
+    openSupport() {
+        try {
+          Linking.openURL(SUPPORT_LINK);
+        } catch (error) {
+          console.log(error);
+          Snackbar.show({ title: "Erro ao abrir o whatsapp.", duration: Snackbar.LENGTH_SHORT });
+        }
     }
 
     _showDrugstore() {
@@ -210,7 +217,7 @@ class OrderScreen extends Component {
 
                     <View style={[styles.container, { marginBottom: 90 }]}>
                         <Text style={styles.title}>{"Alguma dúvida ou problema?"}</Text>
-                        <TouchableOpacity onPress={() => { }}>
+                        <TouchableOpacity onPress={() => { this.openSupport() }}>
                             <LinearGradient colors={["#00C7BD", "#009999"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ width: '100%', borderRadius: 8, paddingHorizontal: 28, paddingVertical: 14 }}>
                                 <Text style={styles.buttonText}>{'Entrar em contato'}</Text>
                             </LinearGradient>

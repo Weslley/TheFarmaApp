@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, Linking } from "react-native";
 import { Container, Button, Text, Icon } from "native-base";
-import { LoginButton } from "react-native-fbsdk";
+import Snackbar from 'react-native-snackbar';
 
 import { connect } from "react-redux";
 import { getCities } from "../../actions/cities";
-import { getDistricts } from "../../actions/districts";
 
 import { logout } from "../../actions/clients";
 
@@ -13,7 +12,7 @@ import { Header } from "../../layout/Header";
 import { MenuItem } from "../../components/MenuItem";
 import { ProfileMenuItem } from "../../components/ProfileMenuItem";
 
-import { Components } from "../../helpers";
+import { SUPPORT_LINK } from "../../config/server";
 import styles from "./styles";
 
 class MenuScreen extends Component {
@@ -40,6 +39,15 @@ class MenuScreen extends Component {
       return { uri: this.props.client.foto }
     }else{
       return null
+    }
+  }
+
+  openSupport() {
+    try {
+      Linking.openURL(SUPPORT_LINK);
+    } catch (error) {
+      console.log(error);
+      Snackbar.show({ title: "Erro ao abrir o whatsapp.", duration: Snackbar.LENGTH_SHORT });
     }
   }
 
@@ -73,7 +81,7 @@ class MenuScreen extends Component {
             this.props.navigation.navigate({ key: 'list_credit1', routeName: 'ListCreditCards', params: {} });
           }} />
 
-          <ProfileMenuItem icon="chat" text={"Dúvidas e Reclamações"} onPress={() => { }} />
+          <ProfileMenuItem icon="chat" text={"Dúvidas e Reclamações"} onPress={() => { this.openSupport()}} />
         </ScrollView>
 
         <View style={{ paddingHorizontal: 24, }}>

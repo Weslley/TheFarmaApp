@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { NavigationActions } from 'react-navigation';
-import { StatusBar, KeyboardAvoidingView, View, TouchableOpacity, Image } from "react-native";
+import { StatusBar, KeyboardAvoidingView, View, TouchableOpacity, Image, Alert } from "react-native";
 import { Text, Button } from "native-base";
 
 import Snackbar from 'react-native-snackbar';
@@ -138,16 +138,28 @@ class WelcomeScreen extends Component {
     );
   }
 
+  alertLocation() {
+    Alert.alert(
+      '',
+      'Para lhe oferecer as melhores propostas o TheFarma requer acesso a sua localização?',
+      [
+        { text: 'NÃO', onPress: () => { console.log('cancelou.'); } },
+        { text: 'SIM', onPress: () => { this.requestLocationPermission() } },
+      ],
+      { cancelable: false }
+    )
+  }
+
+  requestLocationPermission(){
+    Permissions.request('location').then(response => {
+      if (response === 'authorized') this.getLocation();
+      this.setState({ locationPermission: response });
+    });
+  }
+
   onSearch = () => {
-    if (this.state.locationPermission === 'authorized') {
-      this.getLocation();
-      this.props.navigation.navigate({ key: 'search_medicine1', routeName: 'SearchMedicine', params: {} });
-    } else {
-      Permissions.request('location').then(response => {
-        if (response === 'authorized') this.getLocation();
-        this.setState({ locationPermission: response });
-      });
-    }
+    this.getLocation();
+    this.props.navigation.navigate({ key: 'search_medicine1', routeName: 'SearchMedicine', params: {} });
   };
 
   showCart() {

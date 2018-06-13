@@ -1,8 +1,8 @@
 import { CLEAR_ERROR, UPDATE_LOCATION, REQUEST_GEOCODE, REQUEST_GEOCODE_SUCCESS, REQUEST_GEOCODE_ERROR } from '../actions/locations';
 
 const INITIAL_STATE = {
-    latitude: 0.0,
-    longitude: 0.0,
+    latitude: -5.083036,
+    longitude: -42.796248,
     uf: 'PI',
     error: null
 };
