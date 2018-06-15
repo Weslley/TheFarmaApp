@@ -65,9 +65,9 @@
 	<string>TheFarma requer acesso à câmera</string>
 
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Para informar os preços de forma mais precisa o TheFarma requer acesso à sua localização</string>
+	<string>O TheFarma pode coletar dados de localização no momento em que você abre app. Com esses dados o TheFarma encontra as farmácia mais próximas a você, informando assim os preços de forma mais precisa.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Para informar os preços de forma mais precisa o TheFarma requer acesso à sua localização</string>
+	<string>O TheFarma pode coletar dados de localização no momento em que você abre app. Com esses dados o TheFarma encontra as farmácia mais próximas a você, informando assim os preços de forma mais precisa.</string>
 
 	<key>NSMotionUsageDescription</key>
 	<string>TheFarma requer este acesso</string>
