@@ -15,18 +15,25 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="SplashIcon" translatesAutoresizingMaskIntoConstraints="NO" id="4LY-SV-TvB">
-                    <rect key="frame" x="67" y="269" width="240" height="128"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SplashIcon" translatesAutoresizingMaskIntoConstraints="NO" id="4LY-SV-TvB">
+                    <rect key="frame" x="145" y="291" width="85" height="85"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="85" id="0hs-RD-ISw"/>
+                        <constraint firstAttribute="width" constant="85" id="DMI-Km-tyv"/>
+                    </constraints>
                 </imageView>
             </subviews>
-            <color key="backgroundColor" red="0.0" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" red="0.2196078431372549" green="0.74901960784313726" blue="0.75294117647058822" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="4LY-SV-TvB" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="MeS-No-T6Q"/>
+                <constraint firstItem="4LY-SV-TvB" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="e8M-cT-hhV"/>
+            </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <modalPageSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="548" y="455"/>
         </view>
     </objects>
     <resources>
-        <image name="SplashIcon" width="160" height="160"/>
+        <image name="SplashIcon" width="367" height="469"/>
     </resources>
 </document>

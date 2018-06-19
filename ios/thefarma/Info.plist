@@ -30,7 +30,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>3</string>
 	<key>FacebookAppID</key>
 	<string>1131794176870212</string>
 	<key>FacebookDisplayName</key>
@@ -63,12 +63,12 @@
 	<string>TheFarma requer este acesso</string>
 	<key>NSCameraUsageDescription</key>
 	<string>TheFarma requer acesso à câmera</string>
-
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>O TheFarma pode coletar dados de localização no momento em que você abre app. Com esses dados o TheFarma encontra as farmácia mais próximas a você, informando assim os preços de forma mais precisa.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>TheFarma requer este acesso</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>O TheFarma pode coletar dados de localização no momento em que você abre app. Com esses dados o TheFarma encontra as farmácia mais próximas a você, informando assim os preços de forma mais precisa.</string>
-
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>O TheFarma pode coletar dados de localização no momento em que você abre app. Com esses dados o TheFarma encontra as farmácia mais próximas a você, informando assim os preços de forma mais precisa.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>TheFarma requer este acesso</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
