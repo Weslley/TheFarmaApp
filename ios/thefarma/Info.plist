@@ -62,7 +62,7 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>TheFarma requer este acesso</string>
 	<key>NSCameraUsageDescription</key>
-	<string>TheFarma requer acesso à câmera</string>
+	<string>O TheFarma requer acesso à câmera do seu dipositivo. Com o acesso a câmera podemos ler o código de barras do medicamento que deseja pesquisar.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>TheFarma requer este acesso</string>
 	<key>NSLocationAlwaysUsageDescription</key>
