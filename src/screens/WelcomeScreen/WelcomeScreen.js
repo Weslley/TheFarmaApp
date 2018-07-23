@@ -118,9 +118,9 @@ class WelcomeScreen extends Component {
   getTitle() {
     let msg = "Bom dia"
     let now = new Date().getHours();
-      if (now >= 6 && now < 12) { msg = `Bom dia`; }
-      if (now >= 12 && now < 19) { msg = `Boa tarde`; }
-      if (now >= 19 || now < 5) { msg = `Boa noite`; }
+    if (now >= 6 && now < 12) { msg = `Bom dia`; }
+    if (now >= 12 && now < 19) { msg = `Boa tarde`; }
+    if (now >= 19 || now < 5) { msg = `Boa noite`; }
 
     let clientName = this.props.client ? this.props.client.nome : "";
     clientName = clientName.split(" ")[0]
@@ -150,16 +150,16 @@ class WelcomeScreen extends Component {
     )
   }
 
-  requestLocationPermission(){
+  requestLocationPermission() {
     Permissions.request('location').then(response => {
       if (response === 'authorized') this.getLocation();
       this.setState({ locationPermission: response });
     });
   }
 
-  onSearch = () => {
+  onSearch = (showCamera) => {
     this.getLocation();
-    this.props.navigation.navigate({ key: 'search_medicine1', routeName: 'SearchMedicine', params: {} });
+    this.props.navigation.navigate({ key: 'search_medicine1', routeName: 'SearchMedicine', params: { showCamera } });
   };
 
   showCart() {
@@ -211,11 +211,13 @@ class WelcomeScreen extends Component {
           }
         />
 
-        <View style={{ paddingHorizontal: 24 }}>
-          <TouchableOpacity style={styles.searchBar} onPress={() => { this.onSearch() }}>
+        <View style={{ paddingHorizontal: 22 }}>
+          <TouchableOpacity style={styles.searchBar} onPress={() => { this.onSearch(false) }}>
             <Image source={require("../../assets/images/ic_search.png")} style={styles.icon} />
             <Text style={styles.text}>Qual medicamento você deseja?</Text>
-            <Icon name="barcode" size={24} color={"#000"} style={styles.icon} />
+            <TouchableOpacity onPress={() => { this.onSearch(true) }}>
+              <Icon name="barcode" size={24} color={"#000"} style={styles.icon} />
+            </TouchableOpacity>
           </TouchableOpacity>
         </View>
 

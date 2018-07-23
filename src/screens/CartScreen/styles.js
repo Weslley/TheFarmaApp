@@ -17,7 +17,7 @@ export default EStyleSheet.create({
     marginRight: 0
   },
   containerDelivery: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
     paddingTop: 24,
     paddingBottom: 32
   },

@@ -26,7 +26,7 @@ export default EStyleSheet.create({
         textAlign: 'center',
         alignSelf: 'center',
         fontFamily: "Roboto-Regular",
-        fontSize: 11,
+        fontSize: 10,
         color: "rgba(0,0,0,0.80)",
         marginTop: 8
     }

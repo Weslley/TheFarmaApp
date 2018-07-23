@@ -48,7 +48,7 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, isLoading: false, error: action.error, success: false };
 
         case CLEAR_ERROR:
-            return { ...state, error: null, success: false };
+            return { ...state, error: null, success: false, isLoading: false };
 
         default:
             return state;

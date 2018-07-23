@@ -63,6 +63,10 @@ class SearchMedicineScreen extends Component {
 
     componentWillMount() {
         this.props.dispatch(getLocation());
+        const { state: { params } } = this.props.navigation;
+        if (params) {
+            if (params.showCamera) this.setState({ showCamera: params.showCamera })
+        }
     }
 
     componentDidMount() {
