@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, Linking } from "react-native";
+import { View, ScrollView, Linking, TouchableOpacity } from "react-native";
 import { Container, Button, Text, Icon } from "native-base";
 import Snackbar from 'react-native-snackbar';
 
@@ -34,10 +34,10 @@ class MenuScreen extends Component {
     this.props.dispatch(logout());
   }
 
-  getPhoto(){
-    if(this.props.client && this.props.client.foto!=null){
+  getPhoto() {
+    if (this.props.client && this.props.client.foto != null) {
       return { uri: this.props.client.foto }
-    }else{
+    } else {
       return null
     }
   }
@@ -51,14 +51,23 @@ class MenuScreen extends Component {
     }
   }
 
+  showVersionScreen() {
+    this.props.navigation.navigate({ key: 'version1', routeName: 'Version', params: {} });
+  }
+
+  showPerfil() {
+    this.props.navigation.navigate({ key: 'PerfilEdit', routeName: 'PerfilEdit', params: {} });
+  }
+
   render() {
     return (
       <Container style={{ backgroundColor: "#FFFFFF" }}>
 
         <Header
+          onPressProfile={() => { this.showPerfil() }}
           title={this.props.client.nome}
           subtitle={"Visualizar e editar o seu perfil"}
-          avatar={ this.getPhoto() }
+          avatar={this.getPhoto()}
           menuLeft={
             <MenuItem
               icon="md-arrow-back"
@@ -81,11 +90,15 @@ class MenuScreen extends Component {
             this.props.navigation.navigate({ key: 'list_credit1', routeName: 'ListCreditCards', params: {} });
           }} />
 
-          <ProfileMenuItem icon="chat" text={"Dúvidas e Reclamações"} onPress={() => { this.openSupport()}} />
+          <ProfileMenuItem icon="chat" text={"Dúvidas e Reclamações"} onPress={() => { this.openSupport() }} />
         </ScrollView>
 
         <View style={{ paddingHorizontal: 24, }}>
-          <Button style={[styles.button]} bordered dark onPress={() => this.logout()}>
+          <TouchableOpacity style={{ marginBottom: 16, }} onPress={() => { this.showVersionScreen() }}>
+            <Text style={styles.version}>{"Versão 1.0.0"}</Text>
+          </TouchableOpacity>
+
+          <Button style={[styles.button, { borderRadius: 0 }]} bordered dark onPress={() => this.logout()}>
             <Text style={styles.buttonText} uppercase={false}>{"Sair"}</Text>
             <Icon name="ios-arrow-round-forward-outline" style={styles.buttonIcon} />
           </Button>

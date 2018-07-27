@@ -35,8 +35,7 @@ export const getAddresses = params => ({
 });
 
 export const getAddressesNextPage = (next) => ({
-  type: GET_APRESENTATIONS_NEXT_PAGE,
-  next
+  type: LIST_ADDRESS_NEXT_PAGE, next
 });
 
 export const saveAddress = params => ({

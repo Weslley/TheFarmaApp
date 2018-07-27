@@ -34,7 +34,6 @@ export default EStyleSheet.create({
         justifyContent: "space-between"
     },
     title: {
-        paddingTop: 8,
         fontSize: 32,
         fontFamily: 'Roboto-Bold',
         color: '#030303',

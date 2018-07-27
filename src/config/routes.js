@@ -22,6 +22,10 @@ import { OrderScreen } from "../screens/OrderScreen";
 import DialogSuccessScreen from "../screens/DialogSuccessScreen";
 import DialogErrorScreen from "../screens/DialogErrorScreen";
 
+import { CameraScreen } from "../screens/CameraScreen";
+import { VersionScreen } from "../screens/VersionScreen";
+import { PerfilEditScreen } from "../screens/PerfilEditScreen";
+
 import { Icon } from "../components/Icon";
 
 export const HomeNavigator = StackNavigator({
@@ -106,6 +110,10 @@ export const MainNavigator = StackNavigator(
     Password: { screen: PasswordScreen },
     Phone: { screen: PhoneScreen },
     VerificationCode: { screen: VerificationCodeScreen },
+
+    Camera: { screen: CameraScreen },
+    Version: { screen: VersionScreen },
+    PerfilEdit: { screen: PerfilEditScreen },
   },
   {
     mode: "modal",

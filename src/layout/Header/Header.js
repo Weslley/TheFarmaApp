@@ -22,7 +22,7 @@ class Header extends Component {
 
   render() {
     return (
-      <View style={[styles.container, { ...this.props.style }]}>
+      <View style={[styles.container, this.props.style]}>
 
         <View style={[styles.actions, this.props.actionsStyle]}>
           <View style={styles.menuLeft}>{this.props.menuLeft}</View>
@@ -37,10 +37,9 @@ class Header extends Component {
           />
         )}
 
-        <TouchableOpacity style={styles.profileContainer} onPress={this.props.onPressProfile}>
+        <TouchableOpacity style={[styles.profileContainer, { alignItems: 'center', paddingTop: 8, }]} onPress={this.props.onPressProfile}>
           <View>
-            {Components.renderIf(
-              this.props.title,
+            {Components.renderIf(this.props.title,
               <Text style={[styles.title, this.props.titleStyle]}>{this.props.title}</Text>
             )}
 

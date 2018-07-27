@@ -22,6 +22,14 @@ export const UPDATE_CLIENT_V2 = "UPDATE_CLIENT_V2";
 export const UPDATE_CLIENT_V2_ERROR = "UPDATE_CLIENT_V2_ERROR";
 export const UPDATE_CLIENT_V2_SUCCESS = "UPDATE_CLIENT_V2_SUCCESS";
 
+export const SEND_SMS = "SEND_SMS";
+export const SEND_SMS_ERROR = "SEND_SMS_ERROR";
+export const SEND_SMS_SUCCESS = "SEND_SMS_SUCCESS";
+
+export const SET_PHOTO = "SET_PHOTO";
+export const SET_PHOTO_ERROR = "SET_PHOTO_ERROR";
+export const SET_PHOTO_SUCCESS = "SET_PHOTO_SUCCESS";
+
 export const getCurrentClient = () => ({
   type: GET_CURRENT_CLIENT
 });
@@ -40,6 +48,14 @@ export const update = params => ({
 
 export const updateV2 = params => ({
   type: UPDATE_CLIENT_V2, params
+});
+
+export const sendSms = params => ({
+  type: SEND_SMS, params
+});
+
+export const setPhoto = params => ({
+  type: SET_PHOTO, params
 });
 
 export const logout = () => ({

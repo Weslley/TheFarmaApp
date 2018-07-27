@@ -196,7 +196,7 @@ class PhoneScreen extends Component {
 function mapStateToProps(state) {
     return {
         client: state.clients.client,
-        isLoading: state.clients.isLoading,
+        isLoading: state.clients.loading,
         error: state.clients.error
     };
 }
