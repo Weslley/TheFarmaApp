@@ -131,7 +131,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             //minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release
@@ -153,7 +153,6 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-device-info')
     compile (project(':react-native-camera')) {
         exclude group: "com.android.support"
         exclude group: "com.google.android.gms"
@@ -162,7 +161,7 @@ dependencies {
             force = true
         }
     }
-
+    compile project(':react-native-device-info')
     compile project(':react-native-awesome-card-io')
     compile project(':react-native-snackbar')
     compile project(':react-native-fbsdk')

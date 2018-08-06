@@ -42,7 +42,10 @@
     "redux-saga": "^0.16.0"
   },
   "devDependencies": {
-    "jest": "22.4.2"
+    "babel-jest": "23.0.1",
+    "babel-preset-react-native": "4.0.0",
+    "jest": "23.1.0",
+    "react-test-renderer": "16.3.1"
   },
   "jest": {
     "preset": "react-native"

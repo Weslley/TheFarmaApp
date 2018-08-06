@@ -68,3 +68,7 @@
 -dontwarn java.nio.file.*
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -dontwarn okio.**
+
+# Card.io
+
+-dontwarn io.card.**

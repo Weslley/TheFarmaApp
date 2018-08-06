@@ -3,7 +3,6 @@ import { View, KeyboardAvoidingView, ScrollView, Text, Imagem, TextInput, Image,
 import { NavigationActions } from 'react-navigation';
 import Snackbar from 'react-native-snackbar';
 import LinearGradient from "react-native-linear-gradient";
-import CodeInput from 'react-native-confirmation-code-input';
 
 TextInput.defaultProps.selectionColor = "black";
 TextInput.defaultProps.underlineColorAndroid = 'black'
