@@ -15,6 +15,8 @@ import { ProfileMenuItem } from "../../components/ProfileMenuItem";
 import { SUPPORT_LINK } from "../../config/server";
 import styles from "./styles";
 
+const DeviceInfo = require('react-native-device-info');
+
 class MenuScreen extends Component {
   constructor(props) {
     super(props);
@@ -95,12 +97,12 @@ class MenuScreen extends Component {
 
         <View style={{ paddingHorizontal: 24, }}>
           <TouchableOpacity style={{ marginBottom: 16, }} onPress={() => { this.showVersionScreen() }}>
-            <Text style={styles.version}>{"Versão 1.0.0"}</Text>
+            <Text style={styles.version}>{`Versão ${DeviceInfo.getVersion()}`}</Text>
           </TouchableOpacity>
 
-          <Button style={[styles.button, { borderRadius: 0 }]} bordered dark onPress={() => this.logout()}>
+          <Button style={[styles.button, { borderWidth: 2, borderRadius: 0, borderColor: '#000', }]} bordered dark onPress={() => this.logout()}>
             <Text style={styles.buttonText} uppercase={false}>{"Sair"}</Text>
-            <Icon name="ios-arrow-round-forward-outline" style={styles.buttonIcon} />
+            <Icon name="md-exit" style={styles.buttonIcon} />
           </Button>
         </View>
 

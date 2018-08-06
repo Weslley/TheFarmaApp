@@ -18,7 +18,7 @@ export default EStyleSheet.create({
     marginRight: 0
   },
   containerDelivery: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
     paddingTop: 24,
     paddingBottom: 32
   },
@@ -26,11 +26,10 @@ export default EStyleSheet.create({
     fontFamily: "Roboto-Bold",
     fontSize: 22,
     color: "rgba(0,0,0,0.87)",
-    marginLeft: 8,
     marginBottom: 24
   },
   row: {
     flexDirection: "row",
-    justifyContent: "space-around"
+    justifyContent: "space-between"
   }
 });

@@ -11,9 +11,10 @@ import generics from './generics';
 import addresses from './addresses';
 import creditCards from './creditCards';
 import orders from './orders';
+import notifications from './notifications';
 
 export default combineReducers({
     locations, carts, cities, districts,
     products, apresentations, generics, 
-    clients, addresses, creditCards, orders
+    clients, addresses, creditCards, orders, notifications
 });

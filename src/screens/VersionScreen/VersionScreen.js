@@ -5,6 +5,8 @@ import { Header } from "../../layout/Header";
 import { MenuItem } from '../../components/MenuItem';
 
 import styles from "./styles";
+
+const DeviceInfo = require('react-native-device-info');
 export default class VersionScreen extends Component {
 
     static navigationOptions = ({ navigation }) => {
@@ -17,7 +19,7 @@ export default class VersionScreen extends Component {
     }
 
     getVersion = () => {
-        return `versão 1.0.0`
+        return `versão ${DeviceInfo.getVersion()}`
     }
 
     render() {

@@ -19,7 +19,6 @@ export default EStyleSheet.create({
         width: "100%",
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "center",
         backgroundColor: "rgba(0, 0, 0, .04)",
         marginTop: 16,
         paddingHorizontal: 12,
@@ -29,10 +28,8 @@ export default EStyleSheet.create({
     text: {
         flex: 1,
         fontSize: 14,
-        paddingHorizontal: 8,
         color: "#000000",
         color: "rgba(0,0,0,0.48)",
-        textAlign: 'center'
     },
     avatarContainer: {
         width: 24,

@@ -103,12 +103,14 @@ class CartScreen extends Component {
             <Text style={styles.titleDialog}>Como deseja obter os seus medicamentos?</Text>
             <View style={styles.row}>
               <ButtonCustom
+                style={{ width: '48%' }}
                 image={require("../../assets/images/ic_walking.png")}
                 title="Buscar"
                 description="Opta em ir buscar seu medicamento em uma farmácia mais próxima."
                 onPress={() => { this._showListProposals(); }}
               />
               <ButtonCustom
+                style={{ width: '48%' }}
                 image={require("../../assets/images/ic_delivery.png")}
                 title="Entregar"
                 description="Seu medicamento é entregue em um local de sua escolha."

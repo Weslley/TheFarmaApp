@@ -1,20 +1,22 @@
 import React, { Component } from "react";
 import { NavigationActions } from 'react-navigation';
-import { StatusBar, KeyboardAvoidingView, View, TouchableOpacity, Image, Alert } from "react-native";
-import { Text, Button } from "native-base";
+import { StatusBar, KeyboardAvoidingView, ScrollView, View, TouchableOpacity, Text, Image, Alert, ActivityIndicator, FlatList, Platform } from "react-native";
 
 import Snackbar from 'react-native-snackbar';
 import Permissions from 'react-native-permissions';
 
 import { connect } from "react-redux";
 import { getCurrentClient } from "../../actions/clients"
+import { getNotifications, getNotificationsNextPage } from "../../actions/notifications"
 import { getLocation, updateLocation, getGeocodeAddress } from "../../actions/locations"
 
 import { Header } from "../../layout/Header";
 import { Container } from "../../layout/Container";
+import { ShoppingBagIcon } from "../../layout/ShoppingBagIcon";
 
 import { Icon } from "../../components/Icon";
-import { ShoppingBagIcon } from "../../layout/ShoppingBagIcon";
+import { Loading } from "../../components/Loading"
+import { NotificationItem } from "../../components/NotificationItem";
 
 import { Components } from "../../helpers";
 import styles from "./styles";
@@ -69,7 +71,6 @@ class WelcomeScreen extends Component {
   }
 
   componentWillMount() {
-    this.props.dispatch(getCurrentClient());
     Permissions.checkMultiple(['camera', 'photo', 'location']).then(response => {
       this.setState({ cameraPermission: response.camera, photoPermission: response.photo, locationPermission: response.location });
     });
@@ -94,6 +95,14 @@ class WelcomeScreen extends Component {
           break;
       }
     }
+
+    this.props.dispatch(getCurrentClient());
+    setTimeout(() => {
+      if (this.props.client) {
+        let params = { client: this.props.client, filters: {} }
+        this.props.dispatch(getNotifications(params));
+      }
+    }, 1000);
   }
 
   componentDidMount() {
@@ -178,13 +187,34 @@ class WelcomeScreen extends Component {
     }
   }
 
+  onEndReached = ({ distanceFromEnd }) => {
+    if (this.props.nextPage) {
+      let params = { client: this.props.client, url: this.props.nextPage }
+      this.props.dispatch(getApresentationsNextPage(params));
+    }
+  }
+
+  _renderItem = ({ item }) => (<NotificationItem notificacao={item} />);
+
+  renderFooter = () => {
+    if (!this.props.isLoading) return null;
+    return (
+      <View style={{ alignItems: 'center', paddingVertical: 16, }}>
+        <ActivityIndicator color={"#00C7BD"} size={"large"} />
+      </View>
+    );
+  };
+
   render() {
     return (
       <KeyboardAvoidingView style={{ flex: 1 }}>
-        <Image
-          resizeMode={"cover"}
-          style={styles.background}
-          source={require("../../assets/images/background-home.png")} />
+
+        {Components.renderIf(this.props.notifications && this.props.notifications.length === 0,
+          <Image
+            resizeMode={"cover"}
+            style={styles.background}
+            source={require("../../assets/images/background-home.png")} />
+        )}
 
         <Header
           style={{ paddingHorizontal: 24, backgroundColor: "transparent" }}
@@ -211,15 +241,37 @@ class WelcomeScreen extends Component {
           }
         />
 
-        <View style={{ paddingHorizontal: 22 }}>
+        <View style={{ paddingHorizontal: 22, marginBottom: 8, }}>
           <TouchableOpacity style={styles.searchBar} onPress={() => { this.onSearch(false) }}>
-            <Image source={require("../../assets/images/ic_search.png")} style={styles.icon} />
-            <Text style={styles.text}>Qual medicamento você deseja?</Text>
-            <TouchableOpacity onPress={() => { this.onSearch(true) }}>
+            <Image source={require("../../assets/images/ic_search.png")} style={[styles.icon, { marginRight: 12 }]} />
+            <Text style={[styles.text, Platform.OS === "ios" ? { fontSize: 12 } : {}]}>Qual medicamento você deseja?</Text>
+            <TouchableOpacity style={{ alignSelf: 'flex-end', }} onPress={() => { this.onSearch(true) }}>
               <Icon name="barcode" size={24} color={"#000"} style={styles.icon} />
             </TouchableOpacity>
           </TouchableOpacity>
         </View>
+
+        {Components.renderIfElse(this.props.notifications && this.props.notifications.length === 0 && this.props.loading === true,
+          <Loading />,
+          <ScrollView style={{ paddingHorizontal: 24 }}
+            onScroll={(e) => {
+              let paddingToBottom = 0;
+              paddingToBottom += e.nativeEvent.layoutMeasurement.height;
+              if (e.nativeEvent.contentOffset.y.toFixed(1) === (e.nativeEvent.contentSize.height - paddingToBottom).toFixed(1)) {
+                this.onEndReached(0)
+              }
+            }}
+          >
+
+            <FlatList
+              data={this.props.notifications}
+              keyExtractor={(item, index) => item.id.toString()}
+              renderItem={this._renderItem}
+              ListFooterComponent={this.renderFooter()}
+            />
+
+          </ScrollView>
+        )}
 
       </KeyboardAvoidingView>
     );
@@ -234,6 +286,11 @@ function mapStateToProps(state) {
     latitude: state.locations.latitude,
     longitude: state.locations.longitude,
     uf: state.locations.uf,
+
+    notifications: state.notifications.notifications,
+    loading: state.notifications.loading,
+    nextPage: state.notifications.next,
+    error: state.notifications.error,
   };
 }
 

@@ -25,11 +25,10 @@ export default EStyleSheet.create({
     fontFamily: "Roboto-Bold",
     fontSize: 22,
     color: "rgba(0,0,0,0.87)",
-    marginLeft: 8,
     marginBottom: 24
   },
   row: {
     flexDirection: "row",
-    justifyContent: "space-around"
+    justifyContent: "space-between"
   }
 });

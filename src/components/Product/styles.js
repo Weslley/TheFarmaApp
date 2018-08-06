@@ -60,7 +60,7 @@ export default EStyleSheet.create({
   },
   Quantity: {
     fontFamily: "Roboto-Medium",
-    fontSize: 20,
+    fontSize: 18,
     textAlign: "center",
     width: 24,
     height: 24,

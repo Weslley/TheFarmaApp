@@ -172,7 +172,6 @@ class ListCreditCardsScreen extends Component {
 
           <FlatList
             scrollEnabled={ false }
-            style={{ marginBottom: 64 }}
             data={this.props.creditCards}
             keyExtractor={item => item.id.toString()}
             renderItem={this._renderItemV2}

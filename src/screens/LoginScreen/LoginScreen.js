@@ -144,11 +144,11 @@ class LoginScreen extends Component {
                 <View style={{ flex: 1, justifyContent: 'space-between' }}>
                     <View style={{ alignItems: 'center', }} >
                         <Image source={require('../../assets/images/logo-white.png')} style={styles.logo} />
-                        <Text style={[styles.text, { fontSize: 20 }]} uppercase={false}>{"theFarma"}</Text>
+                        <Text style={[styles.text, { fontSize: 20 }]} uppercase={false}>{"TheFarma"}</Text>
                     </View>
 
                     <View style={{ marginBottom: 24 }}>
-                        <Text style={styles.text} uppercase={false}>{"Logar com"}</Text>
+                        <Text style={styles.text} uppercase={false}>{"Acessar a minha conta com"}</Text>
 
                         <Button style={[styles.button]} transparent bordered iconLeft onPress={() => this.loginPhone()}>
                             <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: "flex-start" }} >

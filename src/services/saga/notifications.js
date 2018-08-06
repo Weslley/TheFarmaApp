@@ -11,7 +11,7 @@ import {
 export const getNotifications = function* (action) {
     try {
         let config = { headers: { 'Authorization': 'Token ' + action.params.client.token } }
-        const response = yield call(axios.get, `${SERVER_API}/notifications/`, config);
+        const response = yield call(axios.get, `${SERVER_API}/notificacoes/`, config);
         yield put(responseSuccess(GET_NOTIFICATIONS_SUCCESS, response.data));
     } catch (e) {
         yield put(responseError(GET_NOTIFICATIONS_ERROR, e));

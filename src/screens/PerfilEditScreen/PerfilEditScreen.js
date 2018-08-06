@@ -8,7 +8,7 @@ import { MaskService } from "react-native-masked-text";
 import { StackActions, NavigationActions } from "react-navigation";
 
 import { connect } from "react-redux";
-import { update as updateClient } from "../../actions/clients";
+import { updateV2 as updateClient } from "../../actions/clients";
 
 import { Header } from "../../layout/Header";
 
@@ -86,9 +86,9 @@ class PerfilEditScreen extends Component {
             }
 
             if (nextProps.success === true) {
-                const resetAction = StackActions.reset({
+                const resetAction = NavigationActions.reset({
                     index: 0,
-                    actions: [NavigationActions.navigate({ key: 'home1', routeName: 'Home', params: {} })],
+                    actions: [NavigationActions.navigate({ key: 'welcome1', routeName: 'Welcome', params: {} })],
                 });
                 this.props.navigation.dispatch(resetAction);
             }
@@ -108,12 +108,7 @@ class PerfilEditScreen extends Component {
             if (client.celular) this.setState({ celular: MaskService.toMask('cel-phone', client.celular) })
             if (client.data_nascimento) this.setState({ data_nascimento: client.data_nascimento })
             if (client.sexo) this.setState({ sexo: client.sexo })
-            /*
-            if (client.data_nascimento) {
-                let mask = MaskService.toMask('datetime', client.data_nascimento, { format: 'DD/MM/YYYY' });
-                this.setState({ data_nascimento: mask })
-            }
-            */
+            
         }
     }
 
@@ -246,7 +241,7 @@ class PerfilEditScreen extends Component {
                                     <MenuItem
                                         icon="check"
                                         iconColor={"#FFF"}
-                                        onPress={() => { }}
+                                        onPress={() => { this.submit()}}
                                         style={{ paddingRight: 24, paddingVertical: 12 }}
                                     />
                                 }

@@ -29,7 +29,7 @@ export default EStyleSheet.create({
     },
     buttonText: {
         fontFamily: "Roboto-Bold",
-        fontSize: 16,
+        fontSize: 15,
         color: "#FFFFFF"
     }
 });

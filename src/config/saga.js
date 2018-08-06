@@ -12,6 +12,9 @@ import { GET_APRESENTATIONS, GET_APRESENTATIONS_NEXT_PAGE, RANKING_VIEW } from '
 //GENERICS
 import { getGenerics, getGenericsNextPage } from '../services/saga/generics';
 import { GET_GENERICS, GET_GENERICS_NEXT_PAGE } from '../actions/generics';
+//NOTIFICATIONS
+import { getNotifications, getNotificationsNextPage } from '../services/saga/notifications';
+import { GET_NOTIFICATIONS, GET_NOTIFICATIONS_NEXT_PAGE } from '../actions/notifications';
 //CITIES
 import { getCities } from '../services/saga/cities';
 import { GET_CITIES } from '../actions/cities';
@@ -44,9 +47,13 @@ const rootSaga = function* () {
     yield takeEvery(SELECT_PRODUCT, selectProduct);
     yield takeEvery(GET_APRESENTATIONS, getApresentations);
     yield takeLatest(GET_APRESENTATIONS_NEXT_PAGE, getApresentationsNextPage);
+    yield takeEvery(RANKING_VIEW, ranking);
+
     yield takeEvery(GET_GENERICS, getGenerics);
     yield takeLatest(GET_GENERICS_NEXT_PAGE, getGenericsNextPage);
-    yield takeEvery(RANKING_VIEW, ranking);
+
+    yield takeEvery(GET_NOTIFICATIONS, getNotifications);
+    yield takeLatest(GET_NOTIFICATIONS_NEXT_PAGE, getNotificationsNextPage);
 
     yield takeEvery(REQUEST_LOGIN, login);
     yield takeEvery(REGISTER_CLIENT, register);

@@ -14,7 +14,7 @@ export default EStyleSheet.create({
     logo: {
         width: 75,
         height: 75,
-        marginBottom: 16,
+        marginBottom: 8,
     },
     text: {
         fontFamily: 'Roboto-Bold',

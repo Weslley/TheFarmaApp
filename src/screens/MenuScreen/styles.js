@@ -14,5 +14,11 @@ export default EStyleSheet.create({
     },
     inputError: {
         color: "red"
+    },
+    version: {
+        fontFamily: 'Roboto-Regular',
+        fontSize: 16,
+        color: 'rgba(0,0,0,0.40)',
+        textAlign: 'left'
     }
 });

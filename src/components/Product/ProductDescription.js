@@ -43,6 +43,7 @@ class ProductDescription extends Component {
                 <TouchableOpacity style={[styles.Button, { marginRight: 8 }]} onPress={this.props.onPressMinus}>
                   <Icon name="remove" style={styles.Icon} />
                 </TouchableOpacity>
+                
                 <Text style={styles.Quantity}>{this.props.apresentation.quantidade || 0}</Text>
 
                 <TouchableOpacity style={styles.Button} onPress={this.props.onPressPlus}>
