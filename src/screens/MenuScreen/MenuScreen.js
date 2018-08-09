@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, Linking, TouchableOpacity } from "react-native";
+import { View, ScrollView, Linking, TouchableOpacity, Platform } from "react-native";
 import { Container, Button, Text, Icon } from "native-base";
 import Snackbar from 'react-native-snackbar';
 
@@ -61,6 +61,14 @@ class MenuScreen extends Component {
     this.props.navigation.navigate({ key: 'PerfilEdit', routeName: 'PerfilEdit', params: {} });
   }
 
+  getVersion(){
+    if(Platform.OS === 'ios'){
+      return `Versão 1.0.0`;
+    }else{
+      return `Versão ${DeviceInfo.getVersion()}`;
+    }
+  }
+
   render() {
     return (
       <Container style={{ backgroundColor: "#FFFFFF" }}>
@@ -97,7 +105,7 @@ class MenuScreen extends Component {
 
         <View style={{ paddingHorizontal: 24, }}>
           <TouchableOpacity style={{ marginBottom: 16, }} onPress={() => { this.showVersionScreen() }}>
-            <Text style={styles.version}>{`Versão ${DeviceInfo.getVersion()}`}</Text>
+            <Text style={styles.version}>{this.getVersion()}</Text>
           </TouchableOpacity>
 
           <Button style={[styles.button, { borderWidth: 2, borderRadius: 0, borderColor: '#000', }]} bordered dark onPress={() => this.logout()}>
