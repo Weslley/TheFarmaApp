@@ -167,7 +167,11 @@ class PhoneScreen extends Component {
                             style={[styles.input]}
                             onChangeText={this.onPhoneChange.bind(this)}
                             value={this.state.celular}
+                            underlineColorAndroid={'transparent'}
                         />
+
+                        <View style={{ borderBottomColor: '#000', borderWidth: 0.5, marginTop: 4, marginBottom: 8 }} />
+
                         {Components.renderIf(this.state.celularError,
                             <Text style={styles.inputError} uppercase={false}>{this.state.celularError}</Text>
                         )}

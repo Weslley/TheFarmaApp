@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { View, TouchableOpacity, Image } from "react-native";
-import { Text, Button, Thumbnail, Icon } from "native-base";
+import { Text, Button, Thumbnail } from "native-base";
 import { TextMask } from "react-native-masked-text";
 
-import { Components } from "../../helpers";
+import { Icon } from "../../components/Icon";
 
+import { Components } from "../../helpers";
 import styles from "./styles";
 
 const imgDefault = require("./images/ic_default_medicine.png");
@@ -17,7 +18,7 @@ class ProductDescription extends Component {
   render() {
     return (
       <View style={styles.container}>
-      
+
         <TouchableOpacity style={styles.ImageContainer} onPress={this.props.onPress}>
           {Components.renderIfElse(this.props.apresentation.imagem,
             <Thumbnail style={styles.Image} square size={88} source={{ uri: this.props.apresentation.imagem }} />,
@@ -41,13 +42,13 @@ class ProductDescription extends Component {
               this.props.showActions,
               <View style={styles.Actions}>
                 <TouchableOpacity style={[styles.Button, { marginRight: 8 }]} onPress={this.props.onPressMinus}>
-                  <Icon name="remove" style={styles.Icon} />
+                  <Icon name="minus" size={24} color={"#000"} style={styles.Icon} />
                 </TouchableOpacity>
-                
+
                 <Text style={styles.Quantity}>{this.props.apresentation.quantidade || 0}</Text>
 
                 <TouchableOpacity style={styles.Button} onPress={this.props.onPressPlus}>
-                  <Icon name="add" style={styles.Icon} />
+                  <Icon name="plus" size={24} color={"#000"} style={styles.Icon} />
                 </TouchableOpacity>
               </View>,
               null

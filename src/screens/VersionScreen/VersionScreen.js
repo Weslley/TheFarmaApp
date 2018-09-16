@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Image } from 'react-native'
+import { Text, View, Image, Platform } from 'react-native'
 
 import { Header } from "../../layout/Header";
 import { MenuItem } from '../../components/MenuItem';
@@ -19,7 +19,11 @@ export default class VersionScreen extends Component {
     }
 
     getVersion = () => {
-        return `versão ${DeviceInfo.getVersion()}`
+        if (Platform.OS === 'ios') {
+            return `Versão 1.0.0`;
+        } else {
+            return `Versão ${DeviceInfo.getVersion()}`;
+        }
     }
 
     render() {
@@ -48,7 +52,7 @@ export default class VersionScreen extends Component {
                 <View style={styles.container}>
                     <Text style={styles.text}>{"Apoio"}</Text>
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between'}}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }}>
                         <Image source={require('./images/fapepi.png')} resizeMode={"center"} style={{ width: 64, height: 64 }} />
                         <Image source={require('./images/inovativa.png')} resizeMode={"center"} style={{ width: 128, height: 35 }} />
                         <Image source={require('./images/sebrae.png')} resizeMode={"center"} style={{ width: 64, height: 64 }} />
