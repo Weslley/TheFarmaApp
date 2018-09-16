@@ -11,6 +11,8 @@ import { Header } from "../../layout/Header"
 import { MenuItem } from "../../components/MenuItem"
 import { ProposalDescription } from "../../components/Proposal";
 
+import { ProposalNotFoundScreen } from "../ProposalNotFoundScreen";
+
 import { Components } from "../../helpers";
 import styles from "./styles";
 
@@ -18,7 +20,8 @@ class ListProposalsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      back_screen: 'Cart'
+      back_screen: 'Cart',
+      show_not_fount_proposal: false,
     }
     loadPropostas = 0;
   }
@@ -26,6 +29,31 @@ class ListProposalsScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return { header: null };
   };
+
+  componentWillReceiveProps = nextProps => {
+    try {
+      if (nextProps.order) {
+        if (nextProps.order.status === 8) {
+          this.setState({ show_not_fount_proposal: true })
+        }
+      }
+
+      if (nextProps && nextProps.error) {
+        if (nextProps.error.response && (nextProps.error.response.status >= 400 || nextProps.error.response.status <= 403)) {
+          if (nextProps.error.response.data.detail) {
+            if (nextProps.error.response.data.detail === "Token inválido.") {
+              this.props.dispatch(clearError());
+              this.props.dispatch(logout());
+            }
+            Snackbar.show({ title: nextProps.error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
+          }
+        }
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   componentWillMount = () => {
     console.log("Montando -> ListProposal");
@@ -105,28 +133,38 @@ class ListProposalsScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
-        <Header
-          title={"Propostas"}
-          menuLeft={
-            <MenuItem icon="md-arrow-back" onPress={() => { this.alertCancel() }}
-              style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
-            />}
-        />
-        <ScrollView>
-          <FlatList
-            style={{ paddingHorizontal: 24 }}
-            data={this.props.order.propostas}
-            keyExtractor={item => item.farmacia.id.toString()}
-            renderItem={this._renderItem}
-          />
-        </ScrollView>
+        {Components.renderIfElse(this.state.show_not_fount_proposal,
 
-        <LinearGradient colors={["#A445B2", "#D41872", "#FF0066"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} location={[0.0, 0.52, 1]} style={styles.bottomBar}>
-          <Text style={styles.button}>
-            {"Recebendo propostas aguarde…"}
-          </Text>
-        </LinearGradient>
+          <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+            <ProposalNotFoundScreen onPress={() => { this._cancelOrder() }} />
+          </View>,
+
+          <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+            <Header
+              title={"Propostas"}
+              menuLeft={
+                <MenuItem icon="md-arrow-back" onPress={() => { this.alertCancel() }}
+                  style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+                />}
+            />
+            <ScrollView>
+              <FlatList
+                style={{ paddingHorizontal: 24 }}
+                data={this.props.order.propostas}
+                keyExtractor={item => item.farmacia.id.toString()}
+                renderItem={this._renderItem}
+              />
+            </ScrollView>
+
+            <LinearGradient colors={["#A445B2", "#D41872", "#FF0066"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} location={[0.0, 0.52, 1]} style={styles.bottomBar}>
+              <Text style={styles.button}>
+                {"Recebendo propostas aguarde…"}
+              </Text>
+            </LinearGradient>
+          </View>
+        )}
       </View>
+
     );
   }
 }

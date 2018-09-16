@@ -26,6 +26,8 @@ import { CameraScreen } from "../screens/CameraScreen";
 import { VersionScreen } from "../screens/VersionScreen";
 import { PerfilEditScreen } from "../screens/PerfilEditScreen";
 
+//import { ProposalNotFoundScreen } from "../screens/ProposalNotFoundScreen";
+
 import { Icon } from "../components/Icon";
 
 export const HomeNavigator = StackNavigator({
