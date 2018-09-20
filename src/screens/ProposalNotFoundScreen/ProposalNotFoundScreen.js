@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { View, Image } from 'react-native'
 import { Button, Text } from "native-base";
 import styles from "./styles";
 
@@ -10,7 +10,9 @@ class ProposalNotFoundScreen extends Component {
 
     render() {
         return (
-            <View style={{ flex: 1, justifyContent: 'space-between', paddingHorizontal: 24, paddingVertical: 32, paddingTop: 64 }}>
+            <View style={{ flex: 1, justifyContent: 'space-between', paddingHorizontal: 24, paddingVertical: 32, paddingTop: 64, backgroundColor: "#FFF" }}>
+                <Image style={styles.background} source={require("./images/bg.jpg")} resizeMode="contain" />
+
                 <View>
                     <Text style={styles.title}>{"Desculpe-nos, não há farmácias, por enquanto, próximas de você cadastradas no TheFarma!"}</Text>
                     <Text style={styles.text}>{"Se você gostou dessa ideia, ajude-nos, compartilhando o TheFarma com as   farmácias e amigos próximos de você."}</Text>
