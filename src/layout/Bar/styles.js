@@ -11,7 +11,6 @@ export default EStyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        height: 80,
         paddingHorizontal: 24,
         paddingVertical: 16,
         borderColor: "#CCCCCC",
@@ -28,6 +27,7 @@ export default EStyleSheet.create({
         color: "rgba(0,0,0,0.80)"
     },
     buttonText: {
+        paddingVertical: 2,
         fontFamily: "Roboto-Bold",
         fontSize: 15,
         color: "#FFFFFF"

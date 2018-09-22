@@ -3,6 +3,7 @@ package br.com.infog2.thefarma;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import org.reactnative.camera.RNCameraPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import org.reactnative.camera.RNCameraPackage;
 import com.cardio.RNCardIOPackage;
@@ -43,6 +44,7 @@ public class MainApplication extends Application implements ReactApplication {
        //mCallbackManager = new CallbackManager.Factory().create();
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNCameraPackage(),
             new RNDeviceInfo(),
             new RNCameraPackage(),
             new RNCardIOPackage(),

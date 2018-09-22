@@ -19,7 +19,7 @@ class BottomBar extends Component {
   }
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { minHeight: 80 }]}>
         <View>
           {Components.renderIf(this.props.price,
             <View>

@@ -18,7 +18,7 @@ export default EStyleSheet.create({
     },
     title: {
         fontFamily: "Roboto-Medium",
-        fontSize: 15,
+        fontSize: 14,
         color: "rgba(0,0,0,0.80)",
         marginTop: 8
     },

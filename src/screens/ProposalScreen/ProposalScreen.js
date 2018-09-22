@@ -145,8 +145,8 @@ class ProposalScreen extends Component {
           this.setState({ showPaymentDialog: false });
         }}
         content={
-          <View style={{ paddingHorizontal: 24, paddingTop: 24, paddingBottom: 32 }} >
-            <Text style={{ fontFamily: "Roboto-Bold", fontSize: 22, color: "rgba(0,0,0,0.87)", marginLeft: 8, marginBottom: 24 }} >Qual a forma de pagamento que você deseja?</Text>
+          <View style={{ paddingHorizontal: 20, paddingTop: 24, paddingBottom: 32 }} >
+            <Text style={{ fontFamily: "Roboto-Bold", fontSize: 20, color: "rgba(0,0,0,0.87)", marginLeft: 8, marginBottom: 24 }} >Qual a forma de pagamento que você deseja?</Text>
             <View style={{ flexDirection: "row", justifyContent: "space-around" }} >
 
               <ButtonCustom
@@ -174,8 +174,8 @@ class ProposalScreen extends Component {
       <ActionSheet
         callback={buttonIndex => { this.setState({ showTrocoDialog: false }); }}
         content={
-          <View style={{ paddingHorizontal: 24, paddingTop: 24, paddingBottom: 32 }} >
-            <Text style={{ fontFamily: "Roboto-Bold", fontSize: 22, color: "rgba(0,0,0,0.87)", marginBottom: 24 }} >Quanto em espécie?</Text>
+          <View style={{ paddingHorizontal: 20, paddingTop: 20, paddingBottom: 32 }} >
+            <Text style={{ fontFamily: "Roboto-Bold", fontSize: 20, color: "rgba(0,0,0,0.87)", marginBottom: 24 }} >Quanto em espécie?</Text>
             <View>
 
               <View style={{ marginBottom: 24 }}>

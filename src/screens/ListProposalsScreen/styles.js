@@ -8,7 +8,7 @@ export default EStyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        height: 50,
+        minHeight: 50,
         paddingHorizontal: 24,
         paddingVertical: 14
     },
