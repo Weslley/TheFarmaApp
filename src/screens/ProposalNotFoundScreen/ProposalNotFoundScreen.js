@@ -14,8 +14,8 @@ class ProposalNotFoundScreen extends Component {
                 <Image style={styles.background} source={require("./images/bg.jpg")} resizeMode="contain" />
 
                 <View>
-                    <Text style={styles.title}>{"Desculpe-nos, não há farmácias, por enquanto, próximas de você cadastradas no TheFarma!"}</Text>
-                    <Text style={styles.text}>{"Se você gostou dessa ideia, ajude-nos, compartilhando o TheFarma com as   farmácias e amigos próximos de você."}</Text>
+                    <Text style={styles.title}>{"Desculpe, Por enquanto não há farmácias cadastradas no TheFarma próximas de você!"}</Text>
+                    <Text style={styles.text}>{"Se você gostou dessa ideia, ajude-nos, compartilhando o TheFarma com as farmácias e amigos próximos de você."}</Text>
                 </View>
 
                 <View>
