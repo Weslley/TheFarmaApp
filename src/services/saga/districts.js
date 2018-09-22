@@ -15,7 +15,7 @@ export const getDistricts = function* (action) {
         let districts = response.data.results;
         nextPage = response.data.next;
         while (nextPage) {
-            let result = yield call(axios.get, nextPage);
+            let result = yield call(axios.get, nextPage.replace('http://','https://'));
             districts.push(...result.data.results)
             nextPage = result.data.next;
         }
