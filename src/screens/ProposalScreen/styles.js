@@ -20,14 +20,15 @@ export default EStyleSheet.create({
     buttonEnabled: {},
     buttonText: {
         fontFamily: "Roboto-Bold",
-        fontSize: 16,
+        paddingVertical: 2,
+        fontSize: 14,
         color: "rgba(0,0,0,0.80)",
     },
     linearGradient: {
         justifyContent: "center",
         alignItems: 'center',
         flex: 1,
-        paddingVertical: 14,
+        paddingVertical: 12,
         borderRadius: 4
     },
     inputError: {
