@@ -46,13 +46,12 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new RNCameraPackage(),
             new RNDeviceInfo(),
-            new RNCameraPackage(),
             new RNCardIOPackage(),
-          new RealmReactPackage(),
-          new SnackbarPackage(),
-          new FBSDKPackage(mCallbackManager),
-          new VectorIconsPackage(),
-          new LinearGradientPackage()
+            new RealmReactPackage(),
+            new SnackbarPackage(),
+            new FBSDKPackage(mCallbackManager),
+            new VectorIconsPackage(),
+            new LinearGradientPackage()
       );
     }
 

@@ -7,7 +7,7 @@ export default EStyleSheet.create({
         position: "absolute",
         left: 0,
         right: 0,
-        top: 370,
+        top: 425,
         bottom: 0
     },
     title: {
@@ -24,6 +24,13 @@ export default EStyleSheet.create({
         color: 'rgba(0,0,0,0.64)',
         letterSpacing: 0,
         lineHeight: 28
+    },
+    timeout: {
+        fontFamily: 'Roboto-Light',
+        fontSize: 40,
+        color: '#F0166D',
+        letterSpacing: 0,
+        textAlign: 'center'
     },
     button: {
         width: '100%',

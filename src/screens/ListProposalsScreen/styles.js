@@ -1,12 +1,22 @@
 import EStyleSheet from "react-native-extended-stylesheet";
 export default EStyleSheet.create({
-    bottomBar: {
+    center: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        alignItems: "center",
+    },
+    footer: {
         position: "absolute",
         left: 0,
         right: 0,
         bottom: 0,
-        flexDirection: "row",
         alignItems: "center",
+    },
+    bottomBar: {
+        flexDirection: "row",
         justifyContent: "space-between",
         minHeight: 50,
         paddingHorizontal: 24,
@@ -17,5 +27,13 @@ export default EStyleSheet.create({
         fontFamily: "Roboto-Regular",
         fontSize: 16,
         color: "#FFFFFF"
+    },
+    txtDefault: {
+        fontFamily: 'Roboto-Bold',
+        fontSize: 24,
+        color: 'rgba(0, 0, 0, 0.87)',
+        letterSpacing: 0,
+        textAlign: 'center',
+        lineHeight: 32
     }
 });
