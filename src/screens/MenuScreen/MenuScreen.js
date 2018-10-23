@@ -15,7 +15,7 @@ import { ProfileMenuItem } from "../../components/ProfileMenuItem";
 import { SUPPORT_LINK } from "../../config/server";
 import styles from "./styles";
 
-const DeviceInfo = require('react-native-device-info');
+import DeviceInfo from 'react-native-device-info';
 
 class MenuScreen extends Component {
   constructor(props) {

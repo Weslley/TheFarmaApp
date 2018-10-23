@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, TouchableOpacity, Image } from "react-native";
 import { Text, Button, Thumbnail } from "native-base";
-import { TextMask } from "react-native-masked-text";
+import { TextMask, MaskService } from "react-native-masked-text";
 
 import { Icon } from "../../components/Icon";
 
@@ -13,6 +13,19 @@ class ProductDescription extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+  }
+
+  getPrice() {
+    let pmc = this.props.apresentation.pmc
+    if (pmc && (pmc === "0, 00" || pmc === "0,00" || pmc === 0 || pmc === 0.0)) {
+      return (
+        <Text style={[styles.Price, { fontSize: 12, }]}>{"Preço indisponível"}</Text>
+      )
+    } else {
+      return (
+        <TextMask style={styles.Price} value={this.props.apresentation.pmc} type={"money"} options={{}} />
+      )
+    }
   }
 
   render() {
@@ -34,9 +47,8 @@ class ProductDescription extends Component {
           </TouchableOpacity>
 
           <View style={styles.Footer}>
-            <TouchableOpacity onPress={this.props.onPress}>
-              <TextMask style={styles.Price} value={this.props.apresentation.pmc} type={"money"} options={{}} />
-            </TouchableOpacity>
+
+            <TouchableOpacity onPress={this.props.onPress}>{this.getPrice()}</TouchableOpacity>
 
             {Components.renderIfElse(
               this.props.showActions,

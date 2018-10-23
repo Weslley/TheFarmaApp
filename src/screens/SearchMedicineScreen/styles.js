@@ -36,4 +36,10 @@ export default EStyleSheet.create({
         fontSize: 16,
         color: "rgba(0,0,0,0.80)",
     },
+    notfound: {
+        fontFamily: 'Roboto-Regular',
+        fontSize: 12,
+        marginTop: 32,
+        marginBottom: 8
+    },
 });

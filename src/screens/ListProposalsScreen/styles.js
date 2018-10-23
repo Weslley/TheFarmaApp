@@ -35,5 +35,12 @@ export default EStyleSheet.create({
         letterSpacing: 0,
         textAlign: 'center',
         lineHeight: 32
+    },
+    counter: {
+        fontFamily: 'Roboto-Light',
+        fontSize: 40,
+        color: 'rgba(0, 0, 0, 0.87)',
+        letterSpacing: 0,
+        textAlign: 'center',
     }
 });

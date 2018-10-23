@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { View, ScrollView, TouchableOpacity, FlatList, Picker, Platform, BackHandler } from "react-native";
-import { Button, Text, Picker as NBPicker } from "native-base";
-import { TextInputMask, TextMask, MaskService } from "react-native-masked-text";
+import { View, ScrollView, FlatList, Platform, BackHandler } from "react-native";
+import { Text, Picker as NBPicker } from "native-base";
+import { TextMask, MaskService } from "react-native-masked-text";
 import Snackbar from 'react-native-snackbar';
 
 import { NavigationActions } from 'react-navigation';
@@ -81,11 +81,11 @@ class ConfirmationScreen extends Component {
 
   componentWillMount = () => {
     BackHandler.addEventListener('hardwareBackPress', this.nothing);
-    this.setState({numero_parcelas: 1})
+    this.setState({ numero_parcelas: 1 })
   }
 
-  componentDidMount(){
-    this.setState({numero_parcelas: 1})
+  componentDidMount() {
+    this.setState({ numero_parcelas: 1 })
   }
 
   componentWillUnmount = () => {
@@ -132,6 +132,19 @@ class ConfirmationScreen extends Component {
 
   closeDialog() {
     this.setState({ showCheckoutError: false });
+  }
+
+  getPrice() {
+    return CurrencyUtils.toMoney("" + this.props.proposal.valor_total);
+  }
+
+  getFrete() {
+    let frete = this.props.proposal.valor_frete;
+    if (frete) {
+      return (<TextMask type={"money"} value={this.props.proposal.valor_frete} style={styles.footerOrderTitle} />);
+    } else {
+      return (<Text style={[styles.footerOrderText, { fontSize: 14 }]} >{"GRÁTIS"}</Text>);
+    }
   }
 
   _checkout() {
@@ -192,8 +205,7 @@ class ConfirmationScreen extends Component {
 
         <ScrollView>
           <View style={styles.container}>
-            <Text style={styles.title}>{"Meu pedido"}</Text>
-
+            <Text style={[styles.title, { fontFamily: 'Roboto-Bold' }]}>{"Meu pedido"}</Text>
             {Components.renderIf(this.props.order && this.props.proposal && this.props.proposal.itens,
               <FlatList
                 data={this.props.proposal.itens}
@@ -202,22 +214,33 @@ class ConfirmationScreen extends Component {
               />
             )}
 
-            <View style={[styles.footerOrder, { marginBottom: 8, marginTop: 16 }]}>
-              <Text style={styles.footerOrderTitle}>{"Frete"}</Text>
-              {Components.renderIfElse(this.props.order.valor_frete === "0.00",
-                <Text style={[styles.footerOrderText, { fontSize: 14 }]} >{"GRÁTIS"}</Text>,
-                <TextMask type={"money"} value={this.props.order.valor_frete} />
-              )}
+            <View style={[styles.row, { marginTop: 16 }]}>
+              <View />
+              <View style={[styles.row, { width: '60%' }]}>
+                <Text style={[styles.footerOrderTitle, { textAlign: 'right' }]}>{"Subtotal"}</Text>
+                <TextMask type={"money"} value={this.props.proposal.valor_total} style={styles.footerOrderTitle} />
+              </View>
             </View>
 
-            <View style={[styles.footerOrder]}>
-              <Text style={[styles.footerOrderTitle, { color: "rgba(0,0,0,0.80)" }]}>{"Total"}</Text>
-              <TextMask style={styles.footerOrderText} type={"money"} value={this.props.proposal.valor_total} />
+            <View style={[styles.row, { marginTop: 8 }]}>
+              <View />
+              <View style={[styles.row, { width: '60%' }]}>
+                <Text style={[styles.footerOrderTitle, { textAlign: 'right' }]}>{"Frete"}</Text>
+                {this.getFrete()}
+              </View>
+            </View>
+
+            <View style={[styles.row, { marginTop: 8 }]}>
+              <View />
+              <View style={[styles.row, { width: '60%' }]}>
+                <Text style={[styles.footerOrderTitle, { color: "rgba(0,0,0,0.80)", textAlign: 'right', fontFamily: 'Roboto-Medium' }]}>{"Total"}</Text>
+                <TextMask style={styles.footerOrderText} type={"money"} value={this.props.proposal.valor_total_com_frete} />
+              </View>
             </View>
           </View>
 
           <View style={styles.container}>
-            <Text style={styles.title}>{"Pagamento"}</Text>
+            <Text style={styles.title}>{"Forma de pagamento"}</Text>
             {Components.renderIfElse(this.props.order.forma_pagamento === 0,
               <View>
                 {Components.renderIf(this.props.creditCard, <CreditCardAdapter creditCard={this.props.creditCard} />)}
@@ -231,7 +254,7 @@ class ConfirmationScreen extends Component {
                       headerBackButtonText="voltar"
                       itemStyle={styles.nbItem}
                       textStyle={styles.nbTextItem}
-                      selectedValue={ this.state.numero_parcelas }
+                      selectedValue={this.state.numero_parcelas}
                       onValueChange={(value, index) => this.setState({ numero_parcelas: value })}
                     >
                       {this._renderParcelsOptions()}
@@ -240,7 +263,7 @@ class ConfirmationScreen extends Component {
                 </View>
               </View>,
               <View>
-                <Text>{`Troco para ${MaskService.toMask('money', this.props.order.troco)}`}</Text>
+                <Text style={styles.parcelTitle}>{"Dinheiro"}</Text>
               </View>
             )}
           </View>
@@ -263,8 +286,10 @@ class ConfirmationScreen extends Component {
         </ScrollView>
 
         <BottomBar
+          label={"Total"}
           buttonTitle="Confirmar"
           onButtonPress={() => { this._checkout() }}
+          price={this.props.proposal.valor_total_com_frete}
         />
 
         {Components.renderIf(this.props.isLoading === true,

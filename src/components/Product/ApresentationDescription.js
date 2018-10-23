@@ -15,6 +15,19 @@ class ApresentationDescription extends Component {
     this.state = {};
   }
 
+  getPrice() {
+    let pmc = this.props.apresentation.pmc
+    if (pmc && (pmc === "0, 00" || pmc === "0,00" || pmc === 0 || pmc === 0.0)) {
+      return (
+        <Text style={[styles.Price, { fontSize: 12, }]}>{"Preço indisponível"}</Text>
+      )
+    } else {
+      return (
+        <TextMask style={styles.Price} value={this.props.apresentation.pmc} type={"money"} options={{}} />
+      )
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -56,15 +69,7 @@ class ApresentationDescription extends Component {
           </TouchableOpacity>
 
           <View style={styles.Footer}>
-            <TouchableOpacity onPress={this.props.onPress}>
-              <TextMask
-                style={styles.Price}
-                value={this.props.apresentation.pmc}
-                type={"money"}
-                options={{}}
-              />
-            </TouchableOpacity>
-
+            <TouchableOpacity onPress={this.props.onPress}>{this.getPrice()}</TouchableOpacity>
             {Components.renderIfElse(
               this.props.showActions,
               <View style={styles.Actions}>

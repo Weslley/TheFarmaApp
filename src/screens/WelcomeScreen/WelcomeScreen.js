@@ -262,7 +262,6 @@ class WelcomeScreen extends Component {
               }
             }}
           >
-
             <FlatList
               data={this.props.notifications}
               keyExtractor={(item, index) => item.id.toString()}

@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { View, ScrollView, KeyboardAvoidingView, Image, TextInput, Picker, Platform } from "react-native";
+
 import { Button, Text, Picker as NBPicker } from "native-base";
 import { TextInputMask, MaskService } from "react-native-masked-text";
+
+import Snackbar from 'react-native-snackbar';
 
 TextInput.defaultProps.selectionColor = "black";
 TextInput.defaultProps.underlineColorAndroid = 'black'
@@ -50,6 +53,11 @@ class AddAddressScreen extends Component {
   componentWillReceiveProps = nextProps => {
     try {
       if (nextProps && nextProps.error) {
+
+        if (nextProps.error.response && (nextProps.error.response.status >= 500 && nextProps.error.response.status <= 504)) {
+          Snackbar.show({ title: "Erro no servidor!", duration: Snackbar.LENGTH_SHORT });
+        }
+        
         if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
 
           if (nextProps.error.response.data.nome_endereco) {

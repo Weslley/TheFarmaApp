@@ -90,7 +90,7 @@ class ProposalScreen extends Component {
   _setTroco() {
     this.setState({ trocoError: null })
     let troco = parseFloat(this.state.troco.replace(/\D/g, "")) / 100
-    if (troco >= this.props.proposal.valor_total) {
+    if (troco >= this.props.proposal.valor_total_com_frete) {
       let order = this.props.order;
       order.troco = troco
       order.forma_pagamento = 1;
@@ -316,9 +316,10 @@ class ProposalScreen extends Component {
           </ScrollView>
 
           <BottomBar
+            label={"Total com frete"}
             proposal={true}
             buttonTitle="Comprar"
-            price={this.props.proposal.valor_total}
+            price={this.props.proposal.valor_total_com_frete}
             onButtonPress={() => { this._showPaymentDialog(); }}
           />
 

@@ -23,7 +23,7 @@ class ProposalNotFoundScreen extends Component {
 
                 {Components.renderIfElse(this.props.timeout,
                     <View>
-                        <Text style={[styles.title, { textAlign: 'center', marginBottom: 100, }]}>{"Nenhuma farmacia próxima de você visualizou a sua proposta."}</Text>
+                        <Text style={[styles.title, { textAlign: 'center', marginBottom: 100, }]}>{"Nenhuma farmácia próxima a você visualizou a sua proposta."}</Text>
                         <Text style={styles.timeout}>{"0"}</Text>
                     </View>,
                     <View>

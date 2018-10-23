@@ -43,5 +43,5 @@ export default EStyleSheet.create({
     avatar: {
         width: 24,
         height: 24,
-    }
+    },
 });

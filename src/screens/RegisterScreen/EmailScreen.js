@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { View, KeyboardAvoidingView, ScrollView, Text, Imagem, TextInput, Image, TouchableOpacity, Platform, Keyboard } from "react-native";
+import { View, KeyboardAvoidingView, Text, TextInput, Image, TouchableOpacity, Platform, Keyboard } from "react-native";
+
 import Snackbar from 'react-native-snackbar';
 import LinearGradient from "react-native-linear-gradient";
 
@@ -38,6 +39,11 @@ class EmailScreen extends Component {
     componentWillReceiveProps = nextProps => {
         try {
             if (nextProps && nextProps.error) {
+
+                if (nextProps.error.response && (nextProps.error.response.status >= 500 && nextProps.error.response.status <= 504)) {
+                    Snackbar.show({ title: "Erro no servidor!", duration: Snackbar.LENGTH_SHORT });
+                }
+
                 if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
 
                     if (nextProps.error.response.data.email) {
@@ -108,6 +114,7 @@ class EmailScreen extends Component {
             if (this.state.login_type === 0) {
                 this.props.navigation.navigate({ key: 'password1', routeName: 'Password', params });
             } else {
+                params["login_type"] = 1
                 let u = this.state.facebook_user
                 if (u.id) params["facebook_id"] = u.id;
                 if (u.email) params["email"] = this.state.email;

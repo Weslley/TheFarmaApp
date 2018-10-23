@@ -3,7 +3,6 @@ import { NavigationActions } from 'react-navigation'
 import { Alert, View, ScrollView, TouchableOpacity, FlatList, BackHandler } from "react-native";
 import { Container, Text } from "native-base";
 import LinearGradient from "react-native-linear-gradient";
-import TimerCountdown from "react-native-timer-countdown";
 
 import { connect } from "react-redux";
 import { getOrder, cancelOrder, clearError, updateOrder, selectProposal } from "../../actions/orders";
@@ -11,6 +10,7 @@ import { getOrder, cancelOrder, clearError, updateOrder, selectProposal } from "
 import { Header } from "../../layout/Header"
 import { MenuItem } from "../../components/MenuItem"
 import { ButtonDefault } from "../../components/ButtonDefault"
+import { TimerCountdown } from "../../components/TimerCountdown"
 
 import { ProposalDescription } from "../../components/Proposal";
 import { ProposalNotFoundScreen } from "../ProposalNotFoundScreen";
@@ -22,10 +22,12 @@ class ListProposalsScreen extends Component {
     super(props);
     this.state = {
       back_screen: 'Cart',
-      start_timer: false,
       status: 0,
+      timer: 60,
+      start_timer: false,
     }
     loadPropostas = 0;
+    counterDown = 0;
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -34,14 +36,21 @@ class ListProposalsScreen extends Component {
 
   componentWillReceiveProps = nextProps => {
     try {
-
       if (nextProps.order !== this.props.order) {
+
         if (nextProps.order.status === 8) {
-          this.setState({ show_not_fount_proposal: true })
+          clearInterval(this.counterDown);
+          this.setState({ status: 1 })
         }
 
         if (nextProps.order.status === 9) {
-          this.setState({ show_not_fount_proposal: true })
+          clearInterval(this.counterDown);
+          this.setState({ status: 2 })
+        }
+
+        if (nextProps.order && nextProps.order.propostas && nextProps.order.propostas.length > 0) {
+          clearInterval(this.counterDown);
+          this.setState({ status: 3 })
         }
       }
 
@@ -63,20 +72,35 @@ class ListProposalsScreen extends Component {
   }
 
   componentWillMount = () => {
-    console.log("Montando -> ListProposal");
     BackHandler.addEventListener('hardwareBackPress', this.nothing);
+    if (this.props.order && this.props.order.timer) {
+      this.setState({ timer: this.props.order.timer })
+    }
   }
 
   componentDidMount() {
-    console.log("Montou  -> ListProposal");
     this.loadPropostas = setInterval(() => this.getProposals(), 10000);
-    setTimeout(() => { this.setState({ start_timer: true }), 3000 });
+
+    setTimeout(() => {
+      this.setState({ start_timer: true });
+      this.counterDown = setInterval(() => this.setTimer(), 1000);
+    }, 2000);
   }
 
   componentWillUnmount = () => {
-    console.log("Desmontou  -> ListProposal");
     clearInterval(this.loadPropostas);
+    clearInterval(this.counterDown);
     BackHandler.removeEventListener('hardwareBackPress', this.nothing);
+  }
+
+  setTimer() {
+    let timer = this.state.timer;
+    if (timer > 0) {
+      this.setState({ timer: timer - 1 })
+    } else {
+      clearInterval(this.counterDown);
+      this.setState({ status: 2 });
+    }
   }
 
   /** Private functions */
@@ -107,8 +131,9 @@ class ListProposalsScreen extends Component {
   }
 
   getProposals() {
-    if (this.props.order.id) {
-      let params = { client: this.props.client, order: this.props.order }
+    let order = this.props.order
+    if (order && order.id) {
+      let params = { client: this.props.client, order: order }
       this.props.dispatch(getOrder(params));
     }
   }
@@ -156,12 +181,6 @@ class ListProposalsScreen extends Component {
             renderItem={this._renderItem}
           />
         </ScrollView>
-
-        <LinearGradient colors={["#A445B2", "#D41872", "#FF0066"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} location={[0.0, 0.52, 1]} style={[styles.footer, styles.bottomBar]}>
-          <Text style={styles.button}>
-            {"Recebendo propostas aguarde…"}
-          </Text>
-        </LinearGradient>
       </View>
     )
   }
@@ -175,14 +194,15 @@ class ListProposalsScreen extends Component {
   }
 
   renderText() {
-    let startTimer = this.state.start_timer
+    const timer = this.state.timer;
+    const startTimer = this.state.start_timer;
+
     if (!startTimer) {
       return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-between' }}>
-
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
             <Text style={[styles.txtDefault, { width: 300 }]}>
-              {"Aguarde, estamos verificando as farmacias próxima do endereço indicado…"}
+              {"Aguarde, estamos verificando as farmácias próximas do endereço indicado."}
             </Text>
           </View>
 
@@ -197,25 +217,23 @@ class ListProposalsScreen extends Component {
         </View>
       )
     } else {
-      if (this.props.order && this.props.order.views) {
+      let order = this.props.order
+      if (order && order.views) {
         return (
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Text style={styles.txtDefault}>{`${this.props.order.views} farmacias estão visualizando sua proposta…`}</Text>
+            {Components.renderIfElse(order.views === 1,
+              <Text style={styles.txtDefault}>{`${order.views} farmácia está visualizando sua proposta.`}</Text>,
+              <Text style={styles.txtDefault}>{`${order.views} farmácias estão visualizando sua proposta.`}</Text>
+            )}
           </View>
         )
       } else {
         return (
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-between' }}>
-            <Text style={[styles.txtDefault, { marginTop: 32 }]}>{"Enviando sua proposta para as farmacias…"}</Text>
+            <Text style={[styles.txtDefault, { marginTop: 32 }]}>{"Esperando resposta das farmácias..."}</Text>
 
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
-              <TimerCountdown
-                initialSecondsRemaining={1000 * 30}
-                onTick={secondsRemaining => console.log('tick', secondsRemaining)}
-                onTimeElapsed={() => console.log('complete')}
-                allowFontScaling={true}
-                style={{ fontSize: 40 }}
-              />
+              <Text style={styles.counter}>{`${timer}s`}</Text>
             </View>
 
             <View style={[{ padding: 24 }]}>
@@ -235,13 +253,16 @@ class ListProposalsScreen extends Component {
   renderView() {
     switch (this.state.status) {
       case 0:
-        return this.renderText()
+        return this.renderText();
         break;
       case 1:
-        return this.renderNotFoundTimeout()
+        return this.renderNotFoundTimeout();
         break;
       case 2:
-        return this.renderNotFoundTimeout(true)
+        return this.renderNotFoundTimeout(true);
+        break;
+      case 3:
+        return this.renderProposals();
         break;
       default:
         this.renderProposals();

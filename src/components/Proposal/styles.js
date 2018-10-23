@@ -32,7 +32,17 @@ export default EStyleSheet.create({
     alignItems: "center"
   },
   TagTextImcomplete: { fontSize: 11, color: "#E91E63" },
-  Price: { fontFamily: "Roboto-Bold", fontSize: 18, color: "rgba(0,0,0,0.80)" },
+  Price: {
+    fontFamily: "Roboto-Bold",
+    fontSize: 18,
+    color: "rgba(0,0,0,0.80)"
+  },
+  Frete: {
+    fontFamily: 'Roboto-Medium',
+    fontSize: 14,
+    color: 'rgba(0,0,0,0.48)',
+    textAlign: 'right'
+  },
   InfoContainer: {
     flexDirection: "row",
     alignItems: "center",

@@ -1,18 +1,38 @@
 import React, { Component } from "react";
-import { View, TouchableOpacity } from "react-native";
-import { Text } from "native-base";
-import { TextMask } from "react-native-masked-text";
+import { View, Text } from "react-native";
 
 import { Icon } from "../../components/Icon";
 
-import { Components } from "../../helpers";
-
+import { Components, CurrencyUtils } from "../../helpers";
 import styles from "./styles";
-
 class ProposalDescription extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+  }
+
+  getName() {
+    let pharmacy = this.props.proposal.farmacia;
+    if (pharmacy.nome_fantasia.length > 20) {
+      return `${pharmacy.nome_fantasia.substring(0, 17)}...`;
+    }
+    return pharmacy.nome_fantasia;
+  }
+
+  getPrice() {
+    return CurrencyUtils.toMoney("" + this.props.proposal.valor_total_com_frete);
+  }
+
+  getFrete() {
+    if (this.props.proposal.valor_frete) {
+      return (
+        <Text style={styles.Frete}>
+          {` + ${CurrencyUtils.toMoney("" + this.props.proposal.valor_frete)}`}
+        </Text>
+      );
+    } else {
+      return null;
+    }
   }
 
   render() {
@@ -20,7 +40,7 @@ class ProposalDescription extends Component {
       <View style={styles.Container}>
         <View style={styles.Header}>
           <View>
-            <Text style={styles.PharmaName}>{this.props.proposal.farmacia.nome_fantasia}</Text>
+            <Text style={styles.PharmaName}>{this.getName()}</Text>
             {Components.renderIfElse(this.props.proposal.possui_todos_itens,
               <View style={styles.TagContainer}>
                 <Text style={styles.TagText}>{"Estoque completo"}</Text>
@@ -30,12 +50,14 @@ class ProposalDescription extends Component {
               </View>
             )}
           </View>
-          <TextMask style={styles.Price} value={`${parseFloat(this.props.proposal.valor_total).toFixed(2)}`} type={"money"} options={{}} />
+          <Text style={styles.Price}>
+            {this.getPrice()}
+          </Text>
         </View>
 
         <View>
           <View style={styles.InfoContainer}>
-            <Icon name="place" size={18} color={"#000"} style={{marginRight: 8}} />
+            <Icon name="place" size={18} color={"#000"} style={{ marginRight: 8 }} />
             <Text style={styles.InfoTextBold}>
               {this.props.proposal.farmacia.distancia}
               <Text style={styles.InfoText}>{" do endereço indicado"}</Text>
@@ -43,7 +65,7 @@ class ProposalDescription extends Component {
           </View>
 
           <View style={[styles.InfoContainer, { marginBottom: 8 }]}>
-            <Icon name="clock-o" size={18} color={"#000"} style={{marginRight: 8}} />
+            <Icon name="clock-o" size={18} color={"#000"} style={{ marginRight: 8 }} />
             <Text style={styles.InfoTextBold}>
               {this.props.proposal.farmacia.tempo_entrega}
               <Text style={[styles.InfoText, { marginBottom: 0 }]}>{" em média para entregar"}</Text>

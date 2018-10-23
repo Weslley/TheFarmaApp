@@ -99,7 +99,7 @@ class BarcodeScanner extends Component {
         if (this.props.fadeIn) {
             Animated.sequence([
                 Animated.delay(1000),
-                Animated.timing(this.state.fadeInOpacity, { toValue: 1, easing: Easing.inOut(Easing.quad) }, )
+                Animated.timing(this.state.fadeInOpacity, { toValue: 1, easing: Easing.inOut(Easing.quad) })
             ]).start();
         }
     }
@@ -171,6 +171,11 @@ class BarcodeScanner extends Component {
                     type={cameraType}
                     style={[styles.camera, this.props.cameraStyle]}
                     onBarCodeRead={this._handleBarCodeRead.bind(this)}
+                    barCodeTypes={[
+                        Camera.constants.BarCodeType.upce,
+                        Camera.constants.BarCodeType.ean8,
+                        Camera.constants.BarCodeType.ean13,
+                    ]}
                 >
                     {this._renderCameraMarker()}
                 </Camera>

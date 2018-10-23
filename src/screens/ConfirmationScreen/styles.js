@@ -1,5 +1,10 @@
 import EStyleSheet from "react-native-extended-stylesheet";
 export default EStyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   container: {
     paddingVertical: 24,
     paddingHorizontal: 24,
@@ -8,27 +13,22 @@ export default EStyleSheet.create({
   },
   title: {
     marginBottom: 16,
-    fontFamily: "Roboto-Bold",
+    fontFamily: "Roboto-Medium",
     fontSize: 16,
     color: "rgba(0,0,0,0.80)"
-  },
-  footerOrder: {
-    flexDirection: "row",
-    justifyContent: "flex-end"
   },
   footerOrderTitle: {
-    flex: 2,
-    textAlign: "right",
+    width: '50%',
     fontFamily: "Roboto-Regular",
     fontSize: 16,
-    color: "rgba(0,0,0,0.32)"
+    color: "rgba(0,0,0,0.32)",
+    textAlign: 'right',
   },
   footerOrderText: {
-    flex: 1,
-    textAlign: "right",
     fontFamily: "Roboto-Medium",
     fontSize: 18,
-    color: "rgba(0,0,0,0.80)"
+    color: "rgba(0,0,0,0.80)",
+    textAlign: 'right',
   },
   containerParcel: {
     width: "100%",

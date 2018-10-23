@@ -82,7 +82,7 @@ export const TabsNavigator = TabNavigator(
 
 export const MainNavigator = StackNavigator(
   {
-    ListProposals: { screen: ListProposalsScreen },
+    //ListProposals: { screen: ListProposalsScreen },
 
     Welcome: { screen: WelcomeScreen },
     Profile: { screen: ProfileScreen },

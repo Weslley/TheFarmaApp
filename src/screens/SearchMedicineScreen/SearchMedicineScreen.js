@@ -146,6 +146,12 @@ class SearchMedicineScreen extends Component {
                     )}
                 </ScrollView>
 
+                {Components.renderIf(this.props.products.length <= 0,
+                <View style={{ flex: 1, position: 'absolute', top: 0, bottom: 0, right: 0, left: 0, alignItems: 'center', justifyContent: 'center' }}>
+                <Text style={styles.notfound}>{"Nenhum produto encontrado."}</Text>
+                </View>
+                )}
+
                 {Components.renderIf(this.state.showCamera === true,
                     <View style={{ flex: 1, backgroundColor: "#FFF", position: 'absolute', top: 0, bottom: 0, right: 0, left: 0 }}>
                         <BarcodeScanner

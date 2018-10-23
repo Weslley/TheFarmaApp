@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { View, KeyboardAvoidingView, ScrollView, Text, Imagem, TextInput, Image, TouchableOpacity, Keyboard } from "react-native";
+import { View, KeyboardAvoidingView, Text, TextInput, Image, TouchableOpacity, Keyboard } from "react-native";
+
 import Snackbar from 'react-native-snackbar';
 import LinearGradient from "react-native-linear-gradient";
 import { TextInputMask, MaskService } from "react-native-masked-text";
@@ -45,7 +46,13 @@ class PhoneScreen extends Component {
 
     componentWillReceiveProps = nextProps => {
         try {
+
+            if (nextProps.error.response && (nextProps.error.response.status >= 500 && nextProps.error.response.status <= 504)) {
+                Snackbar.show({ title: "Erro no servidor!", duration: Snackbar.LENGTH_SHORT });
+            }
+
             if (nextProps && nextProps.error) {
+
                 if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
 
                     if (nextProps.error.response.data.email) {
@@ -126,7 +133,7 @@ class PhoneScreen extends Component {
             params["login_type"] = 2;
             params["celular"] = StringUtils.removeMask(this.state.celular);
             params["actionBack"] = this.state.actionBack
-            
+
             this.props.dispatch(login(params));
             this.props.navigation.navigate({ key: 'verification_code1', routeName: 'VerificationCode', params });
         }

@@ -10,23 +10,21 @@ import styles from "./styles";
 
 class BottomBar extends Component {
   static defaultProps = {
-    proposal: false
+    label: "Total"
   }
 
   constructor(props) {
     super(props);
     this.state = {};
   }
+
   render() {
     return (
       <View style={[styles.container, { minHeight: 80 }]}>
         <View>
           {Components.renderIf(this.props.price,
             <View>
-              {Components.renderIfElse(this.props.proposal,
-                <Text style={styles.label}>Total</Text>,
-                <Text style={styles.label}>Total aproximado</Text>
-              )}
+              <Text style={styles.label}>{this.props.label}</Text>
               <TextMask style={styles.price} value={this.props.price} type={"money"} options={{}} />
             </View>
           )}

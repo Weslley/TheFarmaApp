@@ -106,6 +106,7 @@ class LoginScreen extends Component {
                     const infoRequest = new GraphRequest('/me', {
                         parameters: { 'fields': { 'string': 'email, first_name, last_name, gender, birthday, picture.width(480)' } }
                     }, (err, res) => {
+                        console.log(res);
                         this.setState({ facebook_user: res })
                         this.props.dispatch(login({ login_type: 1, facebook_id: res.id }));
                     });

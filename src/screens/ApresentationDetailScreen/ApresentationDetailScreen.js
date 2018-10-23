@@ -211,7 +211,7 @@ class ApresentationDetailScreen extends Component {
           {Components.renderIf(this.props.generics.length > 0,
             <View style={{ marginBottom: 16 }}>
               <View style={styles.containerLabel}>
-                <Text style={styles.label}>{"Genéricos e Similhares"}</Text>
+                <Text style={styles.label}>{"Genéricos e Similares"}</Text>
               </View>
 
               <FlatList

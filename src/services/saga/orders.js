@@ -21,7 +21,7 @@ export const getOrder = function* (action) {
     try {
         let config = { headers: { 'Authorization': 'Token ' + action.params.client.token } }
         const response = yield call(axios.get, `${SERVER_API}/pedidos/${action.params.order.id}/`, config);
-        
+
         let order = response.data
         if (order.propostas)
             order.propostas = orderBy(order.propostas, ['possui_todos_itens', 'valor_total'], ['desc', 'asc'])
@@ -41,7 +41,12 @@ export const getOrders = function* (action) {
             }
         }
         const response = yield call(axios.get, `${SERVER_API}/pedidos/`, config);
-        yield put(responseSuccess(LIST_ORDER_SUCCESS, response.data));
+
+        let orders = response.data
+        if (orders.next)
+            orders.next = orders.next.replace("http://", "https://");
+
+        yield put(responseSuccess(LIST_ORDER_SUCCESS, orders));
     } catch (e) {
         yield put(responseError(LIST_ORDER_ERROR, e));
     }
@@ -56,9 +61,14 @@ export const getOrdersNextPage = function* (action) {
             }
         }
         const response = yield call(axios.get, `${action.params.url}`, config);
-        yield put(responseSuccess(LIST_ORDER_NEXT_PAGE_SUCCESS, response.data));
+
+        let orders = response.data
+        if (orders.next)
+            orders.next = orders.next.replace("http://", "https://");
+
+        yield put(responseSuccess(LIST_ORDER_NEXT_PAGE_SUCCESS, orders));
     } catch (e) {
-        yield put(responseError(LIST_ORDER_NEXT_PAGE_SUCCESS, e));
+        yield put(responseError(LIST_ORDER_NEXT_PAGE_ERROR, e));
     }
 }
 
