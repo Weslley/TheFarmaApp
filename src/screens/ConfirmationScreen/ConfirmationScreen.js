@@ -263,7 +263,10 @@ class ConfirmationScreen extends Component {
                 </View>
               </View>,
               <View>
-                <Text style={styles.parcelTitle}>{"Dinheiro"}</Text>
+                <Text style={[{ fontFamily: 'Roboto-Light' }]}>
+                  <Text style={styles.title}>Dinheiro</Text>
+                  {` (Troco para ${MaskService.toMask('money', this.props.order.troco)})`}
+                </Text>
               </View>
             )}
           </View>

@@ -9,3 +9,7 @@ export const toMoney = (value) => {
         return "R$ 0,00"
     }
 }
+
+export const toReal = (value) => {
+    return parseFloat(`${value}`.replace(/\D/g, "")) / 100
+}

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, TouchableOpacity, FlatList, Linking } from "react-native";
-import { Text } from "native-base";
+import { Text, View, ScrollView, TouchableOpacity, FlatList, Linking } from "react-native";
 import { TextMask, MaskService } from "react-native-masked-text";
 
 import Snackbar from 'react-native-snackbar';
@@ -16,7 +15,7 @@ import { AddressAdapter } from "../../components/Address";
 import { CreditCardAdapter } from "../../components/CreditCard";
 
 import { StatusPedido } from "../../models/enums"
-import { Components, StringUtils, Date as DateUtils } from "../../helpers";
+import { Components, StringUtils, Date as DateUtils, CurrencyUtils } from "../../helpers";
 
 import { SUPPORT_LINK } from "../../config/server";
 import styles from "./styles";
@@ -47,10 +46,10 @@ class OrderScreen extends Component {
 
     openSupport() {
         try {
-          Linking.openURL(SUPPORT_LINK);
+            Linking.openURL(SUPPORT_LINK);
         } catch (error) {
-          console.log(error);
-          Snackbar.show({ title: "Erro ao abrir o whatsapp.", duration: Snackbar.LENGTH_SHORT });
+            console.log(error);
+            Snackbar.show({ title: "Erro ao abrir o whatsapp.", duration: Snackbar.LENGTH_SHORT });
         }
     }
 
@@ -68,7 +67,7 @@ class OrderScreen extends Component {
 
     _renderParcel() {
         let numero_parcelas = this.state.order.numero_parcelas;
-        let valor = (this.state.order.valor_total / numero_parcelas).toFixed(2);
+        let valor = (this.state.order.valor_bruto / numero_parcelas).toFixed(2);
         let sValor = MaskService.toMask('money', valor);
         if (numero_parcelas === 1) {
             return (
@@ -98,7 +97,7 @@ class OrderScreen extends Component {
             if (this.state.order.cartao) {
                 return (
                     <View style={styles.container}>
-                        <Text style={[styles.title]}>{"Pagamento"}</Text>
+                        <Text style={[styles.title]}>{"Forma de Pagamento"}</Text>
 
                         <View>
                             <CreditCardAdapter creditCard={this.state.order.cartao} />
@@ -115,9 +114,12 @@ class OrderScreen extends Component {
         } else {
             return (
                 <View style={styles.container}>
-                    <Text style={styles.title}>{"Pagamento"}</Text>
+                    <Text style={styles.title}>{"Forma de Pagamento"}</Text>
                     <View>
-                        <Text>{`Troco para ${MaskService.toMask('money', this.state.order.troco)}`}</Text>
+                        <Text style={[{ fontFamily: 'Roboto-Light' }]}>
+                            <Text style={styles.title}>Dinheiro</Text>
+                            {` (Troco para ${MaskService.toMask('money', this.state.order.troco)})`}
+                        </Text>
                     </View>
                 </View>
             );
@@ -171,11 +173,28 @@ class OrderScreen extends Component {
         return null;
     }
 
+    getSubTotal() {
+        let order = this.state.order;
+        let valor_total = CurrencyUtils.toReal(order.valor_bruto)
+        let valor_frete = CurrencyUtils.toReal(order.valor_frete)
+        return valor_total - valor_frete
+    }
+
+    getFrete() {
+        let frete = this.state.order.valor_frete;
+        if (frete) {
+            return (<TextMask type={"money"} value={frete} style={styles.footerOrderTitle} />);
+        } else {
+            return (<Text style={[styles.footerOrderText, { fontSize: 14 }]} >{"GRÁTIS"}</Text>);
+        }
+    }
+
     render() {
+        let order = this.state.order;
         return (
             <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
                 <Header
-                    title={`Ordem #${StringUtils.rjust('' + this.state.order.id, 8, '0')}`}
+                    title={`Ordem #${StringUtils.rjust('' + order.id, 8, '0')}`}
                     subtitle={"Todos os detalhes do seu pedido está aqui"}
                     menuLeft={
                         <MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }}
@@ -185,29 +204,40 @@ class OrderScreen extends Component {
                 <ScrollView>
                     <View style={styles.container}>
                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-                            <Text style={styles.title}>{DateUtils.toDate(this.state.order.log.data_criacao)}</Text>
-                            <Text style={styles.title}>{StatusPedido[this.state.order.status][1]}</Text>
+                            <Text style={styles.title}>{DateUtils.toDate(order.log.data_criacao)}</Text>
+                            <Text style={styles.title}>{StatusPedido[order.status][1]}</Text>
                         </View>
 
-                        {Components.renderIf(this.state.order && this.state.order.itens,
+                        {Components.renderIf(order && order.itens,
                             <FlatList
-                                data={this.state.order.itens}
+                                data={order.itens}
                                 keyExtractor={item => item.apresentacao.id.toString()}
                                 renderItem={this._renderItem}
                             />
                         )}
 
-                        <View style={[styles.footerOrder, { marginBottom: 8, marginTop: 16 }]}>
-                            <Text style={styles.footerOrderTitle}>{"Frete"}</Text>
-                            {Components.renderIfElse(this.state.order.valor_frete === "0.00",
-                                <Text style={[styles.footerOrderText, { fontSize: 14 }]} >{"GRÁTIS"}</Text>,
-                                <TextMask type={"money"} value={this.state.order.valor_frete} />
-                            )}
+                        <View style={[styles.row, { marginTop: 16 }]}>
+                            <View />
+                            <View style={[styles.row, { width: '60%' }]}>
+                                <Text style={[styles.footerOrderTitle, { textAlign: 'right' }]}>{"Subtotal"}</Text>
+                                <TextMask type={"money"} value={this.getSubTotal()} style={styles.footerOrderTitle} />
+                            </View>
                         </View>
 
-                        <View style={[styles.footerOrder]}>
-                            <Text style={[styles.footerOrderTitle, { color: "rgba(0,0,0,0.80)" }]}>{"Total"}</Text>
-                            <TextMask style={styles.footerOrderText} type={"money"} value={this.state.order.valor_total} />
+                        <View style={[styles.row, { marginTop: 8 }]}>
+                            <View />
+                            <View style={[styles.row, { width: '60%' }]}>
+                                <Text style={[styles.footerOrderTitle, { textAlign: 'right' }]}>{"Frete"}</Text>
+                                {this.getFrete()}
+                            </View>
+                        </View>
+
+                        <View style={[styles.row, { marginTop: 8 }]}>
+                            <View />
+                            <View style={[styles.row, { width: '60%' }]}>
+                                <Text style={[styles.footerOrderTitle, { color: "rgba(0,0,0,0.80)", textAlign: 'right', fontFamily: 'Roboto-Medium' }]}>{"Total"}</Text>
+                                <TextMask style={styles.footerOrderText} type={"money"} value={order.valor_bruto} />
+                            </View>
                         </View>
                     </View>
 

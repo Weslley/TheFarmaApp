@@ -48,7 +48,7 @@ class OrderAdapter extends Component {
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text style={[styles.text, { marginRight: 16 }]}>{"Total"}</Text>
-            <TextMask style={styles.text} value={this.props.order.valor_total} type={"money"} options={{}} />
+            <TextMask style={styles.text} value={this.props.order.valor_bruto} type={"money"} options={{}} />
           </View>
         </View>
 
