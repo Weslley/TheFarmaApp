@@ -97,7 +97,7 @@ class DrugstoreScreen extends Component {
                 {`${this.state.drugstore.endereco.logradouro}, ${this.state.drugstore.endereco.numero}`}
               </Text>
               <Text style={styles.info}>
-                {`${this.state.drugstore.endereco.cidade.nome}-${this.state.drugstore.endereco.cidade.uf}, ${this.state.drugstore.endereco.bairro.nome}`}
+                {`${this.state.drugstore.endereco.cidade.nome}-${this.state.drugstore.endereco.cidade.uf}, ${this.state.drugstore.endereco.bairro}`}
               </Text>
             </View>
           )}

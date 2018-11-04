@@ -8,34 +8,36 @@ export default EStyleSheet.create({
     marginBottom: 8
   },
   PharmaName: {
-    width: "100%",
     fontFamily: "Roboto-Bold",
     fontSize: 16,
     color: "rgba(0,0,0,0.80)",
     marginBottom: 4
   },
   TagContainer: {
-    borderColor: "#009688",
-    borderWidth: 1,
+    backgroundColor: 'rgba(80,227,194,0.32)',
     borderRadius: 4,
     paddingVertical: 5,
     paddingHorizontal: 7,
     alignItems: "center"
   },
-  TagText: { fontSize: 11, color: "#009688" },
+  TagText: {
+    fontSize: 11,
+    color: "#009688",
+    fontFamily: 'Roboto-Regular',
+    textAlign: 'center',
+  },
   TagContainerImcomplete: {
-    borderColor: "#E91E63",
-    borderWidth: 1,
-    borderRadius: 4,
-    paddingVertical: 5,
-    paddingHorizontal: 7,
-    alignItems: "center"
+    opacity: 0.32,
+    backgroundColor: '#F0166D'
   },
-  TagTextImcomplete: { fontSize: 11, color: "#E91E63" },
+  TagTextImcomplete: {
+    color: '#F0166D',
+  },
   Price: {
     fontFamily: "Roboto-Bold",
     fontSize: 18,
-    color: "rgba(0,0,0,0.80)"
+    color: "#38BFC0",
+    textAlign: 'right',
   },
   Frete: {
     fontFamily: 'Roboto-Medium',
@@ -58,5 +60,15 @@ export default EStyleSheet.create({
     color: "rgba(0,0,0,0.80)",
     fontFamily: "Roboto-Light"
   },
-  InfoIcon: { width: 16, height: 16, marginRight: 8 }
+  InfoIcon: {
+    width: 16,
+    height: 16,
+    marginRight: 8
+  },
+  view: {
+    fontFamily: 'Roboto-Black',
+    fontSize: 10,
+    color: '#000000',
+    textAlign: 'right'
+  }
 });

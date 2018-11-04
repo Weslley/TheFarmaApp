@@ -20,7 +20,8 @@ class ProposalDescription extends Component {
   }
 
   getPrice() {
-    return CurrencyUtils.toMoney("" + this.props.proposal.valor_total_com_frete);
+    let price = CurrencyUtils.toMoney("" + this.props.proposal.valor_total_com_frete);
+    return price;
   }
 
   getFrete() {
@@ -39,20 +40,8 @@ class ProposalDescription extends Component {
     return (
       <View style={styles.Container}>
         <View style={styles.Header}>
-          <View>
-            <Text style={styles.PharmaName}>{this.getName()}</Text>
-            {Components.renderIfElse(this.props.proposal.possui_todos_itens,
-              <View style={styles.TagContainer}>
-                <Text style={styles.TagText}>{"Estoque completo"}</Text>
-              </View>,
-              <View style={styles.TagContainerImcomplete}>
-                <Text style={styles.TagTextImcomplete}>{"Estoque imcompleto"}</Text>
-              </View>
-            )}
-          </View>
-          <Text style={styles.Price}>
-            {this.getPrice()}
-          </Text>
+          <Text style={styles.PharmaName}>{this.getName()}</Text>
+          <Text style={styles.Price}>{this.getPrice()}</Text>
         </View>
 
         <View>
@@ -64,13 +53,25 @@ class ProposalDescription extends Component {
             </Text>
           </View>
 
-          <View style={[styles.InfoContainer, { marginBottom: 8 }]}>
+          <View style={[styles.InfoContainer, { marginBottom: 10 }]}>
             <Icon name="clock-o" size={18} color={"#000"} style={{ marginRight: 8 }} />
             <Text style={styles.InfoTextBold}>
               {this.props.proposal.farmacia.tempo_entrega}
               <Text style={[styles.InfoText, { marginBottom: 0 }]}>{" em média para entregar"}</Text>
             </Text>
           </View>
+        </View>
+
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          {Components.renderIfElse(this.props.proposal.possui_todos_itens,
+            <View style={styles.TagContainer}>
+              <Text style={styles.TagText}>{"Estoque completo"}</Text>
+            </View>,
+            <View style={[styles.TagContainer, styles.TagContainerImcomplete]}>
+              <Text style={[styles.TagText, styles.TagTextImcomplete]}>{"Estoque imcompleto"}</Text>
+            </View>
+          )}
+          <Text style={styles.view}>{"VISUALIZAR"}</Text>
         </View>
       </View>
     );

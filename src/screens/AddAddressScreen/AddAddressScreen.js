@@ -57,7 +57,7 @@ class AddAddressScreen extends Component {
         if (nextProps.error.response && (nextProps.error.response.status >= 500 && nextProps.error.response.status <= 504)) {
           Snackbar.show({ title: "Erro no servidor!", duration: Snackbar.LENGTH_SHORT });
         }
-        
+
         if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
 
           if (nextProps.error.response.data.nome_endereco) {
@@ -115,19 +115,19 @@ class AddAddressScreen extends Component {
       if (address.logradouro) this.setState({ logradouro: address.logradouro })
       if (address.numero) this.setState({ numero: address.numero.toString() })
       if (address.complemento) this.setState({ complemento: address.complemento })
-      if (address.cidade) {
+
+      if (address.cidade && address.cidade.ibge) {
         this.setState({ cidade: address.cidade.ibge })
-        this._loadBairros(address.cidade.ibge);
+      } else {
+        let c = this.props.cities.find((i) => i.nome === address.cidade)
+        if (c) this.setState({ cidade: c.ibge })
       }
-      if (address.bairro) this.setState({ bairro: address.bairro.id })
 
+      if (address.bairro) this.setState({ bairro: address.bairro })
     } else {
-
       if (this.props.cities.length > 0) {
-        this._loadBairros(this.props.cities[0].ibge);
         this.setState({ cidade: this.props.cities[0].ibge });
       }
-
     }
 
     this.clearFormErrors();
@@ -146,7 +146,7 @@ class AddAddressScreen extends Component {
 
   onChangeCity = (cidade, index) => {
     this.setState({ cidade, bairro: '' })
-    if (cidade !== 0) this._loadBairros(cidade);
+    //if (cidade !== 0) this._loadBairros(cidade);
   }
 
   _loadBairros(cidade) {
@@ -313,18 +313,16 @@ class AddAddressScreen extends Component {
 
             <View floatingLabel style={styles.formitem}>
               <Text style={[styles.label, Platform.OS === 'ios' ? { marginBottom: 16 } : {}]}>Bairro</Text>
-              <NBPicker
-                mode={Platform.OS === 'ios' ? "dropdown" : 'dialog'}
-                iosHeader="Selecione um bairro"
-                iosIcon={<Icon name="ios-arrow-down" size={24} color={"#000"} />}
-                headerBackButtonText="voltar"
-                itemStyle={styles.nbItem}
-                textStyle={styles.nbTextItem}
-                selectedValue={this.state.bairro}
-                onValueChange={(value, index) => this.setState({ bairro: value })}>
-                {this._renderDistrictOptions()}
-              </NBPicker>
-              <View style={{ borderBottomColor: '#000', borderWidth: 0.5, marginTop: -6 }} />
+              <TextInput
+                style={styles.input}
+                placeholderTextColor="#CCC"
+                multiline={false}
+                onChangeText={(bairro) => this.setState({ bairro })}
+                value={this.state.bairro}
+              />
+              {Components.renderIf(Platform.OS === 'ios',
+                <View style={{ borderBottomColor: '#000', borderWidth: 0.5, marginTop: 4, }} />
+              )}
               {Components.renderIf(this.state.bairroError,
                 <Text style={styles.inputError} uppercase={false}>{this.state.bairroError}</Text>
               )}
@@ -399,8 +397,11 @@ class AddAddressScreen extends Component {
 function mapStateToProps(state) {
   return {
     client: state.clients.client,
+
+    address: state.locations.address,
     cities: state.cities.cities,
     districts: state.districts.districts,
+
     isLoading: state.addresses.isLoading,
     error: state.addresses.error,
     success: state.addresses.success,

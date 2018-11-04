@@ -131,6 +131,7 @@ class CartScreen extends Component {
       order.itens = itens
       order.latitude = this.props.latitude;
       order.longitude = this.props.longitude;
+      order.delivery = false;
       let params = { client: this.props.client, order: order }
       this.props.dispatch(createOrder(params));
       this.props.navigation.navigate({ key: 'list_proposals1', routeName: 'ListProposals', params: {} });

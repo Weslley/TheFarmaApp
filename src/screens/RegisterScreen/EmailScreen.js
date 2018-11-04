@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { NavigationActions } from 'react-navigation';
 import { View, KeyboardAvoidingView, Text, TextInput, Image, TouchableOpacity, Platform, Keyboard } from "react-native";
 
 import Snackbar from 'react-native-snackbar';
@@ -38,8 +39,18 @@ class EmailScreen extends Component {
 
     componentWillReceiveProps = nextProps => {
         try {
-            if (nextProps && nextProps.error) {
 
+            if (nextProps && nextProps.client) {
+                if (nextProps.client.nome !== '') {
+                    const resetAction = NavigationActions.reset({
+                        index: 0,
+                        actions: [NavigationActions.navigate({ routeName: 'Welcome', params: { actionBack: this.state.actionBack } })],
+                    });
+                    this.props.navigation.dispatch(resetAction);
+                }
+            }
+
+            if (nextProps && nextProps.error) {
                 if (nextProps.error.response && (nextProps.error.response.status >= 500 && nextProps.error.response.status <= 504)) {
                     Snackbar.show({ title: "Erro no servidor!", duration: Snackbar.LENGTH_SHORT });
                 }
@@ -117,13 +128,14 @@ class EmailScreen extends Component {
                 params["login_type"] = 1
                 let u = this.state.facebook_user
                 if (u.id) params["facebook_id"] = u.id;
-                if (u.email) params["email"] = this.state.email;
                 if (u.first_name) params["nome"] = u.first_name;
-                if (u.last_name) params["nome"] += u.last_name;
+                if (u.last_name) params["nome"] = params["nome"] + " " + u.last_name;
+                if (u.email) params["email"] = this.state.email;
                 if (u.birthday) params["data_nascimento"] = u.birthday;
                 if (u.gender) params["sexo"] = u.birthday === 'male' ? "M" : "F";
                 if (u.picture && u.picture.data) params["foto"] = u.picture.data;
                 params["password"] = u.id;
+                params["facebook_data"] = u
 
                 this.props.dispatch(login(params));
             }

@@ -4,7 +4,7 @@ import { Text, Button } from "native-base";
 import Snackbar from 'react-native-snackbar';
 
 import { connect } from 'react-redux';
-import { getLocation, updateLocation, getGeocodeAddress } from "../../actions/locations"
+import { getLocation } from "../../actions/locations"
 
 import { searchProducts, selectProduct, getHistory, searchProductsByBarcode, clearError } from '../../actions/products';
 import { clearApresentations } from '../../actions/apresentations';

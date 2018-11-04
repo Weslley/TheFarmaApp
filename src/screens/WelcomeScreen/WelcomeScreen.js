@@ -8,7 +8,7 @@ import Permissions from 'react-native-permissions';
 import { connect } from "react-redux";
 import { getCurrentClient } from "../../actions/clients"
 import { getNotifications, getNotificationsNextPage } from "../../actions/notifications"
-import { getLocation, updateLocation, getGeocodeAddress } from "../../actions/locations"
+import { updateLocation, getGeocodeAddress } from "../../actions/locations"
 
 import { Header } from "../../layout/Header";
 import { Container } from "../../layout/Container";
@@ -140,7 +140,7 @@ class WelcomeScreen extends Component {
   getLocation() {
     this.watchId = navigator.geolocation.watchPosition((position) => {
       this.props.dispatch(updateLocation(this.props.uf, position.coords.latitude, position.coords.longitude));
-      this.props.dispatch(getGeocodeAddress(position.coords.latitude, position.coords.longitude));
+      this.props.dispatch(getGeocodeAddress(position.coords));
     },
       (error) => this.setState({ error: error.message }),
       { enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter: 10 },

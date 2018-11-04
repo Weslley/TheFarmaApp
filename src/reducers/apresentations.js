@@ -1,4 +1,4 @@
-import { uniqBy, union } from 'lodash';
+import { uniqBy, union, sortBy, orderBy } from 'lodash';
 
 import {
   CLEAR_ERROR, CLEAR_APRESENTATIONS,
@@ -16,22 +16,35 @@ const INITIAL_STATE = {
   next: null,
   previous: null,
   apresentations: [],
+  apresentations_zeroed: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
   let list = [];
+  let list_zerados = [];
+  let list_nao_zerados = [];
   switch (action.type) {
 
     case GET_APRESENTATIONS:
-      return { ...state, apresentations: [], isLoading: true, error: null, success: false };
+      return { ...state, apresentations: [], apresentations_zeroed: [], isLoading: true, error: null, success: false };
 
     case GET_APRESENTATIONS_NEXT_PAGE:
       return { ...state, isLoading: true, error: null, success: false };
 
     case GET_APRESENTATIONS_SUCCESS:
     case GET_APRESENTATIONS_NEXT_PAGE_SUCCESS:
-      list = uniqBy(union(action.data.results, state.apresentations), "id");
-      //list = orderBy(list, ['id'], ['desc'])
+      list_zerados = action.data.results.filter((x) => parseFloat(x.pmc) === 0)
+      list_zerados = uniqBy(union(list_zerados, state.apresentations_zeroed), "id");
+
+      list_nao_zerados = action.data.results.filter((x) => parseFloat(x.pmc) !== 0)
+      list = uniqBy(union(list_nao_zerados, state.apresentations), "id");
+
+      list = orderBy(list, ['pmc'], ['asc'])
+
+      if (action.data.next === null) {
+        list = uniqBy(union(list, state.apresentations_zeroed), "id");
+      }
+
       return {
         ...state,
         isLoading: false,
@@ -39,12 +52,13 @@ export default (state = INITIAL_STATE, action) => {
         num_pages: action.data.num_pages,
         next: action.data.next,
         previous: action.data.previous,
-        apresentations: list
+        apresentations: list,
+        apresentations_zeroed: list_zerados
       };
     case GET_APRESENTATIONS_ERROR:
       return { ...state, error: action.error, isLoading: false };
     case CLEAR_APRESENTATIONS:
-      return { ...state, error: null, apresentations: [], count: 0, num_pages: 0, next: null };
+      return { ...state, error: null, apresentations: [], apresentations_zeroed: [], count: 0, num_pages: 0, next: null };
     case CLEAR_ERROR:
       return { ...state, error: null };
     default:

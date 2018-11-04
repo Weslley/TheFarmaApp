@@ -5,12 +5,10 @@ import Snackbar from 'react-native-snackbar';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
 import { connect } from "react-redux";
-
-
 import { logout } from "../../actions/clients";
 import { getCities } from "../../actions/cities";
-import { getDistricts } from "../../actions/districts";
 import { createOrder } from "../../actions/orders";
+import { updateLocation, getGeocodeAddress } from "../../actions/locations"
 import { selectAddress, getAddresses, clearError, clearAddresses, removeAddress } from "../../actions/addresses"
 
 import { Header } from "../../layout/Header";
@@ -60,6 +58,7 @@ class ListAddressScreen extends Component {
   componentWillMount() {
     this.props.dispatch(clearError());
     this.props.dispatch(getAddresses({ client: this.props.client }));
+    this.getLocation();
   }
 
   componentDidMount() {
@@ -86,7 +85,19 @@ class ListAddressScreen extends Component {
   }
 
   _showAddress(address) {
-    this.props.navigation.navigate({ key: 'new_address1', routeName: 'NewAddress', params: { address } });
+    let p_address = this.props.currenty_address;
+    if (address !== null) p_address = address;
+    this.props.navigation.navigate({ key: 'new_address1', routeName: 'NewAddress', params: { address: p_address } });
+  }
+
+  getLocation() {
+    this.watchId = navigator.geolocation.watchPosition((position) => {
+      this.props.dispatch(updateLocation(this.props.uf, position.coords.latitude, position.coords.longitude));
+      this.props.dispatch(getGeocodeAddress(position.coords));
+    },
+      (error) => this.setState({ error: error.message }),
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter: 10 },
+    );
   }
 
   _renderItem = ({ item }) => (
@@ -203,14 +214,18 @@ class ListAddressScreen extends Component {
 
 function mapStateToProps(state) {
   return {
+    address: state.addresses.address,
     addresses: state.addresses.addresses,
     isLoading: state.addresses.isLoading,
-    error: state.addresses.error,
-    address: state.addresses.address,
+    error: state.addresses.error,    
+
     cities: state.cities.cities,
     districts: state.districts.districts,
+
+    currenty_address: state.locations.address,
     latitude: state.locations.latitude,
     longitude: state.locations.longitude,
+
     cartItems: state.carts.cartItems,
     client: state.clients.client,
     order: state.orders.order,

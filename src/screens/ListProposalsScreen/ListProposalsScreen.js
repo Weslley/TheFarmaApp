@@ -220,11 +220,21 @@ class ListProposalsScreen extends Component {
       let order = this.props.order
       if (order && order.views) {
         return (
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            {Components.renderIfElse(order.views === 1,
-              <Text style={styles.txtDefault}>{`${order.views} farmácia está visualizando sua proposta.`}</Text>,
-              <Text style={styles.txtDefault}>{`${order.views} farmácias estão visualizando sua proposta.`}</Text>
-            )}
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-between' }}>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+              {Components.renderIfElse(order.views === 1,
+                <Text style={styles.txtDefault}>{`${order.views} farmácia está visualizando sua proposta.`}</Text>,
+                <Text style={styles.txtDefault}>{`${order.views} farmácias estão visualizando sua proposta.`}</Text>
+              )}
+            </View>
+            <View style={[{ padding: 24, position: "absolute", bottom: 0, left: 0, right: 0 }]}>
+              <ButtonDefault
+                text="Cancelar"
+                style={{ backgroundColor: "#FFF", borderColor: "rgba(0,0,0,0.16)" }}
+                textStyle={{ color: '#000' }}
+                onPress={() => { this.alertCancel() }}
+              />
+            </View>
           </View>
         )
       } else {

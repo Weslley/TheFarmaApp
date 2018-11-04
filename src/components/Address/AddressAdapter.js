@@ -34,7 +34,7 @@ class AddressAdapter extends Component {
             <Text style={[styles.text, { marginBottom: 8 }]}>
               {`${this.props.address.logradouro}, ${this.props.address.numero}`}
             </Text>
-            <Text style={styles.text}>{`${this.props.address.bairro.nome}`}</Text>
+            <Text style={styles.text}>{`${this.props.address.bairro}`}</Text>
           </View>
         </View>
       </View>

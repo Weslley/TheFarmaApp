@@ -3,7 +3,6 @@ import { ScrollView, KeyboardAvoidingView, Image } from "react-native";
 import { Container } from "native-base";
 
 import { connect } from "react-redux";
-import { getCities } from "../../actions/cities";
 
 import { MenuScreen } from "../MenuScreen";
 import { LoginScreen } from "../LoginScreen";
@@ -68,9 +67,7 @@ class ProfileScreen extends Component {
     this.setState({ actionBack })
   }
 
-  componentDidMount() {
-    this.props.dispatch(getCities());
-  }
+  componentDidMount() {}
 
   /** Private functions */
   onBack() {
