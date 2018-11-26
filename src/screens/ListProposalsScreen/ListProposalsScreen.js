@@ -221,7 +221,7 @@ class ListProposalsScreen extends Component {
       if (order && order.views) {
         return (
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-between' }}>
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24 }}>
               {Components.renderIfElse(order.views === 1,
                 <Text style={styles.txtDefault}>{`${order.views} farmácia está visualizando sua proposta.`}</Text>,
                 <Text style={styles.txtDefault}>{`${order.views} farmácias estão visualizando sua proposta.`}</Text>

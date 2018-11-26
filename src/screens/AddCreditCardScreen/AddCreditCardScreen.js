@@ -103,7 +103,7 @@ class AddCreditCardScreen extends Component {
       .scanCard({ suppressConfirmation: true })
       .then(card => {
         console.log(card);
-        this.setState({ numero_cartao: card.cardNumber })
+        this.onChangeNumeroCartao(card.cardNumber);
       })
       .catch(() => { console.log("Cancelou"); })
   }
@@ -216,13 +216,13 @@ class AddCreditCardScreen extends Component {
   validForm() {
     this.clearFormErrors();
 
-    if (this.state.numero_cartao == null || this.state.numero_cartao == "") {
+    if (this.state.numero_cartao === null || this.state.numero_cartao === "") {
       this.setState({ numeroCartaoError: "Este campo é obrigatório" })
       this.setCurrentIndex(0);
       return false;
     }
 
-    if (this.state.bandeira == null || this.state.bandeira == "") {
+    if (this.state.bandeira === null || this.state.bandeira === "") {
       this.setState({ numeroCartaoError: "Cartão inválido" })
       this.setCurrentIndex(0);
       return false;
@@ -248,7 +248,7 @@ class AddCreditCardScreen extends Component {
       return false;
     }
 
-    if ((this.state.cvv == null || this.state.cvv == "") || this.state.cvv.length < 3) {
+    if ((this.state.cvv === null || this.state.cvv === "") || this.state.cvv.length < 3) {
       this.setState({ cvvError: "Campo Inválido" })
       this.setCurrentIndex(2);
       return false;
@@ -357,7 +357,7 @@ class AddCreditCardScreen extends Component {
                 <View style={[styles.item, { width: 100 }]}>
                   <Text style={styles.label}>{"CVV"}</Text>
                   <TextInput
-                    maxLength={3}
+                    maxLength={(this.state.bandeira === 'amex') ? 4 : 3}
                     multiline={false}
                     secureTextEntry={true}
                     keyboardType={"numeric"}

@@ -8,6 +8,10 @@ export const REQUEST_GEOCODE = 'REQUEST_GEOCODE';
 export const REQUEST_GEOCODE_SUCCESS = 'REQUEST_GEOCODE_SUCCESS';
 export const REQUEST_GEOCODE_ERROR = 'REQUEST_GEOCODE_ERROR';
 
+export const GET_ADDRESS_BY_CEP = 'GET_ADDRESS_BY_CEP';
+export const GET_ADDRESS_BY_CEP_SUCCESS = 'GET_ADDRESS_BY_CEP_SUCCESS';
+export const GET_ADDRESS_BY_CEP_ERROR = 'GET_ADDRESS_BY_CEP_ERROR';
+
 export const getLocation = () => ({
   type: GET_LOCATION
 });
@@ -19,6 +23,10 @@ export const updateLocation = (uf, latitude, longitude) => ({
 
 export const getGeocodeAddress = (params) => ({
   type: REQUEST_GEOCODE, params
+});
+
+export const getAddressByCep = (params) => ({
+  type: GET_ADDRESS_BY_CEP, params
 });
 
 /** Action results body */

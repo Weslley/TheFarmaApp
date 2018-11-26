@@ -31,6 +31,7 @@ class ListAddressScreen extends Component {
       showBottomBar: false,
       scroll: true
     };
+    this.rows = {};
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -39,7 +40,12 @@ class ListAddressScreen extends Component {
 
   componentWillReceiveProps = nextProps => {
     try {
+
       if (nextProps && nextProps.error) {
+        if (nextProps.error.response && (nextProps.error.response.status >= 500 && nextProps.error.response.status <= 504)) {
+          Snackbar.show({ title: "Erro em nosso servidor!", duration: Snackbar.LENGTH_SHORT });
+        }
+
         if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
           if (nextProps.error.response.data.detail) {
             if (nextProps.error.response.data.detail === "Token inválido.") {
@@ -57,6 +63,7 @@ class ListAddressScreen extends Component {
 
   componentWillMount() {
     this.props.dispatch(clearError());
+    this.props.dispatch(getCities());
     this.props.dispatch(getAddresses({ client: this.props.client }));
     this.getLocation();
   }
@@ -66,6 +73,7 @@ class ListAddressScreen extends Component {
     if (params && params.showBottomBar) {
       this.setState({ showBottomBar: true })
     }
+    setTimeout(() => { this.checkAddresses() }, 3000);
   }
 
   componentWillUnmount() {
@@ -75,6 +83,11 @@ class ListAddressScreen extends Component {
   /** Private functions */
   onBack() {
     this.props.navigation.goBack(null);
+  }
+
+  checkAddresses() {
+    let addresses = this.props.addresses;
+    if (addresses && addresses.length === 0) this._showAddress();
   }
 
   _removeAddress(address) {
@@ -100,18 +113,34 @@ class ListAddressScreen extends Component {
     );
   }
 
-  _renderItem = ({ item }) => (
-    <TouchableOpacity
-      activeOpacity={1}
-      style={styles.rowFront}
-      onPress={() => { this._selectAddress(item) }}>
+  openRow = (rowRef) => {
+    if (rowRef)
+      rowRef.manuallySwipeRow(-150);
+  }
 
-      <AddressAdapter
-        address={item}
-        checked={(this.props.address && item.id === this.props.address.id)} />
+  _renderItem = ({ item }) => {
 
-    </TouchableOpacity>
-  );
+    let list = this.list;
+    let row = null;
+    if (list && list._rows)
+      row = list._rows[item.id]
+
+    return (
+      <TouchableOpacity
+        activeOpacity={1}
+        style={styles.rowFront}
+        onLongPress={() => { this.openRow(row) }}
+        onPress={() => { this._selectAddress(item) }}>
+
+        <AddressAdapter
+          address={item}
+          checked={(this.props.address && item.id === this.props.address.id)} />
+
+        <View style={{ backgroundColor: 'rgba(0,0,0,0.08)', width: '100%', height: 1 }} />
+
+      </TouchableOpacity>
+    )
+  };
 
   _selectAddress(address) {
     this.props.dispatch(selectAddress(address))
@@ -161,44 +190,44 @@ class ListAddressScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <View style={{ backgroundColor: "#FFFFFF" }}>
+        <Header
+          title={"Meus Endereços"}
+          subtitle={"Seus endereços para futuras entregas"}
+          menuLeft={
+            <MenuItem
+              icon="md-arrow-back"
+              onPress={() => { this.onBack() }}
+              style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+            />
+          }
+          menuRight={
+            <MenuItem
+              icon="add-circle"
+              onPress={() => { this._showAddress(null) }}
+              style={{ paddingRight: 24, paddingVertical: 12 }}
+            />
+          }
+        />
 
-          <Header
-            title={"Meus Endereços"}
-            subtitle={"Seus endereços para futuras entregas"}
-            menuLeft={
-              <MenuItem
-                icon="md-arrow-back"
-                onPress={() => { this.onBack() }}
-                style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
-              />
-            }
-            menuRight={
-              <MenuItem
-                icon="add-circle"
-                onPress={() => { this._showAddress(null) }}
-                style={{ paddingRight: 24, paddingVertical: 12 }}
-              />
-            }
-          />
-
+        {Components.renderIfElse(this.props.addresses && this.props.addresses.length === 0 && this.props.isLoading === true,
+          <Loading />,
           <ScrollView>
             <SwipeListView
+              ref={ref => { this.list = ref }}
               scrollEnabled={this.state.scroll}
               onRowOpen={() => this.setState({ scroll: false })}
               onRowDidClose={() => this.setState({ scroll: true })}
-              useFlatList
+              useFlatList={true}
               disableRightSwipe={true}
               data={this.props.addresses}
               keyExtractor={item => item.id.toString()}
+              renderRow={this._renderRow}
               renderItem={this._renderItem}
               renderHiddenItem={this._renderActions}
               rightOpenValue={-150}
             />
           </ScrollView>
-        </View>
-
-        {Components.renderIf(this.props.addresses && this.props.addresses.length === 0 && this.props.isLoading === true, <Loading />)}
+        )}
 
         {Components.renderIf(this.state.showBottomBar,
           <BottomBar
@@ -217,7 +246,7 @@ function mapStateToProps(state) {
     address: state.addresses.address,
     addresses: state.addresses.addresses,
     isLoading: state.addresses.isLoading,
-    error: state.addresses.error,    
+    error: state.addresses.error,
 
     cities: state.cities.cities,
     districts: state.districts.districts,

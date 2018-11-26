@@ -14,7 +14,7 @@ export default EStyleSheet.create({
     marginBottom: 4
   },
   TagContainer: {
-    backgroundColor: 'rgba(80,227,194,0.32)',
+    backgroundColor: 'rgba(56,191,192,0.16)',
     borderRadius: 4,
     paddingVertical: 5,
     paddingHorizontal: 7,
@@ -27,8 +27,7 @@ export default EStyleSheet.create({
     textAlign: 'center',
   },
   TagContainerImcomplete: {
-    opacity: 0.32,
-    backgroundColor: '#F0166D'
+    backgroundColor: 'rgba(240,22,109,0.16);'
   },
   TagTextImcomplete: {
     color: '#F0166D',

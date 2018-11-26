@@ -168,7 +168,7 @@ class ConfirmationScreen extends Component {
       let valor = (this.props.proposal.valor_total / i).toFixed(2);
       let sValor = MaskService.toMask('money', valor);
       if (i === 1) {
-        parcelas.push({ id: i, label: `${sValor} à vista` })
+        parcelas.push({ id: i, label: `${sValor} Avista` })
       } else {
         parcelas.push({ id: i, label: `${i}X de ${sValor}` })
       }

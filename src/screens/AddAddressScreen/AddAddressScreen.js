@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, KeyboardAvoidingView, Image, TextInput, Picker, Platform } from "react-native";
+import { View, ScrollView, KeyboardAvoidingView, Image, TextInput, Picker, Platform, Switch } from "react-native";
 
 import { Button, Text, Picker as NBPicker } from "native-base";
 import { TextInputMask, MaskService } from "react-native-masked-text";
@@ -10,8 +10,9 @@ TextInput.defaultProps.selectionColor = "black";
 TextInput.defaultProps.underlineColorAndroid = 'black'
 
 import { connect } from "react-redux";
-import { getAddresses, saveAddress, updateAddress, clearError } from "../../actions/addresses";
+import { updateLocation, getGeocodeAddress, getAddressByCep } from "../../actions/locations"
 import { getDistricts, clearDistricts } from "../../actions/districts";
+import { getAddresses, saveAddress, updateAddress, clearError } from "../../actions/addresses";
 
 import { Header } from "../../layout/Header"
 import { Icon } from "../../components/Icon"
@@ -43,6 +44,8 @@ class AddAddressScreen extends Component {
       complementoError: null,
       cidadeError: null,
       bairroError: null,
+      showCep: true,
+      useLocation: true,
     };
   }
 
@@ -52,6 +55,24 @@ class AddAddressScreen extends Component {
 
   componentWillReceiveProps = nextProps => {
     try {
+
+      if (nextProps && nextProps.success === true) {
+        this.onBack();
+        this.props.dispatch(getAddresses({ client: this.props.client }));
+      }
+
+      if (nextProps.currenty_address && this.state.useLocation) {
+        this.completeAddress(nextProps.currenty_address);
+      }
+
+      if (nextProps.address_by_cep !== this.props.address_by_cep && this.state.useLocation === false) {
+        let address = nextProps.address_by_cep
+        if (address && address.localidade) {
+          address.cidade = { ibge: address.ibge, nome: address.localidade }
+        }
+        this.completeAddress(address);
+      }
+
       if (nextProps && nextProps.error) {
 
         if (nextProps.error.response && (nextProps.error.response.status >= 500 && nextProps.error.response.status <= 504)) {
@@ -91,15 +112,8 @@ class AddAddressScreen extends Component {
           if (nextProps.error.response.data.detail) {
             Snackbar.show({ title: nextProps.error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
           }
-
         }
       }
-
-      if (nextProps && nextProps.success === true) {
-        this.onBack();
-        this.props.dispatch(getAddresses({ client: this.props.client }));
-      }
-
     } catch (e) {
       console.log(e);
     }
@@ -109,21 +123,7 @@ class AddAddressScreen extends Component {
     const { state: { params } } = this.props.navigation;
     let address = params ? params.address : null;
     if (address) {
-      if (address.id) this.setState({ id: address.id })
-      if (address.nome_endereco) this.setState({ nome_endereco: address.nome_endereco })
-      if (address.cep) this.setState({ cep: address.cep })
-      if (address.logradouro) this.setState({ logradouro: address.logradouro })
-      if (address.numero) this.setState({ numero: address.numero.toString() })
-      if (address.complemento) this.setState({ complemento: address.complemento })
-
-      if (address.cidade && address.cidade.ibge) {
-        this.setState({ cidade: address.cidade.ibge })
-      } else {
-        let c = this.props.cities.find((i) => i.nome === address.cidade)
-        if (c) this.setState({ cidade: c.ibge })
-      }
-
-      if (address.bairro) this.setState({ bairro: address.bairro })
+      this.completeAddress(address);
     } else {
       if (this.props.cities.length > 0) {
         this.setState({ cidade: this.props.cities[0].ibge });
@@ -140,8 +140,38 @@ class AddAddressScreen extends Component {
     this.props.navigation.goBack(null);
   }
 
+  completeAddress(addr) {
+    if (addr) {
+      if (addr.id) this.setState({ id: addr.id, useLocation: false })
+      if (addr.nome_endereco) this.setState({ nome_endereco: addr.nome_endereco })
+      if (addr.cep) this.setState({ cep: addr.cep })
+      if (addr.logradouro) this.setState({ logradouro: addr.logradouro })
+
+      this.setState({ numero: (addr.numero) ? addr.numero.toString() : '' })
+      this.setState({ complemento: (addr.complemento) ? addr.complemento : '' });
+      this.setState({ bairro: (addr.bairro) ? addr.bairro : '' })
+
+      if (addr.cidade && addr.cidade.ibge) {
+        this.setState({ cidade: +addr.cidade.ibge })
+      } else {
+        let c = this.props.cities.find((i) => i.nome === addr.cidade)
+        if (c) this.setState({ cidade: c.ibge })
+      }
+    }
+  }
+
   clearFormErrors() {
     this.setState({ nomeError: null, cepError: null, logradouroError: null, numeroError: null, complementoError: null, cidadeError: null, bairroError: null })
+  }
+
+  getLocation() {
+    this.watchId = navigator.geolocation.watchPosition((position) => {
+      this.props.dispatch(updateLocation('PI', position.coords.latitude, position.coords.longitude));
+      this.props.dispatch(getGeocodeAddress(position.coords));
+    },
+      (error) => this.setState({ error: error.message }),
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter: 10 },
+    );
   }
 
   onChangeCity = (cidade, index) => {
@@ -156,6 +186,22 @@ class AddAddressScreen extends Component {
   onChangeCep = cep => {
     let cepMask = MaskService.toMask('zip-code', cep);
     this.setState({ cep: cepMask })
+
+    if (StringUtils.removeMask(cepMask).length >= 8 && this.state.useLocation === false) {
+      setTimeout(() => {
+        this.props.dispatch(getAddressByCep({ cep: StringUtils.removeMask(cepMask) }));
+      }, 500);
+    } else {
+      this.setState({ button_disabled: true, cep_error: null })
+    }
+  }
+
+  onChangeUseLocation = value => {
+    this.setState({ useLocation: value });
+    if (value) {
+      this.getLocation();
+      this.props.dispatch(getGeocodeAddress({ latitude: this.props.latitude, longitude: this.props.longitude }));
+    }
   }
 
   validForm() {
@@ -243,7 +289,7 @@ class AddAddressScreen extends Component {
 
           <Header
             title={"Novo Endereço"}
-            subtitle={"Prencha as informações do endereço"}
+            subtitle={"Preencha as informações do endereço"}
             menuLeft={
               <MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }}
                 style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }} />
@@ -258,39 +304,44 @@ class AddAddressScreen extends Component {
             <View floatingLabel style={styles.formitem}>
               <Text style={[styles.label, Platform.OS === 'ios' ? { marginBottom: 16 } : {}]}>Nome</Text>
               <TextInput
+                multiline={false}
                 style={styles.input}
                 placeholderTextColor="#CCC"
-                multiline={false}
-                onChangeText={(nome_endereco) => this.setState({ nome_endereco })}
                 value={this.state.nome_endereco}
+                underlineColorAndroid={"transparent"}
+                onChangeText={(nome_endereco) => this.setState({ nome_endereco })}
               />
-              {Components.renderIf(Platform.OS === 'ios',
-                <View style={{ borderBottomColor: '#000', borderWidth: 0.5, marginTop: 4, }} />
-              )}
+              <View style={{ borderBottomColor: "#000", borderWidth: 0.5, marginTop: 4, marginBottom: 8 }} />
               {Components.renderIfElse(this.state.nomeError,
                 <Text style={styles.inputError} uppercase={false}>{this.state.nomeError}</Text>,
                 <Text style={styles.example} uppercase={false}>{"Ex: Casa, Trabalho..."}</Text>
               )}
             </View>
 
-            <View floatingLabel style={styles.formitem}>
-              <Text style={[styles.label, Platform.OS === 'ios' ? { marginBottom: 16 } : {}]} >CEP</Text>
-              <TextInput
-                maxLength={9}
-                keyboardType={"numeric"}
-                style={styles.input}
-                placeholderTextColor="#CCC"
-                multiline={false}
-                onChangeText={this.onChangeCep.bind(this)}
-                value={this.state.cep}
-              />
-              {Components.renderIf(Platform.OS === 'ios',
-                <View style={{ borderBottomColor: '#000', borderWidth: 0.5, marginTop: 4, }} />
-              )}
-              {Components.renderIf(this.state.cepError,
-                <Text style={styles.inputError} uppercase={false}>{this.state.cepError}</Text>
-              )}
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 8, marginBottom: 24 }}>
+              <Text style={styles.text}>{'Usar minha localização'}</Text>
+              <Switch
+                onValueChange={this.onChangeUseLocation.bind(this)}
+                value={this.state.useLocation} />
             </View>
+
+            {Components.renderIf(this.state.showCep,
+              <View floatingLabel style={styles.formitem}>
+                <Text style={[styles.label, Platform.OS === 'ios' ? { marginBottom: 16 } : {}]} >CEP</Text>
+                <TextInput
+                  maxLength={9}
+                  multiline={false}
+                  style={styles.input}
+                  value={this.state.cep}
+                  keyboardType={"numeric"}
+                  placeholderTextColor="#CCC"
+                  underlineColorAndroid={"transparent"}
+                  onChangeText={this.onChangeCep.bind(this)}
+                />
+                <View style={{ borderBottomColor: "#000", borderWidth: 0.5, marginTop: 4, marginBottom: 8 }} />
+                {Components.renderIf(this.state.cepError, <Text style={styles.inputError} uppercase={false}>{this.state.cepError}</Text>)}
+              </View>
+            )}
 
             <View floatingLabel style={styles.formitem}>
               <Text style={[styles.label, Platform.OS === 'ios' ? { marginBottom: 16 } : {}]}>Cidade</Text>
@@ -314,70 +365,58 @@ class AddAddressScreen extends Component {
             <View floatingLabel style={styles.formitem}>
               <Text style={[styles.label, Platform.OS === 'ios' ? { marginBottom: 16 } : {}]}>Bairro</Text>
               <TextInput
-                style={styles.input}
-                placeholderTextColor="#CCC"
                 multiline={false}
-                onChangeText={(bairro) => this.setState({ bairro })}
+                style={styles.input}
                 value={this.state.bairro}
+                placeholderTextColor="#CCC"
+                underlineColorAndroid={"transparent"}
+                onChangeText={(bairro) => this.setState({ bairro })}
               />
-              {Components.renderIf(Platform.OS === 'ios',
-                <View style={{ borderBottomColor: '#000', borderWidth: 0.5, marginTop: 4, }} />
-              )}
-              {Components.renderIf(this.state.bairroError,
-                <Text style={styles.inputError} uppercase={false}>{this.state.bairroError}</Text>
-              )}
+              <View style={{ borderBottomColor: "#000", borderWidth: 0.5, marginTop: 4, marginBottom: 8 }} />
+              {Components.renderIf(this.state.bairroError, <Text style={styles.inputError} uppercase={false}>{this.state.bairroError}</Text>)}
             </View>
 
             <View floatingLabel style={styles.formitem}>
               <Text style={[styles.label, Platform.OS === 'ios' ? { marginBottom: 16 } : {}]}>Logradouro</Text>
               <TextInput
+                multiline={false}
                 style={styles.input}
                 placeholderTextColor="#CCC"
-                multiline={false}
-                onChangeText={(logradouro) => this.setState({ logradouro })}
                 value={this.state.logradouro}
+                underlineColorAndroid={"transparent"}
+                onChangeText={(logradouro) => this.setState({ logradouro })}
               />
-              {Components.renderIf(Platform.OS === 'ios',
-                <View style={{ borderBottomColor: '#000', borderWidth: 0.5, marginTop: 4, }} />
-              )}
-              {Components.renderIf(this.state.logradouroError,
-                <Text style={styles.inputError} uppercase={false}>{this.state.logradouroError}</Text>
-              )}
+              <View style={{ borderBottomColor: "#000", borderWidth: 0.5, marginTop: 4, marginBottom: 8 }} />
+              {Components.renderIf(this.state.logradouroError, <Text style={styles.inputError} uppercase={false}>{this.state.logradouroError}</Text>)}
             </View>
 
             <View floatingLabel style={styles.formitem}>
               <Text style={[styles.label, Platform.OS === 'ios' ? { marginBottom: 16 } : {}]}>Número</Text>
               <TextInput
-                keyboardType={"numeric"}
-                style={styles.input}
-                placeholderTextColor="#CCC"
                 multiline={false}
-                onChangeText={(numero) => this.setState({ numero })}
+                style={styles.input}
+                keyboardType={"numeric"}
                 value={this.state.numero}
+                placeholderTextColor="#CCC"
+                underlineColorAndroid={"transparent"}
+                onChangeText={(numero) => this.setState({ numero })}
               />
-              {Components.renderIf(Platform.OS === 'ios',
-                <View style={{ borderBottomColor: '#000', borderWidth: 0.5, marginTop: 4, }} />
-              )}
-              {Components.renderIf(this.state.numeroError,
-                <Text style={styles.inputError} uppercase={false}>{this.state.numeroError}</Text>
-              )}
+              <View style={{ borderBottomColor: "#000", borderWidth: 0.5, marginTop: 4, marginBottom: 8 }} />
+              {Components.renderIf(this.state.numeroError, <Text style={styles.inputError} uppercase={false}>{this.state.numeroError}</Text>)}
             </View>
 
             <View floatingLabel style={[styles.formitem, { marginBottom: 64 }]}>
               <Text style={[styles.label, Platform.OS === 'ios' ? { marginBottom: 16 } : {}]}>Complemento</Text>
               <TextInput
+                multiline={false}
                 style={styles.input}
                 placeholderTextColor="#CCC"
-                multiline={false}
-                onChangeText={(complemento) => this.setState({ complemento })}
                 value={this.state.complemento}
+                underlineColorAndroid={"transparent"}
+                onChangeText={(complemento) => this.setState({ complemento })}
               />
-              {Components.renderIf(Platform.OS === 'ios',
-                <View style={{ borderBottomColor: '#000', borderWidth: 0.5, marginTop: 4, }} />
-              )}
-              {Components.renderIf(this.state.complementoError,
-                <Text style={styles.inputError} uppercase={false}>{this.state.complementoError}</Text>
-              )}
+              <View style={{ borderBottomColor: "#000", borderWidth: 0.5, marginTop: 4, marginBottom: 8 }} />
+              {Components.renderIf(this.state.complementoError, <Text style={styles.inputError} uppercase={false}>{this.state.complementoError}</Text>)}
             </View>
 
           </ScrollView>
@@ -398,10 +437,17 @@ function mapStateToProps(state) {
   return {
     client: state.clients.client,
 
+    uf: state.locations.uf,
     address: state.locations.address,
+    latitude: state.locations.latitude,
+    longitude: state.locations.longitude,
+    currenty_address: state.locations.address,
+    address_by_cep: state.locations.address_by_cep,
+
     cities: state.cities.cities,
     districts: state.districts.districts,
 
+    addresses: state.addresses.addresses,
     isLoading: state.addresses.isLoading,
     error: state.addresses.error,
     success: state.addresses.success,

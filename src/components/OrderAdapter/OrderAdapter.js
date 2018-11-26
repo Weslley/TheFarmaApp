@@ -20,6 +20,38 @@ class OrderAdapter extends Component {
     this.state = {};
   }
 
+  _getOrderStatus() {
+    let order = this.props.order;
+    let status = StatusPedido[order.status][1];
+    switch (order.status) {
+      case 2:
+      case 3:
+      case 9:
+        return (
+          <View style={[styles.tag, styles.tagWarning]}>
+            <Text style={[styles.tagText, styles.tagWarningText]}>{status}</Text>
+          </View>
+        )
+      case 4:
+      case 5:
+        return (
+          <View style={[styles.tag]}>
+            <Text style={styles.tagText}>{status}</Text>
+          </View>
+        )
+      case 6:
+      case 7:
+      case 8:
+        return (
+          <View style={[styles.tag, styles.tagDanger]}>
+            <Text style={[styles.tagText, styles.tagDangerText]}>{status}</Text>
+          </View>
+        )
+      default:
+        return (<Text style={styles.text}>{status}</Text>)
+    }
+  }
+
   _keyExtractor = (item, index) => item.apresentacao.id.toString();
 
   _renderItem = ({ item }) => {
@@ -31,10 +63,9 @@ class OrderAdapter extends Component {
   render() {
     return (
       <View style={{}}>
-
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
           <Text style={styles.text}>{DateUtils.toDate(this.props.order.log.data_criacao)}</Text>
-          <Text style={styles.text}>{StatusPedido[this.props.order.status][1]}</Text>
+          {this._getOrderStatus()}
         </View>
 
         <View style={{ marginBottom: 8 }}>

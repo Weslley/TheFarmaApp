@@ -9,6 +9,13 @@ export default EStyleSheet.create({
     width: '100%',
     marginBottom: 16,
   },
+  text: {
+    fontFamily: 'Roboto-Regular',
+    fontSize: 16,
+    color: 'rgba(0,0,0,0.87)',
+    letterSpacing: 0,
+    textAlign: 'left'
+  },
   label: {
     fontFamily: "Roboto-Regular",
     fontSize: 12,
@@ -19,7 +26,8 @@ export default EStyleSheet.create({
     width: '100%',
     fontFamily: "Roboto-Bold",
     fontSize: 16,
-    color: "#000000"
+    color: "#000000",
+    paddingBottom: 0,
   },
   inputError: {
     fontFamily: 'Roboto-Regular',
@@ -39,7 +47,7 @@ export default EStyleSheet.create({
     fontFamily: "Roboto-Bold",
     color: "$textColorPrimary",
     fontSize: 16,
-    paddingHorizontal: 0, 
+    paddingHorizontal: 0,
     paddingLeft: 0
   },
 });

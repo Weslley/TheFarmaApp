@@ -68,7 +68,7 @@ class ProposalDescription extends Component {
               <Text style={styles.TagText}>{"Estoque completo"}</Text>
             </View>,
             <View style={[styles.TagContainer, styles.TagContainerImcomplete]}>
-              <Text style={[styles.TagText, styles.TagTextImcomplete]}>{"Estoque imcompleto"}</Text>
+              <Text style={[styles.TagText, styles.TagTextImcomplete]}>{"Estoque incompleto"}</Text>
             </View>
           )}
           <Text style={styles.view}>{"VISUALIZAR"}</Text>

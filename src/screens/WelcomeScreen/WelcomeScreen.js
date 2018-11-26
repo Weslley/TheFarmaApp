@@ -167,8 +167,14 @@ class WelcomeScreen extends Component {
   }
 
   onSearch = (showCamera) => {
-    this.getLocation();
-    this.props.navigation.navigate({ key: 'search_medicine1', routeName: 'SearchMedicine', params: { showCamera } });
+    Permissions.request('location').then(response => {
+      if (response === 'authorized') {
+        this.getLocation();
+        this.props.navigation.navigate({ key: 'search_medicine1', routeName: 'SearchMedicine', params: { showCamera } });
+      } else {
+        this.alertLocation();
+      }
+    });
   };
 
   showCart() {

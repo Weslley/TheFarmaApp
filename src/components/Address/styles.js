@@ -21,10 +21,10 @@ export default EStyleSheet.create({
     color: "rgba(0,0,0,0.80)",
   },
   text: {
+    fontSize: 14,
     width: '100%',
     textAlign: 'left',
-    fontFamily: 'Roboto-Regular',
-    fontSize: 14,
-    color: 'rgba(0,0,0,0.80)'
+    color: 'rgba(0,0,0,0.80)',
+    fontFamily: 'Roboto-Light',
   }
 });
