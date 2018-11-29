@@ -36,7 +36,7 @@ export const getGeocode = function* (action) {
 
 export const getAddressByCep = function* (action) {
   try {
-    const response = yield call(axios.get, `http://viacep.com.br/ws/${action.params.cep}/json/`);
+    const response = yield call(axios.get, `https://viacep.com.br/ws/${action.params.cep}/json/`);
     yield put(responseSuccess(GET_ADDRESS_BY_CEP_SUCCESS, response.data));
   } catch (e) {
     yield put(responseError(GET_ADDRESS_BY_CEP_ERROR, e));

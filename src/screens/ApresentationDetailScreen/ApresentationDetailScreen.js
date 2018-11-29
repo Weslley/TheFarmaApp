@@ -25,6 +25,8 @@ import { TipoMedicamento } from "../../models/enums"
 
 import styles from "./styles";
 
+const imgDefault = require("../../assets/images/ic_default_medicine.png");
+
 class ApresentationDetailScreen extends Component {
   constructor(props) {
     super(props);
@@ -85,6 +87,17 @@ class ApresentationDetailScreen extends Component {
     } catch (error) {
       return 0;
     }
+  }
+
+  getPhoto() {
+    let apresentation = this.props.apresentation;
+    if (apresentation.imagem && apresentation.imagem !== null && apresentation.imagem !== {}) {
+      let imagem = apresentation.imagem
+      if (imagem.square_crop) {
+        return { uri: imagem.square_crop }
+      }
+    }
+    return imgDefault;
   }
 
   _addItemToCart(apresentation) {
@@ -179,11 +192,7 @@ class ApresentationDetailScreen extends Component {
         <ScrollView>
           <Header
             title={this.state.apresentation.produto.nome}
-            image={
-              this.state.apresentation && this.state.apresentation.imagem
-                ? { uri: this.state.apresentation.imagem }
-                : require("../../assets/images/ic_default_medicine.png")
-            }
+            image={this.getPhoto()}
             menuLeft={
               <MenuItem
                 icon="md-arrow-back"
@@ -280,7 +289,7 @@ function mapStateToProps(state) {
     uf: state.locations.uf,
     latitude: state.locations.latitude,
     longitude: state.locations.longitude,
-    
+
     client: state.clients.client,
     cartItems: state.carts.cartItems,
     order: state.orders.order,

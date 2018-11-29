@@ -20,18 +20,30 @@ class OrderAdapter extends Component {
     this.state = {};
   }
 
+  getPhoto() {
+    let apresentation = this.props.item.apresentacao;
+    if (apresentation.imagem && apresentation.imagem !== null && apresentation.imagem !== {}) {
+      let imagem = apresentation.imagem
+      if (imagem.square_crop) {
+        return (
+          <Image style={[styles.Image, { width: 88, height: 88 }]} source={{ uri: imagem.square_crop }} />
+        )
+      }
+    }
+    return (
+      <Image style={[styles.Image, { width: 88, height: 88 }]} source={imgDefault} />
+    )
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
 
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            {Components.renderIfElse(this.props.item.apresentacao.imagem,
-              <Thumbnail square size={40} source={{ uri: this.props.item.apresentacao.imagem }} />,
-              <Image style={{ width: 40, height: 40 }} source={imgDefault} />
-            )}
+            {this.getPhoto()}
 
-            <View style={{marginLeft: 16}}>
+            <View style={{ marginLeft: 16 }}>
               <Text style={[styles.text, { marginBottom: 4 }]}>{this.props.item.apresentacao.produto.nome}</Text>
               <Text style={styles.apresentation}>{this.props.item.apresentacao.nome}</Text>
             </View>

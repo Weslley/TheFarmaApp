@@ -27,7 +27,8 @@ export default EStyleSheet.create({
     fontFamily: "Roboto-Bold",
     fontSize: 16,
     color: "#000000",
-    paddingBottom: 0,
+    padding: 0,
+    margin: 0,
   },
   inputError: {
     fontFamily: 'Roboto-Regular',

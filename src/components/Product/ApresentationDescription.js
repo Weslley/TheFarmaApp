@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { View, TouchableOpacity, Image } from "react-native";
-import { Text, Thumbnail } from "native-base";
+import { View, TouchableOpacity, Image, Text } from "react-native";
 import { TextMask } from "react-native-masked-text";
 
 import { Icon } from "../../components/Icon";
@@ -16,56 +15,50 @@ class ApresentationDescription extends Component {
   }
 
   getPrice() {
-    let pmc = this.props.apresentation.pmc
+    let apresentation = this.props.apresentation;
+    let pmc = apresentation.pmc
     if (pmc && (pmc === "0, 00" || pmc === "0,00" || pmc === 0 || pmc === 0.0)) {
       return (
         <Text style={[styles.Price, { fontSize: 12, }]}>{"Preço indisponível"}</Text>
       )
     } else {
       return (
-        <TextMask style={styles.Price} value={this.props.apresentation.pmc} type={"money"} options={{}} />
+        <TextMask style={styles.Price} value={apresentation.pmc} type={"money"} options={{}} />
       )
     }
   }
 
+  getPhoto() {
+    let apresentation = this.props.apresentation;
+    if (apresentation.imagem && apresentation.imagem !== null && apresentation.imagem !== {}) {
+      let imagem = apresentation.imagem
+      if (imagem.square_crop) {
+        return (
+          <Image style={[styles.Image, { width: 88, height: 88 }]} source={{ uri: imagem.square_crop }} />
+        )
+      }
+    }
+    return (
+      <Image style={[styles.Image, { width: 88, height: 88 }]} source={imgDefault} />
+    )
+  }
+
   render() {
+    let apresentation = this.props.apresentation;
     return (
       <View style={styles.container}>
-        {Components.renderIfElse(
-          this.props.apresentation.imagem,
-          <TouchableOpacity
-            style={styles.ImageContainer}
-            onPress={this.props.onPress}
-          >
-            <Thumbnail
-              style={styles.Image}
-              square
-              size={88}
-              source={{ uri: this.props.apresentation.imagem }}
-            />
-          </TouchableOpacity>,
-          <TouchableOpacity
-            style={styles.ImageContainer}
-            onPress={this.props.onPress}
-          >
-            <Image
-              style={[styles.Image, { width: 88, height: 88 }]}
-              source={imgDefault}
-            />
-          </TouchableOpacity>
-        )}
+
+        <TouchableOpacity style={styles.ImageContainer} onPress={this.props.onPress} >
+          {this.getPhoto()}
+        </TouchableOpacity>
 
         <View style={styles.container1}>
           <TouchableOpacity onPress={this.props.onPress}>
-            <Text style={styles.ApresentationName}>
-              {this.props.apresentation.nome}
-            </Text>
+            <Text style={styles.ApresentationName}>{apresentation.nome}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={this.props.onPress}>
-            <Text style={styles.Maker} uppercase>
-              {this.props.apresentation.produto.fabricante}
-            </Text>
+            <Text style={styles.Maker} uppercase>{apresentation.produto.fabricante}</Text>
           </TouchableOpacity>
 
           <View style={styles.Footer}>
@@ -77,7 +70,7 @@ class ApresentationDescription extends Component {
                   <Icon name="minus" size={24} color={"#000"} style={styles.Icon} />
                 </TouchableOpacity>
                 <Text style={styles.Quantity}>
-                  {this.props.apresentation.quantidade || 0}
+                  {apresentation.quantidade || 0}
                 </Text>
                 <TouchableOpacity style={styles.Button} onPress={this.props.onPressPlus} >
                   <Icon name="plus" size={24} color={"#000"} style={styles.Icon} />
