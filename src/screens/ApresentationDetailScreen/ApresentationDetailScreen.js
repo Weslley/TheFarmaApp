@@ -90,7 +90,7 @@ class ApresentationDetailScreen extends Component {
   }
 
   getPhoto() {
-    let apresentation = this.props.apresentation;
+    let apresentation = this.state.apresentation;
     if (apresentation.imagem && apresentation.imagem !== null && apresentation.imagem !== {}) {
       let imagem = apresentation.imagem
       if (imagem.square_crop) {
