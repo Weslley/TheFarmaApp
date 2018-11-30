@@ -43,6 +43,9 @@ class MedicineApresentationScreen extends Component {
       quantidade: this.getApresentationQuantity(nextProps, apresentation)
     }));
     this.setState({ apresentations });
+    if (nextProps.nextPage !== null) {
+      setTimeout(() => { this.onEndReached(0) }, 500);
+    }
   };
 
   componentWillMount() {
@@ -169,9 +172,9 @@ class MedicineApresentationScreen extends Component {
   };
 
   render() {
+
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
-
         <Header
           title={this.props.selected.nome}
           style={{ backgroundColor: "#FFF" }}
@@ -187,7 +190,6 @@ class MedicineApresentationScreen extends Component {
             </View>
           }
         />
-
         {Components.renderIfElse(this.props.apresentations && this.props.apresentations.length === 0 && this.props.isLoading === true,
           <Loading />,
           <ScrollView style={{ paddingHorizontal: 24 }}
@@ -199,7 +201,6 @@ class MedicineApresentationScreen extends Component {
               }
             }}
           >
-
             <FlatList
               style={{ paddingBottom: 90 }}
               data={this.state.apresentations}
