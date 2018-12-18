@@ -22,8 +22,8 @@ import { GET_CITIES } from '../actions/cities';
 import { getDistricts } from '../services/saga/districts';
 import { GET_DISTRICTS } from '../actions/districts';
 //CLIENTS
-import { login, logout, register, updateClient, updateClientV2, getCurrentClient } from '../services/saga/clients';
-import { REQUEST_LOGIN, REGISTER_CLIENT, UPDATE_CLIENT, UPDATE_CLIENT_V2, GET_CURRENT_CLIENT, LOGOUT } from '../actions/clients';
+import { login, register, updateClient, updateClientV2, getCurrentClient, logout, setFcmToken } from '../services/saga/clients';
+import { REQUEST_LOGIN, REGISTER_CLIENT, UPDATE_CLIENT, UPDATE_CLIENT_V2, GET_CURRENT_CLIENT, LOGOUT, SET_FCM_TOKEN } from '../actions/clients';
 //ADDRESSES
 import { getAddresses, createAddress, updateAddress, removeAddress } from '../services/saga/addresses';
 import { LIST_ADDRESS, SAVE_ADDRESS, UPDATE_ADDRESS, REMOVE_ADDRESS } from '../actions/addresses';
@@ -62,6 +62,7 @@ const rootSaga = function* () {
   yield takeEvery(UPDATE_CLIENT_V2, updateClientV2);
   yield takeEvery(GET_CURRENT_CLIENT, getCurrentClient);
   yield takeEvery(LOGOUT, logout);
+  yield takeEvery(SET_FCM_TOKEN, setFcmToken);
 
   yield takeEvery(LIST_ADDRESS, getAddresses);
   yield takeEvery(SAVE_ADDRESS, createAddress);

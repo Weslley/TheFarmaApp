@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import { View, Text, Image, TouchableOpacity, Platform } from "react-native";
 
-import { Icon } from "../../components/Icon";
-import { TextWithLetterSpacing } from "../../components/Text";
-
 import { Components } from "../../helpers";
 import styles from "./styles";
 
@@ -30,11 +27,7 @@ class Header extends Component {
         </View>
 
         {Components.renderIf(this.props.image,
-          <Image
-            style={styles.image}
-            resizeMode="contain"
-            source={this.props.image}
-          />
+          <Image style={[styles.image]} resizeMode="contain" source={this.props.image} />
         )}
 
         <TouchableOpacity style={[styles.profileContainer, { alignItems: 'center', paddingTop: 8, }]} onPress={this.props.onPressProfile}>

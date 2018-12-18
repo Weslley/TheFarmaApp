@@ -69,6 +69,8 @@
 		F39A231876AE4C2C83570BBD /* RobotoCondensed-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FAE1B5BD21E7480990C226C3 /* RobotoCondensed-Italic.ttf */; };
 		F786803F2D2C478F8658ED96 /* rubicon-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C84C0C3D9A384D619A044B9D /* rubicon-icon-font.ttf */; };
 		FBBE54CB2EDC4649B7B8C091 /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 832816963D0C4C4ABF6A9362 /* Roboto-ThinItalic.ttf */; };
+		2C9D6703886B4AF9ADA7E9A5 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A58C30EC662420F93FC796F /* libRNFirebase.a */; };
+		B3BB6B67DBFF42408FB38D6A /* libRNFIRMessaging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A61A6AC5172406D9DBA3CA6 /* libRNFIRMessaging.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -482,6 +484,10 @@
 		F7B987B12A9841089B81CFD3 /* Roboto-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Italic.ttf"; path = "../src/assets/fonts/Roboto-Italic.ttf"; sourceTree = "<group>"; };
 		FAE1B5BD21E7480990C226C3 /* RobotoCondensed-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RobotoCondensed-Italic.ttf"; path = "../src/assets/fonts/RobotoCondensed-Italic.ttf"; sourceTree = "<group>"; };
 		FCC87DC537B940A283B7E0C4 /* ReactNativePermissions.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativePermissions.xcodeproj; path = "../node_modules/react-native-permissions/ios/ReactNativePermissions.xcodeproj"; sourceTree = "<group>"; };
+		AB0362DCA2BC48F6BA56C615 /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; name = "RNFirebase.xcodeproj"; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		5A58C30EC662420F93FC796F /* libRNFirebase.a */ = {isa = PBXFileReference; name = "libRNFirebase.a"; path = "libRNFirebase.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		0ED057E69A994007B7C21E74 /* RNFIRMessaging.xcodeproj */ = {isa = PBXFileReference; name = "RNFIRMessaging.xcodeproj"; path = "../node_modules/react-native-fcm/ios/RNFIRMessaging.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		4A61A6AC5172406D9DBA3CA6 /* libRNFIRMessaging.a */ = {isa = PBXFileReference; name = "libRNFIRMessaging.a"; path = "libRNFIRMessaging.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -514,6 +520,8 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				91D98EC65CDC4B8AB4DC034D /* libc++.tbd in Frameworks */,
 				D65AE87167BB41FD808B19BF /* libz.tbd in Frameworks */,
+				2C9D6703886B4AF9ADA7E9A5 /* libRNFirebase.a in Frameworks */,
+				B3BB6B67DBFF42408FB38D6A /* libRNFIRMessaging.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -674,6 +682,8 @@
 				8842C5E1DA72432CBFF056D9 /* RNCamera.xcodeproj */,
 				E746F1490224405D8F795222 /* RNCardIO.xcodeproj */,
 				522470CD350541A1B923EEF0 /* RNDeviceInfo.xcodeproj */,
+				AB0362DCA2BC48F6BA56C615 /* RNFirebase.xcodeproj */,
+				0ED057E69A994007B7C21E74 /* RNFIRMessaging.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1427,11 +1437,15 @@
 					"$(SRCROOT)/../node_modules/react-native-youtube/**",
 					"$(SRCROOT)/../node_modules/react-native-awesome-card-io/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-device-info/ios/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
+					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 				);
 				INFOPLIST_FILE = thefarma/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/thefarma\"",
+					"\"$(SRCROOT)/thefarma\"",
 					"\"$(SRCROOT)/thefarma\"",
 					"\"$(SRCROOT)/thefarma\"",
 				);
@@ -1472,11 +1486,15 @@
 					"$(SRCROOT)/../node_modules/react-native-youtube/**",
 					"$(SRCROOT)/../node_modules/react-native-awesome-card-io/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-device-info/ios/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
+					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 				);
 				INFOPLIST_FILE = thefarma/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/thefarma\"",
+					"\"$(SRCROOT)/thefarma\"",
 					"\"$(SRCROOT)/thefarma\"",
 					"\"$(SRCROOT)/thefarma\"",
 				);

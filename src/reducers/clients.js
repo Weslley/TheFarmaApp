@@ -5,7 +5,8 @@ import {
   REQUEST_LOGIN, REQUEST_LOGIN_SUCCESS, REQUEST_LOGIN_ERROR, CLEAR_ERROR,
   REGISTER_CLIENT, REGISTER_CLIENT_ERROR, REGISTER_CLIENT_SUCCESS,
   UPDATE_CLIENT, UPDATE_CLIENT_ERROR, UPDATE_CLIENT_SUCCESS, LOGOUT,
-  GET_CURRENT_CLIENT, GET_CURRENT_CLIENT_ERROR, GET_CURRENT_CLIENT_SUCCESS
+  GET_CURRENT_CLIENT, GET_CURRENT_CLIENT_ERROR, GET_CURRENT_CLIENT_SUCCESS,
+  SET_FCM_TOKEN, SET_FCM_TOKEN_ERROR, SET_FCM_TOKEN_SUCCESS
 } from '../actions/clients';
 
 const INITIAL_STATE = {
@@ -18,6 +19,12 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
+
+    case SET_FCM_TOKEN:
+    case SET_FCM_TOKEN_ERROR:
+    case SET_FCM_TOKEN_SUCCESS:
+      return { ...state }
+
     case SET_PHOTO:
       return { ...state, photo: action.params.path, photo64: action.params.base64, success: false };
 

@@ -14,6 +14,12 @@ import {
 export const getApresentations = function* (action) {
     try {
         const response = yield call(axios.get, `${SERVER_API}/apresentacoes/${action.uf}?nome=${action.name}`);
+        let results = response.data.results
+        results.map((x) => {
+          x.quantidade_rec = x.quantidade;
+          x.quantidade = 0;
+        })
+        response.data.results = results
         yield put(responseSuccess(GET_APRESENTATIONS_SUCCESS, response.data));
     } catch (e) {
         yield put(responseError(GET_APRESENTATIONS_ERROR, e));

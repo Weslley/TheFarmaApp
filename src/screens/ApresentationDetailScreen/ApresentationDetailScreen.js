@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StatusBar, View, ScrollView, Image, TouchableOpacity, FlatList, ActivityIndicator } from "react-native";
+import { PixelRatio, StatusBar, View, ScrollView, Image, TouchableOpacity, FlatList, ActivityIndicator } from "react-native";
 import { Text } from "native-base";
 
 import { connect } from "react-redux";
@@ -52,7 +52,7 @@ class ApresentationDetailScreen extends Component {
 
   componentWillMount() {
     let apresentation = this.props.navigation.state.params.apresentation
-    apresentation.quantidade_rec = apresentation.quantidade
+    //apresentation.quantidade_rec = apresentation.quantidade
     this.setState({ apresentation });
   }
 
@@ -257,7 +257,7 @@ class ApresentationDetailScreen extends Component {
             <Text style={styles.tableLabel} uppercase>
               {"Forma Farmacêutica"}
             </Text>
-            <Text style={styles.tableValue}>{this.state.apresentation.classe_terapeutica}</Text>
+            <Text style={styles.tableValue}>{this.state.apresentation.forma_farmaceutica}</Text>
           </View>
 
           <View style={[styles.table, { backgroundColor: "#FAFAFA", marginBottom: 90 }]}>

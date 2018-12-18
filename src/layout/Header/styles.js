@@ -26,8 +26,8 @@ export default EStyleSheet.create({
     image: {
         marginTop: -40,
         alignSelf: 'center',
-        height: 144,
-        width: 144,
+        height: 200,
+        width: 200,
     },
     profileContainer: {
         flexDirection: "row",

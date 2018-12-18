@@ -37,12 +37,9 @@ export default (state = INITIAL_STATE, action) => {
       list_zerados = uniqBy(union(list_zerados, state.apresentations_zeroed), "id");
 
       list_nao_zerados = action.data.results.filter((x) => parseFloat(x.pmc) !== 0)
-      //list = uniqBy(union(list_nao_zerados, state.apresentations), "id");
       list = concat(state.apresentations, list_nao_zerados)
-      //list = orderBy(list, ['pmc'], ['asc'])
       if (action.data.next === null) {
         list = concat(list, list_zerados)
-        //list = uniqBy(union(list, state.apresentations_zeroed), "id");
       }
 
       return {

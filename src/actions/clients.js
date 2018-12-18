@@ -30,6 +30,10 @@ export const SET_PHOTO = "SET_PHOTO";
 export const SET_PHOTO_ERROR = "SET_PHOTO_ERROR";
 export const SET_PHOTO_SUCCESS = "SET_PHOTO_SUCCESS";
 
+export const SET_FCM_TOKEN = "SET_FCM_TOKEN";
+export const SET_FCM_TOKEN_ERROR = "SET_FCM_TOKEN_ERROR";
+export const SET_FCM_TOKEN_SUCCESS = "SET_FCM_TOKEN_SUCCESS";
+
 export const getCurrentClient = () => ({
   type: GET_CURRENT_CLIENT
 });
@@ -56,6 +60,10 @@ export const sendSms = params => ({
 
 export const setPhoto = params => ({
   type: SET_PHOTO, params
+});
+
+export const setFcmToken = params => ({
+  type: SET_FCM_TOKEN, params
 });
 
 export const logout = () => ({

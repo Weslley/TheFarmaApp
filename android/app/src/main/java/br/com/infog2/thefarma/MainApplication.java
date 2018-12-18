@@ -3,6 +3,12 @@ package br.com.infog2.thefarma;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+
+//import com.evollu.react.fcm.FIRMessagingPackage;
+import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;                       
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
+
 import org.reactnative.camera.RNCameraPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import org.reactnative.camera.RNCameraPackage;
@@ -41,9 +47,12 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
-       //mCallbackManager = new CallbackManager.Factory().create();
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
+            new MainReactPackage(),
+            //new FIRMessagingPackage(),
+            new RNFirebasePackage(),
+            new RNFirebaseMessagingPackage(),
+            new RNFirebaseNotificationsPackage(),
             new RNCameraPackage(),
             new RNDeviceInfo(),
             new RNCardIOPackage(),

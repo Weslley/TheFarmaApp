@@ -34,7 +34,7 @@ export default EStyleSheet.create({
   },
   Price: {
     fontFamily: "Roboto-Medium",
-    fontSize: 18,
+    fontSize: 20,
     color: "#00C7BD"
   },
   Footer: {
