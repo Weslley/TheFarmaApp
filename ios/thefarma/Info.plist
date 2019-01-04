@@ -31,12 +31,14 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>2</string>
+  <key>FirebaseAppDelegateProxyEnabled</key>
+  <string>true</string>
+  <key>FirebaseScreenReportingEnable</key>
+  <string>NO</string>
 	<key>FacebookAppID</key>
 	<string>1131794176870212</string>
 	<key>FacebookDisplayName</key>
 	<string>TheFarma</string>
-	<key>FirebaseAppDelegateProxyEnabled</key>
-	<string>true</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
