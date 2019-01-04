@@ -35,6 +35,8 @@
 	<string>1131794176870212</string>
 	<key>FacebookDisplayName</key>
 	<string>TheFarma</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<string>true</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -112,6 +114,10 @@
 		<string>RobotoCondensed-LightItalic.ttf</string>
 		<string>RobotoCondensed-Regular.ttf</string>
 		<string>TheFarma.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
