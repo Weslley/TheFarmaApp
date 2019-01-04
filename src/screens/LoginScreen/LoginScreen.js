@@ -16,6 +16,7 @@ import styles from "./styles";
 
 const FBSDK = require("react-native-fbsdk");
 const { LoginButton, LoginManager, AccessToken, GraphRequest, GraphRequestManager } = FBSDK;
+//import { LoginManager, AccessToken, GraphRequest, GraphRequestManager } from "react-native-fbsdk";
 
 class LoginScreen extends Component {
     constructor(props) {

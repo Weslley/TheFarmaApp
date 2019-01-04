@@ -66,6 +66,7 @@
 		D65AE87167BB41FD808B19BF /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = BEFDC86662884B1AA586F032 /* libz.tbd */; };
 		DA9C4A7CF9B144A3BC08A6CC /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3EA0863774FB47F98EC56059 /* Roboto-Regular.ttf */; };
 		E5274CCC21DFF55E00B91A1F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5274CCB21DFF55E00B91A1F /* GoogleService-Info.plist */; };
+		E5274D5E21E001C300B91A1F /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A0DD581220C748CA00C78591 /* libRCTFBSDK.a */; };
 		E567EAF821DFD84500AA24E4 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E567EAF721DFD74100AA24E4 /* libRNFirebase.a */; };
 		E57E583221CAE87D00A72E47 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E57E583121CAE87D00A72E47 /* UserNotifications.framework */; };
 		E5B954BB5A834CCB935EDBE1 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D89E5FC1CABE445DBBB9BBC7 /* Entypo.ttf */; };
@@ -489,8 +490,8 @@
 		D89E5FC1CABE445DBBB9BBC7 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/native-base/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		E0A543B0799847C280A0F259 /* Roboto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto.ttf; path = "../node_modules/native-base/Fonts/Roboto.ttf"; sourceTree = "<group>"; };
 		E27E9B31ADED4C079CB02D78 /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
-		E5274C9921DFEB8E00B91A1F /* thefarma.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = thefarma.app; path = "/Users/weslley/projects/thefarma/ios/build/Debug-iphoneos/thefarma.app"; sourceTree = "<absolute>"; };
 		E5274CCB21DFF55E00B91A1F /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E5274CE421DFFE9F00B91A1F /* thefarma.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = thefarma.app; path = "/Users/weslley/projects/thefarma/ios/build/Debug-iphoneos/thefarma.app"; sourceTree = "<absolute>"; };
 		E567EAF221DFD74100AA24E4 /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
 		E57E583121CAE87D00A72E47 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		E5CDF55721DFE1F500D32046 /* thefarma.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = thefarma.entitlements; path = thefarma/thefarma.entitlements; sourceTree = "<group>"; };
@@ -507,6 +508,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5274D5E21E001C300B91A1F /* libRCTFBSDK.a in Frameworks */,
 				E567EAF821DFD84500AA24E4 /* libRNFirebase.a in Frameworks */,
 				E57E583221CAE87D00A72E47 /* UserNotifications.framework in Frameworks */,
 				D568270621567C0D007F926E /* libRealmReact.a in Frameworks */,
@@ -887,7 +889,7 @@
 			);
 			name = thefarma;
 			productName = "Hello World";
-			productReference = E5274C9921DFEB8E00B91A1F /* thefarma.app */;
+			productReference = E5274CE421DFFE9F00B91A1F /* thefarma.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
