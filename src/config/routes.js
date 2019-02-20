@@ -1,12 +1,16 @@
-import { StackNavigator, TabNavigator } from "react-navigation";
-import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
+import React from 'react';
+import { Animated, Easing } from 'react-native';
+
+import { createStackNavigator, createBottomTabNavigator, createAppContainer } from "react-navigation";
 
 import { WelcomeScreen } from "../screens/WelcomeScreen";
+import { ProfileScreen } from "../screens/ProfileScreen";
+import { NotificationsScreen } from "../screens/NotificationsScreen";
+
 import { SearchMedicineScreen } from "../screens/SearchMedicineScreen";
 import { MedicineApresentationsScreen } from "../screens/MedicineApresentationsScreen";
 import { ApresentationDetailScreen } from "../screens/ApresentationDetailScreen";
 import { CartScreen } from "../screens/CartScreen";
-import { ProfileScreen } from "../screens/ProfileScreen";
 import { LoginScreen } from "../screens/LoginScreen";
 import { RegisterScreen, NameScreen, EmailScreen, PasswordScreen, PhoneScreen, VerificationCodeScreen } from "../screens/RegisterScreen";
 import { ListProposalsScreen } from "../screens/ListProposalsScreen";
@@ -30,40 +34,71 @@ import { ProposalNotFoundScreen } from "../screens/ProposalNotFoundScreen";
 
 import { Icon } from "../components/Icon";
 
-export const HomeNavigator = StackNavigator({
-  Welcome: {
-    screen: WelcomeScreen,
-    navigationOptions: {
-      tabBarIcon: ({ tintColor }) => (
-        <Icon
-          name="home-o"
-          style={[{ width: 24, height: 24 }, { tintColor }]} />
-      ),
-      tabBarLabel: "home"
-    }
-  }
-});
+const transitionConfig = () => {
+  return {
+    transitionSpec: {
+      duration: 750,
+      easing: Easing.out(Easing.poly(4)),
+      timing: Animated.timing,
+      useNativeDriver: true,
+    },
+    screenInterpolator: sceneProps => {
+      const { layout, position, scene } = sceneProps
 
-export const TabsNavigator = TabNavigator(
+      const thisSceneIndex = scene.index
+      const width = layout.initWidth
+
+      const translateX = position.interpolate({
+        inputRange: [thisSceneIndex - 1, thisSceneIndex],
+        outputRange: [width, 0],
+      })
+
+      return { transform: [{ translateX }] }
+    },
+  }
+}
+
+export const TabsNavigator = createBottomTabNavigator(
   {
     Home: {
-      screen: HomeNavigator
+      screen: WelcomeScreen,
+      navigationOptions: {
+        header: null,
+        tabBarIcon: ({ focused, tintColor }) => (
+          <Icon name="home" size={24} color={tintColor} />
+        )
+      }
+    },
+    Notifications: {
+      screen: NotificationsScreen,
+      navigationOptions: {
+        header: null,
+        tabBarIcon: ({ focused, tintColor }) => (
+          <Icon name="notification" size={24} color={tintColor} />
+        )
+      }
     },
     Profile: {
-      screen: ProfileScreen
-    }
+      screen: ProfileScreen,
+      navigationOptions: {
+        header: null,
+        tabBarIcon: ({ focused, tintColor }) => (
+          <Icon name="profile" size={24} color={tintColor} />
+        )
+      }
+    },
   },
   {
     swipeEnabled: false,
     animationEnabled: true,
     tabBarPosition: "bottom",
     tabBarOptions: {
-      showLabel: true,
+      showLabel: false,
       upperCaseLabel: false,
       showIcon: true,
-      activeTintColor: "#00C7BD",
+      activeTintColor: "#000000",
       activeBackgroundColor: "#FFFFFF",
-      inactiveTintColor: "#000000",
+      inactiveTintColor: "#CCCCCC",
       inactiveBackgroundColor: "#FFFFFF",
       indicatorStyle: {
         backgroundColor: 'transparent',
@@ -80,16 +115,20 @@ export const TabsNavigator = TabNavigator(
   }
 );
 
-export const MainNavigator = StackNavigator(
+export const MainNavigator = createStackNavigator(
   {
-    //ListProposals: { screen: ListProposalsScreen },
+    //Welcome: { screen: WelcomeScreen },
+    //Login: { screen: LoginScreen },
 
-    Welcome: { screen: WelcomeScreen },
-    Profile: { screen: ProfileScreen },
-    TabsNavigator: {
+    Tabs: {
       screen: TabsNavigator,
       navigationOptions: { header: null }
     },
+
+    Welcome: { screen: WelcomeScreen },
+    Profile: { screen: ProfileScreen },
+    Notifications: { screen: NotificationsScreen },
+
     SearchMedicine: { screen: SearchMedicineScreen },
     MedicineApresentations: { screen: MedicineApresentationsScreen },
     ApresentationDetail: { screen: ApresentationDetailScreen },
@@ -121,10 +160,8 @@ export const MainNavigator = StackNavigator(
   },
   {
     mode: "modal",
-    transitionConfig: () => ({
-      screenInterpolator: sceneProps => {
-        return CardStackStyleInterpolator.forHorizontal(sceneProps);
-      }
-    }),
+    transitionConfig
   }
 );
+
+export const MainContainer = createAppContainer(MainNavigator);

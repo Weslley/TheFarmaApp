@@ -147,7 +147,7 @@ class RegisterScreen extends Component {
                     <Image
                         resizeMode={"cover"}
                         style={styles.background}
-                        source={require("../../assets/images/background-register.png")} />
+                        source={require("../../assets/images/background-register.jpg")} />
 
                     <Header
                         style={{ paddingHorizontal: 0, paddingTop: 24, backgroundColor: "transparent" }}

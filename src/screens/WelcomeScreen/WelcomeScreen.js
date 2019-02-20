@@ -1,26 +1,18 @@
 import React, { Component } from "react";
-import { NavigationActions } from 'react-navigation';
-import { AsyncStorage, StatusBar, KeyboardAvoidingView, ScrollView, View, TouchableOpacity, Text, Image, Alert, ActivityIndicator, FlatList, Platform } from "react-native";
+import { AsyncStorage, StatusBar, KeyboardAvoidingView, View, TouchableOpacity, Text, Image, Alert, ActivityIndicator, Platform } from "react-native";
 import firebase from 'react-native-firebase';
-//import FCM, { FCMEvent, NotificationActionType } from "react-native-fcm";
 
 import Snackbar from 'react-native-snackbar';
 import Permissions from 'react-native-permissions';
 
 import { connect } from "react-redux";
 import { getCurrentClient, setFcmToken } from "../../actions/clients"
-import { getNotifications, getNotificationsNextPage } from "../../actions/notifications"
+import { getNotifications } from "../../actions/notifications"
 import { updateLocation, getGeocodeAddress } from "../../actions/locations"
 
-import { Header } from "../../layout/Header";
-import { Container } from "../../layout/Container";
-import { ShoppingBagIcon } from "../../layout/ShoppingBagIcon";
-
 import { Icon } from "../../components/Icon";
-import { Loading } from "../../components/Loading"
 import { NotificationItem } from "../../components/NotificationItem";
 
-import { Components } from "../../helpers";
 import styles from "./styles";
 
 class WelcomeScreen extends Component {
@@ -40,16 +32,6 @@ class WelcomeScreen extends Component {
 
   componentWillReceiveProps = nextProps => {
     try {
-
-      if (this.props.client) {
-        if (!this.props.client.nome && nextProps.client && nextProps.client.nome === '') {
-          const resetAction = NavigationActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ key: 'name1', routeName: 'Name', params: {} })],
-          });
-          this.props.navigation.dispatch(resetAction);
-        }
-      }
 
       if (nextProps && nextProps.error) {
         if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
@@ -143,11 +125,9 @@ class WelcomeScreen extends Component {
 
   async getToken() {
     let fcmToken = await AsyncStorage.getItem('fcmToken', null);
-    console.log(fcmToken);
     if (!fcmToken) {
       fcmToken = await firebase.messaging().getToken();
       if (fcmToken) {
-        console.log(fcmToken);
         await AsyncStorage.setItem('fcmToken', fcmToken);
       }
     }
@@ -221,15 +201,16 @@ class WelcomeScreen extends Component {
 
   /** Private functions */
   getTitle() {
-    let msg = "Bom dia"
+    let msg = "Bem vindo."
     let now = new Date().getHours();
     if (now >= 6 && now < 12) { msg = `Bom dia`; }
     if (now >= 12 && now < 19) { msg = `Boa tarde`; }
     if (now >= 19 || now < 5) { msg = `Boa noite`; }
 
-    let clientName = this.props.client ? this.props.client.nome : "";
-    clientName = clientName.split(" ")[0]
-    if (clientName) msg = msg + `, ${clientName}`
+    let client = this.props.client;
+    let name = client ? client.nome : "";
+    name = name.split(" ")[0]
+    if (name) msg = `Oi, ${name}`
     return msg;
   }
 
@@ -266,11 +247,11 @@ class WelcomeScreen extends Component {
     Permissions.request('location').then(response => {
       if (response === 'authorized') {
         this.getLocation();
-        this.props.navigation.navigate({ key: 'search_medicine1', routeName: 'SearchMedicine', params: { showCamera } });
       } else {
         this.alertLocation();
       }
     });
+    this.props.navigation.navigate('SearchMedicine', { showCamera });
   };
 
   showCart() {
@@ -282,11 +263,11 @@ class WelcomeScreen extends Component {
   }
 
   getPhoto() {
-    if (this.props.client && this.props.client.foto) {
-      return { uri: this.props.client.foto }
-    } else {
-      return require("../../assets/images/avatar.png");
+    let client = this.props.client;
+    if (client && client.foto) {
+      return { uri: client.foto }
     }
+    return null;
   }
 
   onEndReached = ({ distanceFromEnd }) => {
@@ -307,72 +288,42 @@ class WelcomeScreen extends Component {
     );
   };
 
+  getBackgroundScreen() {
+    let index = Math.floor(Math.random() * 3) + 1
+    switch (index) {
+      case 1:
+        return require("../../assets/images/bg1.jpg");
+      case 2:
+        return require("../../assets/images/bg2.jpg");
+      case 3:
+        return require("../../assets/images/bg3.jpg");
+      default:
+        return require("../../assets/images/bg1.jpg");
+    }
+  }
+
   render() {
     return (
       <KeyboardAvoidingView style={{ flex: 1 }}>
 
-        {Components.renderIf(this.props.notifications && this.props.notifications.length === 0,
-          <Image
-            resizeMode={"cover"}
-            style={styles.background}
-            source={require("../../assets/images/background-home.png")} />
-        )}
+        <Image
+          resizeMode={"cover"}
+          style={styles.background}
+          source={this.getBackgroundScreen()} />
 
-        <Header
-          style={{ paddingHorizontal: 24, backgroundColor: "transparent" }}
-          title={this.getTitle()}
-          menuLeft={
-            <View style={{ paddingLeft: 24, }}>
-              <Image source={require('../../assets/images/logo.png')} style={{ width: 50, height: 50 }} />
+        <View style={{ paddingHorizontal: 22, marginBottom: 8, position: "absolute", left: 0, right: 0, top: 200, zIndex: 1000 }}>
+          <Text style={styles.title}>{this.getTitle()}</Text>
+          <Text style={styles.subtitle}>{"Deseja algum medicamento?"}</Text>
+          <TouchableOpacity style={[styles.searchBar, { justifyContent: 'space-between' }]} onPress={() => { this.onSearch(false) }}>
+            <View style={{ flexDirection: 'row' }}>
+              <Icon name="search" size={24} color={"#FFF"} style={[{ marginRight: 12 }]} />
+              <Text style={[styles.subtitle, Platform.OS === "ios" ? { fontSize: 12 } : {}]}>Nome do medicamento</Text>
             </View>
-          }
-          menuRight={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <TouchableOpacity onPress={() => { this.showMenuScreen() }} style={{ padding: 12, }}>
-                <View style={styles.avatarContainer}>
-                  {Components.renderIfElse(this.props.client && this.props.client.foto !== null,
-                    <Image style={styles.avatar} resizeMode="contain" source={this.getPhoto()} />,
-                    <Icon name="md-person" color={"#000"} size={16} style={{ width: 16, height: 16, textAlign: 'center' }} />
-                  )}
-                </View>
-              </TouchableOpacity>
-              <View style={{ paddingRight: 12 }}>
-                <ShoppingBagIcon value={this.props.cartItems.length} onPress={() => { this.showCart() }} />
-              </View>
-            </View>
-          }
-        />
-
-        <View style={{ paddingHorizontal: 22, marginBottom: 8, }}>
-          <TouchableOpacity style={styles.searchBar} onPress={() => { this.onSearch(false) }}>
-            <Image source={require("../../assets/images/ic_search.png")} style={[styles.icon, { marginRight: 12 }]} />
-            <Text style={[styles.text, Platform.OS === "ios" ? { fontSize: 12 } : {}]}>Qual medicamento você deseja?</Text>
             <TouchableOpacity style={{ alignSelf: 'flex-end', }} onPress={() => { this.onSearch(true) }}>
               <Icon name="barcode" size={24} color={"#000"} style={styles.icon} />
             </TouchableOpacity>
           </TouchableOpacity>
         </View>
-
-        {Components.renderIfElse(this.props.notifications && this.props.notifications.length === 0 && this.props.loading === true,
-          <Loading />,
-          <ScrollView style={{ paddingHorizontal: 24 }}
-            onScroll={(e) => {
-              let paddingToBottom = 0;
-              paddingToBottom += e.nativeEvent.layoutMeasurement.height;
-              if (e.nativeEvent.contentOffset.y.toFixed(1) === (e.nativeEvent.contentSize.height - paddingToBottom).toFixed(1)) {
-                this.onEndReached(0)
-              }
-            }}
-          >
-            <FlatList
-              data={this.props.notifications}
-              keyExtractor={(item, index) => item.id.toString()}
-              renderItem={this._renderItem}
-              ListFooterComponent={this.renderFooter()}
-            />
-
-          </ScrollView>
-        )}
 
       </KeyboardAvoidingView>
     );

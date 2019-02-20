@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ScrollView, KeyboardAvoidingView, Image } from "react-native";
+import { NavigationEvents } from 'react-navigation';
 import { Container } from "native-base";
 
 import { connect } from "react-redux";
@@ -8,7 +8,6 @@ import { MenuScreen } from "../MenuScreen";
 import { LoginScreen } from "../LoginScreen";
 
 import { Components } from "../../helpers";
-
 import styles from "./styles";
 
 class ProfileScreen extends Component {
@@ -20,9 +19,12 @@ class ProfileScreen extends Component {
   }
 
   static navigationOptions = ({ navigation }) => {
+    console.log(navigation);
+    console.log(this.props);
     return { header: null }
   };
 
+  /* 
   componentWillReceiveProps = nextProps => {
     try {
       if (nextProps && nextProps.error) {
@@ -60,6 +62,7 @@ class ProfileScreen extends Component {
       console.log(e);
     }
   }
+  */
 
   componentWillMount() {
     let params = this.props.navigation.state.params;
@@ -67,16 +70,34 @@ class ProfileScreen extends Component {
     this.setState({ actionBack })
   }
 
-  componentDidMount() {}
+  componentDidMount() { }
 
   /** Private functions */
   onBack() {
     this.props.navigation.goBack(null);
   }
 
+  showLogin() {
+    let client = this.props.client;
+    if (!client) {
+      this.props.navigation.navigate('Login')
+    }
+  }
+
+  showHome() {
+    let client = this.props.client;
+    if (client) {
+      this.props.navigation.navigate('Home')
+    }
+  }
+
   render() {
+    let client = this.props.client;
     return (
       <Container style={{ backgroundColor: "#FFFFFF" }}>
+        <NavigationEvents
+          onWillFocus={payload => this.showLogin()}
+        />
         {Components.renderIfElse(this.props.client,
           <MenuScreen navigation={this.props.navigation} />,
           <LoginScreen navigation={this.props.navigation} />
@@ -93,3 +114,8 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(ProfileScreen);
+/*
+  onDidFocus={payload => console.log('did focus', payload)}
+  onWillBlur={payload => console.log('will blur', payload)}
+  onDidBlur={payload => console.log('did blur', payload)}
+*/

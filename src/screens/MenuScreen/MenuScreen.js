@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { View, ScrollView, Linking, TouchableOpacity, Platform } from "react-native";
-import { Container, Button, Text, Icon } from "native-base";
+import { Container, Button, Text } from "native-base";
 import Snackbar from 'react-native-snackbar';
 
 import { connect } from "react-redux";
 
 import { logout } from "../../actions/clients";
 
+import { Icon } from "../../components/Icon";
 import { Header } from "../../layout/Header";
 import { MenuItem } from "../../components/MenuItem";
 import { ProfileMenuItem } from "../../components/ProfileMenuItem";
@@ -56,10 +57,10 @@ class MenuScreen extends Component {
     this.props.navigation.navigate({ key: 'PerfilEdit', routeName: 'PerfilEdit', params: {} });
   }
 
-  getVersion(){
-    if(Platform.OS === 'ios'){
+  getVersion() {
+    if (Platform.OS === 'ios') {
       return `Versão 1.0.0`;
-    }else{
+    } else {
       return `Versão ${DeviceInfo.getVersion()}`;
     }
   }
@@ -95,18 +96,18 @@ class MenuScreen extends Component {
             this.props.navigation.navigate({ key: 'list_credit1', routeName: 'ListCreditCards', params: {} });
           }} />
 
-          <ProfileMenuItem icon="chat" text={"Dúvidas e Reclamações"} onPress={() => { this.openSupport() }} />
+          <ProfileMenuItem icon="chat" text={"Suporte TheFarma"} onPress={() => { this.openSupport() }} />
         </ScrollView>
 
-        <View style={{ paddingHorizontal: 24, }}>
-          <TouchableOpacity style={{ marginBottom: 16, }} onPress={() => { this.showVersionScreen() }}>
-            <Text style={styles.version}>{this.getVersion()}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 24, marginBottom: 40, }}>
+          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', }} onPress={() => { this.logout() }}>
+            <Icon name="logout" size={24} color={"#000"} style={{ marginRight: 16 }} />
+            <Text style={styles.buttonText} uppercase={false}>{"Deslogar"}</Text>
           </TouchableOpacity>
 
-          <Button style={[styles.button, { borderWidth: 2, borderRadius: 0, borderColor: '#000', }]} bordered dark onPress={() => this.logout()}>
-            <Text style={styles.buttonText} uppercase={false}>{"Sair"}</Text>
-            <Icon name="md-exit" style={styles.buttonIcon} />
-          </Button>
+          <TouchableOpacity style={{}} onPress={() => { this.showVersionScreen() }}>
+            <Text style={styles.version}>{this.getVersion()}</Text>
+          </TouchableOpacity>
         </View>
 
       </Container>

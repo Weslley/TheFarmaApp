@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { NavigationActions } from 'react-navigation'
+import { NavigationActions, StackActions } from 'react-navigation';
 import { Alert, View, ScrollView, TouchableOpacity, FlatList, BackHandler } from "react-native";
 import { Container, Text } from "native-base";
 import LinearGradient from "react-native-linear-gradient";

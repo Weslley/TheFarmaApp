@@ -109,7 +109,7 @@ class ApresentationDetailScreen extends Component {
   }
 
   _showGenerics(generic) {
-    this.props.navigation.navigate({ routeName: 'ApresentationDetail', params: { apresentation: generic } });
+    this.props.navigation.navigate({ key: `ApresentationDetail${generic.id}`, routeName: 'ApresentationDetail', params: { apresentation: generic } });
   }
 
   _showDeliveryDialog() { this.setState({ showDeliveryDialog: true }); }

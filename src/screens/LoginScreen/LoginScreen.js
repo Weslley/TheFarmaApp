@@ -1,188 +1,169 @@
 import React, { Component } from "react";
-import { KeyboardAvoidingView, ScrollView, View, Image, TextInput } from "react-native";
-import { Container, Text, Button } from "native-base";
+import { KeyboardAvoidingView, View, Image, Linking, TouchableOpacity } from "react-native";
+import { Text, Button } from "native-base";
 import Snackbar from 'react-native-snackbar';
 
 import { connect } from "react-redux";
 
-import { login, register, clearError } from "../../actions/clients"
-
-import { Header } from "../../layout/Header"
-import { MenuItem } from "../../components/MenuItem"
-import { Icon } from "../../components/Icon"
-
-import { Components } from "../../helpers";
 import styles from "./styles";
 
-const FBSDK = require("react-native-fbsdk");
-const { LoginButton, LoginManager, AccessToken, GraphRequest, GraphRequestManager } = FBSDK;
-
 class LoginScreen extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            email: "",
-            password: "",
-            facebook_id: null,
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      password: "",
+      facebook_id: null,
 
-            emailError: null,
-            passwordError: null,
-            facebook_user: null,
-            actionBack: null,
-        };
-    }
-
-    static navigationOptions = ({ navigation }) => {
-        return { header: null };
+      emailError: null,
+      passwordError: null,
+      facebook_user: null,
+      actionBack: null,
     };
+  }
 
-    componentWillReceiveProps = nextProps => {
-        try {
-            if (nextProps && nextProps.error) {
-                if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
-                    if (nextProps.error.response.data.email) {
-                        this.setState({ emailError: nextProps.error.response.data.email[0] })
-                    }
+  static navigationOptions = ({ navigation }) => {
+    return { header: null, tabBarVisible: false };
+  };
 
-                    if (nextProps.error.response.data.facebook_id) {
-                        if (this.state.facebook_user) {
-                            let params = { login_type: 1, facebook_user: this.state.facebook_user }
-                            this.props.navigation.navigate({ key: 'email1', routeName: 'Email', params });
-                        }
-                    }
+  componentWillReceiveProps = nextProps => {
+    try {
+      if (nextProps && nextProps.error) {
+        if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
+          if (nextProps.error.response.data.email) {
+            this.setState({ emailError: nextProps.error.response.data.email[0] })
+          }
 
-                    if (nextProps.error.response.data.non_field_errors) {
-                        Snackbar.show({ title: nextProps.error.response.data.non_field_errors[0], duration: Snackbar.LENGTH_SHORT, });
-                    }
-
-                    if (nextProps.error.response.data.detail) {
-                        Snackbar.show({ title: nextProps.error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
-                    }
-                }
-
-                if (nextProps.error.message && nextProps.error.message === 'Network Error') {
-                    this.setState({ showNetworkError: true });
-                }
+          if (nextProps.error.response.data.facebook_id) {
+            if (this.state.facebook_user) {
+              let params = { login_type: 1, facebook_user: this.state.facebook_user }
+              this.props.navigation.navigate({ key: 'email1', routeName: 'Email', params });
             }
+          }
 
-            if (nextProps && nextProps.client) {
-                this.onBack()
-            }
-        } catch (e) {
-            console.log(e);
+          if (nextProps.error.response.data.non_field_errors) {
+            Snackbar.show({ title: nextProps.error.response.data.non_field_errors[0], duration: Snackbar.LENGTH_SHORT, });
+          }
+
+          if (nextProps.error.response.data.detail) {
+            Snackbar.show({ title: nextProps.error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
+          }
         }
+
+        if (nextProps.error.message && nextProps.error.message === 'Network Error') {
+          this.setState({ showNetworkError: true });
+        }
+      }
+
+      if (nextProps && nextProps.client) {
+        this.onBack()
+      }
+    } catch (e) {
+      console.log(e);
     }
+  }
 
-    componentWillMount() {
-        let params = this.props.navigation.state.params;
-        let actionBack = params ? params.actionBack : null;
-        this.setState({ actionBack })
+  componentWillMount() {
+    let params = this.props.navigation.state.params;
+    let actionBack = params ? params.actionBack : null;
+    this.setState({ actionBack })
+  }
+
+  componentWillUnmount() { }
+
+  /** Private functions */
+  onBack() {
+    this.props.navigation.goBack(null);
+  }
+
+  openTerms() {
+    try {
+      Linking.openURL("http://thefarma.com.br/termos_de_uso");
+    } catch (error) {
+      console.log(error);
+      Snackbar.show({ title: "Erro ao abrir os termos de uso.", duration: Snackbar.LENGTH_SHORT });
     }
+  }
 
-    componentWillUnmount() { }
-
-    /** Private functions */
-    onBack() {
-        this.props.navigation.goBack(null);
+  openPoliticy() {
+    try {
+      Linking.openURL("http://thefarma.com.br/politica_de_privacidade");
+    } catch (error) {
+      console.log(error);
+      Snackbar.show({ title: "Erro ao abrir a política de privacidade.", duration: Snackbar.LENGTH_SHORT });
     }
+  }
 
-    loginEmail() {
-        this.props.navigation.navigate({ key: 'email1', routeName: 'Email', params: { login_type: 0, actionBack: this.state.actionBack } });
+  showHome() {
+    this.props.navigation.navigate('Home');
+  }
+
+  loginEmail() {
+    this.props.navigation.navigate({ key: 'email1', routeName: 'Email', params: { login_type: 0, actionBack: this.state.actionBack } });
+  }
+
+  loginPhone() {
+    this.props.navigation.navigate({ key: 'phone1', routeName: 'Phone', params: { login_type: 2, actionBack: this.state.actionBack } });
+  }
+
+  getBackgroundScreen() {
+    let index = Math.floor(Math.random() * 3) + 1
+    switch (index) {
+      case 1:
+        return require("../../assets/images/bg1.jpg");
+      case 2:
+        return require("../../assets/images/bg2.jpg");
+      case 3:
+        return require("../../assets/images/bg3.jpg");
+      default:
+        return require("../../assets/images/bg1.jpg");
     }
+  }
 
-    loginPhone() {
-        this.props.navigation.navigate({ key: 'phone1', routeName: 'Phone', params: { login_type: 2, actionBack: this.state.actionBack } });
-    }
+  render() {
+    return (
+      <KeyboardAvoidingView style={{ flex: 1 }}>
+        <Image
+          resizeMode={"cover"}
+          style={styles.background}
+          source={this.getBackgroundScreen()} />
 
-    loginFacebook() {
-        LoginManager.logInWithReadPermissions(['public_profile']).then(
-            (result) => {
-                if (result.isCancelled) {
-                    Snackbar.show({
-                        title: 'Erro ao logar com facebook',
-                        duration: Snackbar.LENGTH_SHORT,
-                    });
-                } else {
-                    const infoRequest = new GraphRequest('/me', {
-                        parameters: { 'fields': { 'string': 'email, first_name, last_name, gender, birthday, picture.width(480)' } }
-                    }, (err, res) => {
-                        console.log(res);
-                        this.setState({ facebook_user: res })
-                        this.props.dispatch(login({ login_type: 1, facebook_id: res.id }));
-                    });
-                    new GraphRequestManager().addRequest(infoRequest).start();
-                }
-            }, (error) => {
-                console.log(error);
-                Snackbar.show({
-                    title: 'Erro ao logar com facebook',
-                    duration: Snackbar.LENGTH_SHORT,
-                });
-            }
-        );
-    }
+        <View style={{ flex: 1, justifyContent: 'space-between', backgroundColor: ' rgba(56,191,192,0.88)', paddingHorizontal: 24, paddingTop: 64 }}>
+          <View style={{ alignItems: 'center', }} >
+            <Image source={require('../../assets/images/logotipo-white.png')} style={styles.logo} />
+          </View>
 
-    render() {
-        return (
-            <KeyboardAvoidingView style={{ flex: 1, paddingHorizontal: 24 }}>
-                <Image
-                    resizeMode={"cover"}
-                    style={styles.background}
-                    source={require("../../assets/images/background-login.png")} />
+          <View style={{ marginBottom: 24 }}>
+            <Button style={[styles.button]} transparent bordered onPress={() => this.loginPhone()}>
+              <Text style={styles.buttonText} uppercase={false}>{"Logar"}</Text>
+            </Button>
 
-                <Header
-                    style={{ paddingHorizontal: 0, paddingTop: 24, backgroundColor: "transparent" }}
-                    separator={false}
-                    menuRight={
-                        <MenuItem
-                            icon="md-close"
-                            iconColor="#FFF"
-                            style={{ paddingVertical: 12, paddingRight: 24 }}
-                            onPress={() => { this.onBack() }}
-                        />
-                    }
-                />
-                <View style={{ flex: 1, justifyContent: 'space-between' }}>
-                    <View style={{ alignItems: 'center', }} >
-                        <Image source={require('../../assets/images/logo-white.png')} style={styles.logo} />
-                        <Text style={[styles.text, { fontSize: 20 }]} uppercase={false}>{"TheFarma"}</Text>
-                    </View>
+            <Button style={[styles.button, { backgroundColor: 'rgba(0, 0, 0, 0.24)', marginBottom: 16 }]} transparent onPress={() => this.showHome()}>
+              <Text style={[styles.buttonText, { color: '#FFF' }]} uppercase={false}>{"Agora não"}</Text>
+            </Button>
 
-                    <View style={{ marginBottom: 24 }}>
-                        <Text style={styles.text} uppercase={false}>{"Acessar a minha conta com"}</Text>
-
-                        <Button style={[styles.button]} transparent bordered iconLeft onPress={() => this.loginPhone()}>
-                            <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: "flex-start" }} >
-                                <Icon name="call-o" style={[styles.buttonIcon, { marginLeft: 16 }]} />
-                                <Text style={styles.buttonText} uppercase={false}>{"Telefone"}</Text>
-                            </View>
-                        </Button>
-
-                        <Button style={[styles.button]} transparent bordered iconLeft onPress={() => this.loginEmail()}>
-                            <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: "flex-start" }} >
-                                <Icon name="mail" style={[styles.buttonIcon, { marginLeft: 16 }]} />
-                                <Text style={styles.buttonText} uppercase={false}>{"Email"}</Text>
-                            </View>
-                        </Button>
-
-                        <Button style={[styles.button, { marginBottom: 0 }]} transparent bordered iconLeft onPress={() => this.loginFacebook()}>
-                            <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: "flex-start" }} >
-                                <Icon name="social-facebook" style={[styles.buttonIcon, { marginLeft: 24 }]} />
-                                <Text style={styles.buttonText} uppercase={false}>{"Facebook"}</Text>
-                            </View>
-                        </Button>
-                    </View>
-                </View>
-            </KeyboardAvoidingView>
-        );
-    }
+            <TouchableOpacity ></TouchableOpacity>
+            <Text style={styles.InfoText}>
+              Continuando, você concorda com os
+              <Text style={[styles.InfoText, styles.InfoTextBold]} onPress={() => { this.openPoliticy() }}>
+                {" termos de uso "}
+              </Text> e 
+              <Text style={[styles.InfoText, styles.InfoTextBold]} onPress={() => { this.openPoliticy() }}>
+                {" política de privacidade."}
+              </Text>
+            </Text>
+          </View>
+        </View>
+      </KeyboardAvoidingView>
+    );
+  }
 }
 
 function mapStateToProps(state) {
-    return {
-        client: state.clients.client,
-        error: state.clients.error
-    };
+  return {
+    client: state.clients.client,
+    error: state.clients.error
+  };
 }
 
 export default connect(mapStateToProps)(LoginScreen);

@@ -56,8 +56,8 @@ const rootSaga = function* () {
   yield takeEvery(GET_NOTIFICATIONS, getNotifications);
   yield takeLatest(GET_NOTIFICATIONS_NEXT_PAGE, getNotificationsNextPage);
 
-  yield takeEvery(REQUEST_LOGIN, login);
-  yield takeEvery(REGISTER_CLIENT, register);
+  yield takeLatest(REQUEST_LOGIN, login);
+  yield takeLatest(REGISTER_CLIENT, register);
   yield takeEvery(UPDATE_CLIENT, updateClient);
   yield takeEvery(UPDATE_CLIENT_V2, updateClientV2);
   yield takeEvery(GET_CURRENT_CLIENT, getCurrentClient);

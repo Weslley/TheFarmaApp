@@ -4,7 +4,7 @@ import { Text, Picker as NBPicker } from "native-base";
 import { TextMask, MaskService } from "react-native-masked-text";
 import Snackbar from 'react-native-snackbar';
 
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';;
 
 import { connect } from "react-redux";
 import { checkout, clearError, clearOrder } from "../../actions/orders";
@@ -110,17 +110,17 @@ class ConfirmationScreen extends Component {
   }
 
   showHome() {
-    const resetAction = NavigationActions.reset({
+    const resetAction = StackActions.reset({
       index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'Welcome', params: {} })],
+      actions: [NavigationActions.navigate({ routeName: 'Tabs', params: {} })],
     });
     this.props.navigation.dispatch(resetAction);
   }
 
   showMyOrders() {
-    const resetAction = NavigationActions.reset({
+    const resetAction = StackActions.reset({
       index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'Welcome', params: { actionBack: 'ListOrders' } })],
+      actions: [NavigationActions.navigate({ routeName: 'Tabs', params: { actionBack: 'ListOrders' } })],
     });
     this.props.navigation.dispatch(resetAction);
   }

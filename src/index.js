@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import store from './config/store';
-import { TabsNavigator, MainNavigator } from './config/routes';
+import { MainContainer } from './config/routes';
 
 EStyleSheet.build({
     $primaryColor: '#00C7BD',
@@ -22,6 +22,6 @@ EStyleSheet.build({
 
 export default () => (
     <Provider store={store}>
-        <MainNavigator />
+        <MainContainer />
     </Provider>
 )
