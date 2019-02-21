@@ -87,12 +87,10 @@ class VerificationCodeScreen extends Component {
 
       if (nextProps.client !== this.props.client) {
         if (nextProps.client.nome) {
-          const resetAction = StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'Tabs', params: { actionBack: this.state.actionBack } })],
-          });
-          this.props.navigation.dispatch(resetAction);
+          console.log("VerificationScreen -> Tabs");
+          this.props.navigation.navigate('Tabs');
         } else {
+          console.log("VerificationScreen -> Name");
           const resetAction = StackActions.reset({
             index: 0,
             actions: [NavigationActions.navigate({ routeName: 'Name', params: { actionBack: this.state.actionBack } })],
@@ -202,7 +200,7 @@ class VerificationCodeScreen extends Component {
 
         <View style={{ flex: 1, paddingHorizontal: 24, justifyContent: "space-between" }}>
           <View style={{ paddingTop: 40 }}>
-            <Text style={[styles.title, { paddingBottom: 40 }]}>{"Digite o código SMS que enviamos"}</Text>
+            <Text style={[styles.title, { paddingBottom: 20 }]}>{"Digite o código SMS que enviamos"}</Text>
 
             <ConfirmationCodeInput
               size={50}

@@ -23,6 +23,7 @@ class WelcomeScreen extends Component {
       latitude: null,
       longitude: null,
       error: null,
+      bg: null
     }
   }
 
@@ -61,6 +62,7 @@ class WelcomeScreen extends Component {
 
     let params = this.props.navigation.state.params;
     let actionBack = params ? params.actionBack : null;
+
     if (actionBack) {
       switch (actionBack) {
         case 'MedicineApresentations':
@@ -92,6 +94,10 @@ class WelcomeScreen extends Component {
 
   componentDidMount() {
     StatusBar.setHidden(true);
+
+    //Seta imagem de background
+    this.setState({ bg: this.getBackgroundScreen() });
+
     if (this.state.locationPermission === 'authorized') {
       this.getLocation();
     } else {
@@ -102,9 +108,10 @@ class WelcomeScreen extends Component {
         }
       });
     }
+
+    //Envia FCM Token ao servidor
     this.checkPermission();
     this.createNotificationListeners();
-    //Envia FCM Token ao servidor
     setTimeout(() => { this.sendFcmToken(); }, 1000)
   }
 
@@ -303,13 +310,15 @@ class WelcomeScreen extends Component {
   }
 
   render() {
+    let state = this.state;
+    console.log("Render -> Home", state);
     return (
       <KeyboardAvoidingView style={{ flex: 1 }}>
 
         <Image
           resizeMode={"cover"}
           style={styles.background}
-          source={this.getBackgroundScreen()} />
+          source={state.bg} />
 
         <View style={{ paddingHorizontal: 22, marginBottom: 8, position: "absolute", left: 0, right: 0, top: 200, zIndex: 1000 }}>
           <Text style={styles.title}>{this.getTitle()}</Text>
@@ -324,7 +333,6 @@ class WelcomeScreen extends Component {
             </TouchableOpacity>
           </TouchableOpacity>
         </View>
-
       </KeyboardAvoidingView>
     );
   }

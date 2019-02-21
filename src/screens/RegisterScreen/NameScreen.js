@@ -66,6 +66,7 @@ class NameScreen extends Component {
       }
 
       if (nextProps.client && nextProps.client.nome !== '') {
+        console.log("NameScreen -> Tabs");
         const resetAction = StackActions.reset({
           index: 0,
           actions: [NavigationActions.navigate({ routeName: 'Tabs', params: { actionBack: this.state.actionBack } })],

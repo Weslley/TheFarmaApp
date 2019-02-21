@@ -34,7 +34,7 @@ class PerfilEditScreen extends Component {
       email_error: null,
       data_nascimento: "",
       data_nascimento_error: null,
-      sexo: "",
+      sexo: "M",
       sexo_error: null,
       photo: null,
       photo64: null,
