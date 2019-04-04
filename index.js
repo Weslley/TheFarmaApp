@@ -1,4 +1,7 @@
-import { AppRegistry } from 'react-native';
-import App from './App';
+import { AppRegistry } from "react-native";
+import App from './src/index';
 
-AppRegistry.registerComponent('thefarma', () => App);
+AppRegistry.registerComponent("thefarma", () => App);
+
+import bgMessaging from "./src/cloudmessaging/bgMessaging";
+AppRegistry.registerHeadlessTask("RNFirebaseBackgroundMessage", () => bgMessaging);

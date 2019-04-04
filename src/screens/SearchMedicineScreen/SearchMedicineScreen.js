@@ -169,14 +169,14 @@ class SearchMedicineScreen extends Component {
               onRead={this.onSuccess.bind(this)}
               ref={(node) => { this.scanner = node }}
               topContent={
-                <View style={{ padding: 32 }}>
+                <View style={{ padding: 24 }}>
                   <Text style={{ fontFamily: 'Roboto-Light', fontSize: 24, color: 'rgba(0,0,0,0.80)', textAlign: 'center', marginTop: 24, }}>
                     Aponte a câmera para o <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 24 }}>{" código de barras"}</Text>.
                                   </Text>
                 </View>
               }
               bottomContent={
-                <View style={{ padding: 32, width: '100%' }}>
+                <View style={{ padding: 24, width: '100%' }}>
                   <Button style={[styles.button]} bordered dark onPress={() => { this.setState({ showCamera: false }) }}>
                     <Text style={[styles.buttonText]} uppercase={false} >{"Cancelar"}</Text>
                   </Button>

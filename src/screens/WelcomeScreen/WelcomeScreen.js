@@ -1,14 +1,29 @@
 import React, { Component } from "react";
-import { AsyncStorage, StatusBar, KeyboardAvoidingView, View, TouchableOpacity, Text, Image, Alert, ActivityIndicator, Platform } from "react-native";
-import firebase from 'react-native-firebase';
+import {
+  StatusBar,
+  KeyboardAvoidingView,
+  View,
+  TouchableOpacity,
+  Text,
+  Image,
+  Alert,
+  ActivityIndicator,
+  Platform
+} from "react-native";
 
-import Snackbar from 'react-native-snackbar';
-import Permissions from 'react-native-permissions';
+import firebase from "react-native-firebase";
+import type { Notification, NotificationOpen } from "react-native-firebase";
+
+import Snackbar from "react-native-snackbar";
+import Permissions from "react-native-permissions";
+import LinearGradient from "react-native-linear-gradient";
+import Geolocation from "react-native-geolocation-service";
+import AsyncStorage from "@react-native-community/async-storage";
 
 import { connect } from "react-redux";
-import { getCurrentClient, setFcmToken } from "../../actions/clients"
-import { getNotifications } from "../../actions/notifications"
-import { updateLocation, getGeocodeAddress } from "../../actions/locations"
+import { getCurrentClient, setFcmToken } from "../../actions/clients";
+import { getNotifications } from "../../actions/notifications";
+import { updateLocation, getGeocodeAddress } from "../../actions/locations";
 
 import { Icon } from "../../components/Icon";
 import { NotificationItem } from "../../components/NotificationItem";
@@ -19,12 +34,12 @@ class WelcomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      locationPermission: '',
+      locationPermission: "",
       latitude: null,
       longitude: null,
       error: null,
       bg: null
-    }
+    };
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -33,49 +48,72 @@ class WelcomeScreen extends Component {
 
   componentWillReceiveProps = nextProps => {
     try {
-
       if (nextProps && nextProps.error) {
-        if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {
+        if (
+          nextProps.error.response &&
+          (nextProps.error.response.status >= 400 &&
+            nextProps.error.response.status <= 403)
+        ) {
           if (nextProps.error.response.data.non_field_errors) {
-            Snackbar.show({ title: nextProps.error.response.data.non_field_errors[0], duration: Snackbar.LENGTH_SHORT });
+            Snackbar.show({
+              title: nextProps.error.response.data.non_field_errors[0],
+              duration: Snackbar.LENGTH_SHORT
+            });
           }
 
           if (nextProps.error.response.data.detail) {
-            Snackbar.show({ title: nextProps.error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
+            Snackbar.show({
+              title: nextProps.error.response.data.detail,
+              duration: Snackbar.LENGTH_SHORT
+            });
           }
         }
 
-        if (nextProps.error.message && nextProps.error.message === 'Network Error') {
+        if (
+          nextProps.error.message &&
+          nextProps.error.message === "Network Error"
+        ) {
           this.setState({ showError: true });
         }
       }
-
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   componentWillMount() {
-    Permissions.checkMultiple(['camera', 'photo', 'location']).then(response => {
-      this.setState({ cameraPermission: response.camera, photoPermission: response.photo, locationPermission: response.location });
-    });
+    Permissions.checkMultiple(["camera", "photo", "location"]).then(
+      response => {
+        this.setState({
+          cameraPermission: response.camera,
+          photoPermission: response.photo,
+          locationPermission: response.location
+        });
+      }
+    );
 
     let params = this.props.navigation.state.params;
     let actionBack = params ? params.actionBack : null;
 
     if (actionBack) {
       switch (actionBack) {
-        case 'MedicineApresentations':
-          this.props.navigation.navigate({ key: 'MedicineApresentations1', routeName: 'MedicineApresentations' });
+        case "MedicineApresentations":
+          this.props.navigation.navigate({
+            key: "MedicineApresentations1",
+            routeName: "MedicineApresentations"
+          });
           break;
-        case 'ApresentationDetail':
-          this.props.navigation.navigate({ key: 'cart1', routeName: 'Cart' });
+        case "ApresentationDetail":
+          this.props.navigation.navigate({ key: "cart1", routeName: "Cart" });
           break;
-        case 'Cart':
-          this.props.navigation.navigate({ key: 'cart1', routeName: 'Cart' });
+        case "Cart":
+          this.props.navigation.navigate({ key: "cart1", routeName: "Cart" });
           break;
-        case 'ListOrders':
-          this.props.navigation.navigate({ key: 'list_orders1', routeName: 'ListOrders' });
+        case "ListOrders":
+          this.props.navigation.navigate({
+            key: "list_orders1",
+            routeName: "ListOrders"
+          });
           break;
         default:
           break;
@@ -85,25 +123,24 @@ class WelcomeScreen extends Component {
     this.props.dispatch(getCurrentClient());
     setTimeout(() => {
       if (this.props.client) {
-        let params = { client: this.props.client, filters: {} }
+        let params = { client: this.props.client, filters: {} };
         this.props.dispatch(getNotifications(params));
       }
     }, 1000);
   }
 
-
   componentDidMount() {
-    StatusBar.setHidden(true);
+    StatusBar.setHidden(false);
 
     //Seta imagem de background
     this.setState({ bg: this.getBackgroundScreen() });
 
-    if (this.state.locationPermission === 'authorized') {
+    if (this.state.locationPermission === "authorized") {
       this.getLocation();
     } else {
-      Permissions.request('location').then(response => {
+      Permissions.request("location").then(response => {
         this.setState({ locationPermission: response });
-        if (response === 'authorized') {
+        if (response === "authorized") {
           this.getLocation();
         }
       });
@@ -112,15 +149,17 @@ class WelcomeScreen extends Component {
     //Envia FCM Token ao servidor
     this.checkPermission();
     this.createNotificationListeners();
-    setTimeout(() => { this.sendFcmToken(); }, 1000)
+    setTimeout(() => {
+      this.sendFcmToken();
+    }, 1000);
   }
 
   componentWillUnmount() {
-    navigator.geolocation.clearWatch(this.watchId);
     this.notificationListener();
     this.notificationOpenedListener();
   }
 
+  /******************** FCM *********************** */
   async checkPermission() {
     const enabled = await firebase.messaging().hasPermission();
     if (enabled) {
@@ -131,21 +170,23 @@ class WelcomeScreen extends Component {
   }
 
   async getToken() {
-    let fcmToken = await AsyncStorage.getItem('fcmToken', null);
+    let fcmToken = await AsyncStorage.getItem("@fcm_token", null);
+    console.log(fcmToken);
     if (!fcmToken) {
       fcmToken = await firebase.messaging().getToken();
       if (fcmToken) {
-        await AsyncStorage.setItem('fcmToken', fcmToken);
+        console.log(fcmToken);
+        await AsyncStorage.setItem("@fcm_token", fcmToken);
       }
     }
   }
 
   async sendFcmToken() {
     let client = this.props.client;
-    let token = await AsyncStorage.getItem('fcmToken', null);
+    let token = await AsyncStorage.getItem("@fcm_token", null);
     console.log(token);
     if (client && token) {
-      let params = { client: this.props.client, fields: { fcm: token } }
+      let params = { client: this.props.client, fields: { fcm: token } };
       this.props.dispatch(setFcmToken(params));
     }
   }
@@ -157,146 +198,238 @@ class WelcomeScreen extends Component {
       this.getToken();
     } catch (error) {
       // User has rejected permissions
-      console.log('permission rejected');
+      console.log("permission rejected");
     }
   }
 
   async createNotificationListeners() {
-    /*
-    * Triggered when a particular notification has been received in foreground
-    * */
-    this.notificationListener = firebase.notifications().onNotification((notification) => {
-      const { title, body } = notification;
-      //this.showAlert(title, body);
-      console.log(notification);
-    });
+    const channel = new firebase.notifications.Android.Channel(
+      "fcm_default_channel",
+      "TheFarma",
+      firebase.notifications.Android.Importance.High
+    ).setDescription("Teste"); //.setSound('sampleaudio.mp3');
+    firebase.notifications().android.createChannel(channel);
+
+    this.notificationDisplayedListener = firebase
+      .notifications()
+      .onNotificationDisplayed(notification => {
+        // Process your notification as required
+        // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
+        console.log("notificationDisplayed", notification);
+      });
 
     /*
-    * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
-    * */
-    this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
-      const { title, body } = notificationOpen.notification;
-      //this.showAlert(title, body);
-    });
+     * Triggered when a particular notification has been received in foreground
+     * */
+    this.notificationListener = firebase
+      .notifications()
+      .onNotification(notification => {
+        const { title, body } = notification;
+        console.log("notificationListener", notification);
+        this.handleFcmMessage(notification.data, title, body);
+
+        /*
+        //sound: 'sampleaudio',
+        const localNotification = new firebase.notifications.Notification({show_in_foreground: true,})
+            .setNotificationId(111)
+            .setTitle("TáxiThe - Motorista")
+            .setBody("")
+            .setData(notification.data)
+            .android.setChannelId('fcm_default_channel') // e.g. the id you chose above
+            .android.setSmallIcon('@drawable/ic_launcher') // create this icon in Android Studio
+            .android.setColor('#000000') // you can set a color here
+            .android.setPriority(firebase.notifications.Android.Priority.High);
+
+        firebase.notifications().displayNotification(localNotification).catch(err => console.error(err));
+        */
+      });
 
     /*
-    * If your app is closed, you can check if it was opened by a notification being clicked / tapped / opened as follows:
-    * */
-    const notificationOpen = await firebase.notifications().getInitialNotification();
-    if (notificationOpen) {
-      const { title, body } = notificationOpen.notification;
-      //this.showAlert(title, body);
+     * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
+     * */
+    this.notificationOpenedListener = firebase
+      .notifications()
+      .onNotificationOpened(notificationOpen => {
+        console.log("notificationOpenedListener", notificationOpen);
+      });
+
+    /*
+     * If your app is closed, you can check if it was opened by a notification being clicked / tapped / opened as follows:
+     * */
+    firebase
+      .notifications()
+      .getInitialNotification()
+      .then((notificationOpen: NotificationOpen) => {
+        if (notificationOpen) {
+          try {
+            console.log("notificationOpen", notificationOpen);
+            const action = notificationOpen.action;
+            const notification: Notification = notificationOpen.notification;
+            this.handleFcmMessage(notification.data);
+          } catch (error) {
+            console.log("notificationOpenError", error);
+          }
+        }
+      });
+
+    /*
+     * Triggered for data only payload in foreground
+     * */
+    this.messageListener = firebase.messaging().onMessage(message => {
+      console.log("MessageListener", message);
+    });
+  }
+
+  handleFcmMessage(message = {}, title = null, body = null) {
+    try {
+      let type = parseInt(message.type);
+      let data = JSON.parse(message.data);
+      switch (type) {
+        case 1:
+          break;
+        default:
+          if (title && body) {
+            this.showAlert(title, body);
+          }
+          break;
+      }
+    } catch (error) {
+      console.log("Erro ao tratar notificação");
     }
-    /*
-    * Triggered for data only payload in foreground
-    * */
-    this.messageListener = firebase.messaging().onMessage((message) => {
-      //process data message
-      console.log(JSON.stringify(message));
-    });
   }
 
   showAlert(title, body) {
     Alert.alert(
-      title, body,
-      [
-        { text: 'OK', onPress: () => console.log('OK Pressed') },
-      ],
-      { cancelable: false },
+      title,
+      body,
+      [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+      { cancelable: false }
     );
   }
 
+  /******************** END FCM *********************** */
+
   /** Private functions */
   getTitle() {
-    let msg = "Bem vindo."
+    let msg = "Bem vindo.";
     let now = new Date().getHours();
-    if (now >= 6 && now < 12) { msg = `Bom dia`; }
-    if (now >= 12 && now < 19) { msg = `Boa tarde`; }
-    if (now >= 19 || now < 5) { msg = `Boa noite`; }
+    if (now >= 6 && now < 12) {
+      msg = `Bom dia`;
+    }
+    if (now >= 12 && now < 19) {
+      msg = `Boa tarde`;
+    }
+    if (now >= 19 || now < 5) {
+      msg = `Boa noite`;
+    }
 
     let client = this.props.client;
     let name = client ? client.nome : "";
-    name = name.split(" ")[0]
-    if (name) msg = `Oi, ${name}`
+    name = name.split(" ")[0];
+    if (name) msg = `Oi, ${name}`;
     return msg;
   }
 
   getLocation() {
-    this.watchId = navigator.geolocation.watchPosition((position) => {
-      this.props.dispatch(updateLocation(this.props.uf, position.coords.latitude, position.coords.longitude));
-      this.props.dispatch(getGeocodeAddress(position.coords));
-    },
-      (error) => this.setState({ error: error.message }),
-      { enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter: 10 },
+    Geolocation.getCurrentPosition(
+      position => {
+        this.props.dispatch(getGeocodeAddress(position.coords));
+        this.props.dispatch(updateLocation(this.props.uf, position.coords.latitude, position.coords.longitude));
+      },
+      error => this.setState({ error: error.message }),
+      {
+        enableHighAccuracy: false,
+        timeout: 10000,
+        maximumAge: 1000,
+        distanceFilter: 10
+      }
     );
   }
 
   alertLocation() {
     Alert.alert(
-      '',
-      'Para lhe oferecer as melhores propostas o TheFarma requer acesso a sua localização?',
+      "",
+      "Para lhe oferecer as melhores propostas o TheFarma requer acesso a sua localização?",
       [
-        { text: 'NÃO', onPress: () => { console.log('cancelou.'); } },
-        { text: 'SIM', onPress: () => { this.requestLocationPermission() } },
+        {
+          text: "NÃO",
+          onPress: () => {
+            console.log("cancelou.");
+          }
+        },
+        {
+          text: "SIM",
+          onPress: () => {
+            this.requestLocationPermission();
+          }
+        }
       ],
       { cancelable: false }
-    )
+    );
   }
 
   requestLocationPermission() {
-    Permissions.request('location').then(response => {
-      if (response === 'authorized') this.getLocation();
+    Permissions.request("location").then(response => {
+      if (response === "authorized") this.getLocation();
       this.setState({ locationPermission: response });
     });
   }
 
-  onSearch = (showCamera) => {
-    Permissions.request('location').then(response => {
-      if (response === 'authorized') {
+  onSearch = showCamera => {
+    Permissions.request("location").then(response => {
+      if (response === "authorized") {
         this.getLocation();
       } else {
         this.alertLocation();
       }
     });
-    this.props.navigation.navigate('SearchMedicine', { showCamera });
+    this.props.navigation.navigate("SearchMedicine", { showCamera });
   };
 
   showCart() {
-    this.props.navigation.navigate({ key: 'cart1', routeName: 'Cart', params: { title: "Cestinha" } });
+    this.props.navigation.navigate({
+      key: "cart1",
+      routeName: "Cart",
+      params: { title: "Cestinha" }
+    });
   }
 
   showMenuScreen() {
-    this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: {} });
+    this.props.navigation.navigate({
+      key: "profile1",
+      routeName: "Profile",
+      params: {}
+    });
   }
 
   getPhoto() {
     let client = this.props.client;
     if (client && client.foto) {
-      return { uri: client.foto }
+      return { uri: client.foto };
     }
     return null;
   }
 
   onEndReached = ({ distanceFromEnd }) => {
     if (this.props.nextPage) {
-      let params = { client: this.props.client, url: this.props.nextPage }
+      let params = { client: this.props.client, url: this.props.nextPage };
       this.props.dispatch(getApresentationsNextPage(params));
     }
-  }
+  };
 
-  _renderItem = ({ item }) => (<NotificationItem notificacao={item} />);
+  _renderItem = ({ item }) => <NotificationItem notificacao={item} />;
 
   renderFooter = () => {
     if (!this.props.isLoading) return null;
     return (
-      <View style={{ alignItems: 'center', paddingVertical: 16, }}>
+      <View style={{ alignItems: "center", paddingVertical: 16 }}>
         <ActivityIndicator color={"#00C7BD"} size={"large"} />
       </View>
     );
   };
 
   getBackgroundScreen() {
-    let index = Math.floor(Math.random() * 3) + 1
+    let index = Math.floor(Math.random() * 3) + 1;
     switch (index) {
       case 1:
         return require("../../assets/images/bg1.jpg");
@@ -314,25 +447,69 @@ class WelcomeScreen extends Component {
     console.log("Render -> Home", state);
     return (
       <KeyboardAvoidingView style={{ flex: 1 }}>
-
         <Image
           resizeMode={"cover"}
           style={styles.background}
-          source={state.bg} />
+          source={state.bg}
+        />
 
-        <View style={{ paddingHorizontal: 22, marginBottom: 8, position: "absolute", left: 0, right: 0, top: 200, zIndex: 1000 }}>
-          <Text style={styles.title}>{this.getTitle()}</Text>
-          <Text style={styles.subtitle}>{"Deseja algum medicamento?"}</Text>
-          <TouchableOpacity style={[styles.searchBar, { justifyContent: 'space-between' }]} onPress={() => { this.onSearch(false) }}>
-            <View style={{ flexDirection: 'row' }}>
-              <Icon name="search" size={24} color={"#FFF"} style={[{ marginRight: 12 }]} />
-              <Text style={[styles.subtitle, Platform.OS === "ios" ? { fontSize: 12 } : {}]}>Nome do medicamento</Text>
-            </View>
-            <TouchableOpacity style={{ alignSelf: 'flex-end', }} onPress={() => { this.onSearch(true) }}>
-              <Icon name="barcode" size={24} color={"#000"} style={styles.icon} />
+        <LinearGradient
+          colors={["rgba(255,255,255,0.00)", "rgba(0,0,0,0.48)"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{ flex: 1 }}
+        >
+          <View
+            style={{
+              paddingHorizontal: 22,
+              marginBottom: 8,
+              position: "absolute",
+              left: 0,
+              right: 0,
+              top: 200,
+              zIndex: 1000
+            }}
+          >
+            <Text style={styles.title}>{this.getTitle()}</Text>
+            <Text style={styles.subtitle}>{"Deseja algum medicamento?"}</Text>
+            <TouchableOpacity
+              style={[styles.searchBar, { justifyContent: "space-between" }]}
+              onPress={() => {
+                this.onSearch(false);
+              }}
+            >
+              <View style={{ flexDirection: "row" }}>
+                <Icon
+                  name="search"
+                  size={24}
+                  color={"#FFF"}
+                  style={[{ marginRight: 12 }]}
+                />
+                <Text
+                  style={[
+                    styles.subtitle,
+                    Platform.OS === "ios" ? { fontSize: 12 } : {}
+                  ]}
+                >
+                  Nome do medicamento
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={{ alignSelf: "flex-end" }}
+                onPress={() => {
+                  this.onSearch(true);
+                }}
+              >
+                <Icon
+                  name="barcode"
+                  size={24}
+                  color={"#000"}
+                  style={styles.icon}
+                />
+              </TouchableOpacity>
             </TouchableOpacity>
-          </TouchableOpacity>
-        </View>
+          </View>
+        </LinearGradient>
       </KeyboardAvoidingView>
     );
   }
@@ -350,7 +527,7 @@ function mapStateToProps(state) {
     notifications: state.notifications.notifications,
     loading: state.notifications.loading,
     nextPage: state.notifications.next,
-    error: state.notifications.error,
+    error: state.notifications.error
   };
 }
 

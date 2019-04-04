@@ -1,0 +1,113 @@
+{
+  "project_info": {
+    "project_number": "951581331272",
+    "firebase_url": "https://thefarma-f3206.firebaseio.com",
+    "project_id": "thefarma-f3206",
+    "storage_bucket": "thefarma-f3206.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:951581331272:android:504dfed4f2002cbc",
+        "android_client_info": {
+          "package_name": "br.com.infog2.thefarma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "951581331272-2nv02ecavjeubliuvlu4binlpddg840s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.infog2.thefarma",
+            "certificate_hash": "a05bff72fda8670d3a7d54485d458e21266bdc56"
+          }
+        },
+        {
+          "client_id": "951581331272-796joch1iu0h4j61o7tghvo9fmns06vp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.infog2.thefarma",
+            "certificate_hash": "4656a2f8003bff6979f0a869bd8d03eab6a6ecec"
+          }
+        },
+        {
+          "client_id": "951581331272-fbuarov7inb390erea6q4a8u5kg343hv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.infog2.thefarma",
+            "certificate_hash": "388a6dd807aae42bcc9a09c8228b68b826a9d6fb"
+          }
+        },
+        {
+          "client_id": "951581331272-nbpg11u06ka4oc2kgmv1qk5lcss0a1cg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeo33tVeoC5g42krOnpLzatn5po94THcg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:951581331272:android:fb3ff54897373471",
+        "android_client_info": {
+          "package_name": "br.com.infog2.thefarmadelivery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "951581331272-2ptt74b30k2g7r5a1poloilcrnrdge2q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.infog2.thefarmadelivery",
+            "certificate_hash": "4656a2f8003bff6979f0a869bd8d03eab6a6ecec"
+          }
+        },
+        {
+          "client_id": "951581331272-98kmkl95ftfdvon40naojnrpqpbku4r5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.infog2.thefarmadelivery",
+            "certificate_hash": "a05bff72fda8670d3a7d54485d458e21266bdc56"
+          }
+        },
+        {
+          "client_id": "951581331272-nbpg11u06ka4oc2kgmv1qk5lcss0a1cg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeo33tVeoC5g42krOnpLzatn5po94THcg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

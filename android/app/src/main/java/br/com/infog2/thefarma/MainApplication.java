@@ -3,25 +3,26 @@ package br.com.infog2.thefarma;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 
-import org.reactnative.camera.RNCameraPackage;
+import com.cardio.RNCardIOPackage;
+import io.realm.react.RealmReactPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import org.reactnative.camera.RNCameraPackage;
-import com.cardio.RNCardIOPackage;
-import com.azendoo.reactnativesnackbar.SnackbarPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
-import io.realm.react.RealmReactPackage;
+import com.azendoo.reactnativesnackbar.SnackbarPackage;
+import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 
-import com.facebook.react.ReactNativeHost;
-import com.facebook.react.ReactPackage;
-import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.facebook.react.ReactPackage;
+import com.facebook.react.ReactNativeHost;
+import com.facebook.react.shell.MainReactPackage;
 
 //import com.facebook.CallbackManager;
 //import com.facebook.FacebookSdk;
@@ -36,7 +37,7 @@ public class MainApplication extends Application implements ReactApplication {
     /*
      * public static CallbackManager mCallbackManager = new
      * CallbackManager.Factory().create();
-     * 
+     *
      * protected static CallbackManager getCallbackManager() { return
      * mCallbackManager; }
      */
@@ -49,12 +50,23 @@ public class MainApplication extends Application implements ReactApplication {
 
         @Override
         protected List<ReactPackage> getPackages() {
-            return Arrays.<ReactPackage>asList(new MainReactPackage(),
-            new RNGestureHandlerPackage(), new RNFirebasePackage(),
-                    new RNFirebaseMessagingPackage(), new RNFirebaseNotificationsPackage(), new RNCameraPackage(),
-                    new RNDeviceInfo(), new RNCardIOPackage(), new RealmReactPackage(), new SnackbarPackage(),
-                    // new FBSDKPackage(mCallbackManager),
-                    new VectorIconsPackage(), new LinearGradientPackage());
+            return Arrays.<ReactPackage>asList(
+                new MainReactPackage(),
+                new AsyncStoragePackage(),
+                new RNGestureHandlerPackage(),
+                new RNFirebasePackage(),
+                new RNFirebaseMessagingPackage(),
+                new RNFirebaseNotificationsPackage(),
+                new RNCameraPackage(),
+                new RNDeviceInfo(),
+                new RNCardIOPackage(),
+                new RealmReactPackage(),
+                new SnackbarPackage(),
+                new VectorIconsPackage(),
+                new LinearGradientPackage(),
+                new RNFusedLocationPackage()
+            );
+            // new FBSDKPackage(mCallbackManager),
         }
 
         @Override

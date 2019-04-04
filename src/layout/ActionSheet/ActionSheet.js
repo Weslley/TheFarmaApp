@@ -1,10 +1,20 @@
 import React, { Component } from "react";
-import { View, KeyboardAvoidingView, Modal, Platform, ActionSheetIOS, TouchableOpacity } from "react-native";
+import {
+  View,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  ActionSheetIOS,
+  TouchableOpacity,
+  Dimensions
+} from "react-native";
 
 import { Text } from "native-base";
 import { Components } from "../../helpers";
 
 import styles from "./styles";
+
+const { width, height } = Dimensions.get("screen");
 
 class ActionSheet extends Component {
   constructor(props) {
@@ -17,7 +27,7 @@ class ActionSheet extends Component {
   static setView(view) {
     this.actionsheetInstance._root.setState({
       content: view
-    })
+    });
   }
   static show(config, callback) {
     this.actionsheetInstance._root.showActionSheet(config, callback);
@@ -26,7 +36,9 @@ class ActionSheet extends Component {
     if (Platform.OS === "ios") {
       if (typeof config.options[0] == "object") {
         let options = config.options;
-        let filtered = options.map(item => { return item.text; });
+        let filtered = options.map(item => {
+          return item.text;
+        });
         config.options = filtered;
         ActionSheetIOS.showActionSheetWithOptions(config, callback);
       } else {
@@ -63,18 +75,26 @@ class ActionSheet extends Component {
         onRequestClose={() => {
           this.state.callback(this.state.cancelButtonIndex);
           this.setState({ modalVisible: false });
-        }}>
-
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : null} enabled>
+        }}
+      >
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : null}
+          enabled
+        >
           <TouchableOpacity
             activeOpacity={1}
-            style={{ backgroundColor: "rgba(0,0,0,0.4)", flex: 1, justifyContent: "flex-end" }}
+            style={{
+              backgroundColor: "rgba(0,0,0,0.4)",
+              flex: 1,
+              justifyContent: "flex-end"
+            }}
             onPress={() => {
               this.state.callback(this.state.cancelButtonIndex);
               this.setState({ modalVisible: false });
-            }}>
-
-            <TouchableOpacity activeOpacity={1} style={{ backgroundColor: "#fff", height: this.state.length * 80, elevation: 4 }}>
+            }}
+          >
+            <TouchableOpacity activeOpacity={1} style={{ elevation: 4 }}>
               {this.props.content}
             </TouchableOpacity>
           </TouchableOpacity>

@@ -160,6 +160,7 @@ class BarcodeScanner extends Component {
                             style={[{ width: windowSize, height: windowSize }, styles.camera, this.props.cameraStyle]}
                             onBarCodeRead={this._handleBarCodeRead.bind(this)}
                             type={this.props.cameraType}
+                            captureAudio={false}
                         >
                             {this._renderCameraMarker()}
                         </Camera>
@@ -169,6 +170,7 @@ class BarcodeScanner extends Component {
             return (
                 <Camera
                     type={cameraType}
+                    captureAudio={false}
                     style={[styles.camera, this.props.cameraStyle]}
                     onBarCodeRead={this._handleBarCodeRead.bind(this)}
                     barCodeTypes={[
@@ -194,11 +196,16 @@ class BarcodeScanner extends Component {
     render() {
         return (
             <View style={[styles.mainContainer, this.props.containerStyle]}>
+
+                {this._renderCamera()}
+
+                <View style={{ }}>
+
+                </View>
+
                 <View style={[{ width: windowSize }, styles.infoView, this.props.topViewStyle]}>
                     {this._renderTopContent()}
                 </View>
-
-                {this._renderCamera()}
 
                 <View style={[{ width: windowSize }, styles.infoView, this.props.bottomViewStyle]}>
                     {this._renderBottomContent()}

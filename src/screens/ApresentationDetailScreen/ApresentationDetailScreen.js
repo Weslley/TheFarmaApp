@@ -57,7 +57,7 @@ class ApresentationDetailScreen extends Component {
   }
 
   componentDidMount() {
-    StatusBar.setHidden(true);
+    StatusBar.setHidden(false);
 
     this.props.dispatch(clearError());
     this.props.dispatch(clearGenerics());
