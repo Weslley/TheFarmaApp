@@ -30,6 +30,7 @@ class FailedScreen extends Component {
 
   componentDidMount() {
     StatusBar.setHidden(false);
+    StatusBar.setTranslucent(true);
   }
 
   render() {

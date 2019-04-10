@@ -117,8 +117,8 @@ export const TabsNavigator = createBottomTabNavigator(
 
 export const MainNavigator = createStackNavigator(
   {
-    //Welcome: { screen: WelcomeScreen },
-    //Login: { screen: LoginScreen },
+
+    //Phone: { screen: PhoneScreen },
 
     Tabs: {
       screen: TabsNavigator,

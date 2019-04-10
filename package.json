@@ -5,9 +5,10 @@
   "scripts": {
     "emulador": "sh ~/devtools/emulador.sh",
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest",
     "android": "react-native run-android",
-    "clean": "watchman watch-del-all && rm -rf $TMPDIR/react-native-packager-cache-* && rm -rf $TMPDIR/metro-bundler-cache-* && npm cache clean --force && watchman shutdown-server && cd android && ./gradlew clean",
+    "ios": "react-native run-ios",
+    "test": "jest",
+    "clean": "watchman watch-del-all && rm -rf $TMPDIR/react-* && npm cache clean --force && watchman shutdown-server && cd android && ./gradlew clean",
     "clean:all": "watchman watch-del-all && rm -rf $TMPDIR/react-* && rm -rf node_modules/ && npm cache clean --force && npm install && npm start -- --reset-cache && rm node_modules/react-native/local-cli/core/__fixtures__/files/package.json",
     "bundle": "react-native bundle --platform android --dev false --entry-file index.android.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/",
     "release": "cd android && ./gradlew clean &&./gradlew assembleRelease &"
@@ -21,7 +22,7 @@
     "native-base": "^2.12.1",
     "prop-types": "^15.7.2",
     "react": "16.8.4",
-    "react-native": "^0.58.6",
+    "react-native": "^0.59.2",
     "react-native-awesome-card-io": "^0.8.2",
     "react-native-camera": "^1.13.1",
     "react-native-communications": "^2.2.1",

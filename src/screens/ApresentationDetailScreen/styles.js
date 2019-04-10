@@ -30,7 +30,10 @@ export default EStyleSheet.create({
     containerDelivery: {
         paddingHorizontal: 20,
         paddingTop: 24,
-        paddingBottom: 32
+        paddingBottom: 32,
+        backgroundColor: "#fff",
+        borderTopLeftRadius: 16,
+        borderTopRightRadius: 16,
     },
     titleDialog: {
         fontFamily: "Roboto-Bold",

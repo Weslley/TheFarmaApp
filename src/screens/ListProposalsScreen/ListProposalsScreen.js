@@ -158,7 +158,7 @@ class ListProposalsScreen extends Component {
   _renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => { this._showProposal(item) }}>
       <View style={{ borderBottomColor: 'rgba(0,0,0,0.08)', borderBottomWidth: 1 }}>
-        <ProposalDescription proposal={item} />
+        <ProposalDescription proposal={item} delivery={this.props.order.delivery}/>
       </View>
     </TouchableOpacity>
   );
@@ -240,7 +240,7 @@ class ListProposalsScreen extends Component {
       } else {
         return (
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-between' }}>
-            <Text style={[styles.txtDefault, { marginTop: 32 }]}>{"Esperando resposta das farmácias..."}</Text>
+            <Text style={[styles.txtDefault, { marginTop: 32, paddingHorizontal: 24 }]}>{"Esperando resposta das farmácias..."}</Text>
 
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
               <Text style={styles.counter}>{`${timer}s`}</Text>

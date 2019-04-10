@@ -6,6 +6,10 @@ import { Icon } from "../../components/Icon";
 import { Components, CurrencyUtils } from "../../helpers";
 import styles from "./styles";
 class ProposalDescription extends Component {
+  static defaultProps = {
+    delivery: true
+  };
+
   constructor(props) {
     super(props);
     this.state = {};
@@ -20,7 +24,9 @@ class ProposalDescription extends Component {
   }
 
   getPrice() {
-    let price = CurrencyUtils.toMoney("" + this.props.proposal.valor_total_com_frete);
+    let price = CurrencyUtils.toMoney(
+      "" + this.props.proposal.valor_total_com_frete
+    );
     return price;
   }
 
@@ -37,6 +43,8 @@ class ProposalDescription extends Component {
   }
 
   render() {
+    let proposal = this.props.proposal;
+    let delivery = this.props.delivery;
     return (
       <View style={styles.Container}>
         <View style={styles.Header}>
@@ -46,29 +54,52 @@ class ProposalDescription extends Component {
 
         <View>
           <View style={styles.InfoContainer}>
-            <Icon name="place" size={18} color={"#000"} style={{ marginRight: 8 }} />
+            <Icon
+              name="place"
+              size={18}
+              color={"#000"}
+              style={{ marginRight: 8 }}
+            />
             <Text style={styles.InfoTextBold}>
-              {this.props.proposal.farmacia.distancia}
+              {proposal.farmacia.distancia}
               <Text style={styles.InfoText}>{" do endereço indicado"}</Text>
             </Text>
           </View>
 
-          <View style={[styles.InfoContainer, { marginBottom: 10 }]}>
-            <Icon name="clock-o" size={18} color={"#000"} style={{ marginRight: 8 }} />
-            <Text style={styles.InfoTextBold}>
-              {this.props.proposal.farmacia.tempo_entrega}
-              <Text style={[styles.InfoText, { marginBottom: 0 }]}>{" em média para entregar"}</Text>
-            </Text>
-          </View>
+          {Components.renderIf(delivery,
+            <View style={[styles.InfoContainer, { marginBottom: 10 }]}>
+              <Icon
+                name="clock-o"
+                size={18}
+                color={"#000"}
+                style={{ marginRight: 8 }}
+              />
+              <Text style={styles.InfoTextBold}>
+                {proposal.farmacia.tempo_entrega}
+                <Text style={[styles.InfoText, { marginBottom: 0 }]}>
+                  {" em média para entregar"}
+                </Text>
+              </Text>
+            </View>
+          )}
         </View>
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          {Components.renderIfElse(this.props.proposal.possui_todos_itens,
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between"
+          }}
+        >
+          {Components.renderIfElse(
+            proposal.possui_todos_itens,
             <View style={styles.TagContainer}>
               <Text style={styles.TagText}>{"Estoque completo"}</Text>
             </View>,
             <View style={[styles.TagContainer, styles.TagContainerImcomplete]}>
-              <Text style={[styles.TagText, styles.TagTextImcomplete]}>{"Estoque incompleto"}</Text>
+              <Text style={[styles.TagText, styles.TagTextImcomplete]}>
+                {"Estoque incompleto"}
+              </Text>
             </View>
           )}
           <Text style={styles.view}>{"VISUALIZAR"}</Text>

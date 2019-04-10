@@ -1,7 +1,15 @@
 import React, { Component } from "react";
-import { View, ScrollView, Linking, TouchableOpacity, Platform } from "react-native";
-import { Container, Button, Text } from "native-base";
-import Snackbar from 'react-native-snackbar';
+import {
+  View,
+  ScrollView,
+  Linking,
+  TouchableOpacity,
+  Platform
+} from "react-native";
+
+import { Container, Text } from "native-base";
+import Snackbar from "react-native-snackbar";
+import { NavigationActions, StackActions } from "react-navigation";
 
 import { connect } from "react-redux";
 
@@ -15,7 +23,7 @@ import { ProfileMenuItem } from "../../components/ProfileMenuItem";
 import { SUPPORT_LINK } from "../../config/server";
 import styles from "./styles";
 
-import DeviceInfo from 'react-native-device-info';
+import DeviceInfo from "react-native-device-info";
 
 class MenuScreen extends Component {
   constructor(props) {
@@ -29,14 +37,23 @@ class MenuScreen extends Component {
 
   /** Private functions */
   logout() {
-    this.props.dispatch(logout());
+    try {
+      this.props.dispatch(logout());
+      const resetAction = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: "Tabs", params: {} })]
+      });
+      this.props.navigation.dispatch(resetAction);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   getPhoto() {
     if (this.props.client && this.props.client.foto != null) {
-      return { uri: this.props.client.foto }
+      return { uri: this.props.client.foto };
     } else {
-      return null
+      return null;
     }
   }
 
@@ -45,20 +62,31 @@ class MenuScreen extends Component {
       Linking.openURL(SUPPORT_LINK);
     } catch (error) {
       console.log(error);
-      Snackbar.show({ title: "Erro ao abrir o whatsapp.", duration: Snackbar.LENGTH_SHORT });
+      Snackbar.show({
+        title: "Erro ao abrir o whatsapp.",
+        duration: Snackbar.LENGTH_SHORT
+      });
     }
   }
 
   showVersionScreen() {
-    this.props.navigation.navigate({ key: 'version1', routeName: 'Version', params: {} });
+    this.props.navigation.navigate({
+      key: "version1",
+      routeName: "Version",
+      params: {}
+    });
   }
 
   showPerfil() {
-    this.props.navigation.navigate({ key: 'PerfilEdit', routeName: 'PerfilEdit', params: {} });
+    this.props.navigation.navigate({
+      key: "PerfilEdit",
+      routeName: "PerfilEdit",
+      params: {}
+    });
   }
 
   getVersion() {
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === "ios") {
       return `Versão 1.0.0`;
     } else {
       return `Versão ${DeviceInfo.getVersion()}`;
@@ -68,48 +96,105 @@ class MenuScreen extends Component {
   render() {
     return (
       <Container style={{ backgroundColor: "#FFFFFF" }}>
-
         <Header
-          onPressProfile={() => { this.showPerfil() }}
+          onPressProfile={() => {
+            this.showPerfil();
+          }}
           title={this.props.client.nome}
           subtitle={"Visualizar e editar o seu perfil"}
           avatar={this.getPhoto()}
           menuLeft={
             <MenuItem
               icon="md-arrow-back"
-              onPress={() => { this.props.navigation.goBack(null) }}
+              onPress={() => {
+                this.props.navigation.goBack(null);
+              }}
               style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
             />
           }
         />
 
         <ScrollView style={{ paddingHorizontal: 24 }}>
-          <ProfileMenuItem icon="history" text={"Minhas compras"} onPress={() => {
-            this.props.navigation.navigate({ key: 'list_orders1', routeName: 'ListOrders', params: {} });
-          }} />
+          <ProfileMenuItem
+            icon="history"
+            text={"Minhas compras"}
+            onPress={() => {
+              this.props.navigation.navigate({
+                key: "list_orders1",
+                routeName: "ListOrders",
+                params: {}
+              });
+            }}
+          />
 
-          <ProfileMenuItem icon="marker" text={"Meus Endereços"} onPress={() => {
-            this.props.navigation.navigate({ key: 'list_address1', routeName: 'ListAddress', params: {} });
-          }} />
+          <ProfileMenuItem
+            icon="marker"
+            text={"Meus Endereços"}
+            onPress={() => {
+              this.props.navigation.navigate({
+                key: "list_address1",
+                routeName: "ListAddress",
+                params: {}
+              });
+            }}
+          />
 
-          <ProfileMenuItem icon="card-a" text={"Meus Cartões"} onPress={() => {
-            this.props.navigation.navigate({ key: 'list_credit1', routeName: 'ListCreditCards', params: {} });
-          }} />
+          <ProfileMenuItem
+            icon="card-a"
+            text={"Meus Cartões"}
+            onPress={() => {
+              this.props.navigation.navigate({
+                key: "list_credit1",
+                routeName: "ListCreditCards",
+                params: {}
+              });
+            }}
+          />
 
-          <ProfileMenuItem icon="chat" text={"Suporte TheFarma"} onPress={() => { this.openSupport() }} />
+          <ProfileMenuItem
+            icon="chat"
+            text={"Suporte TheFarma"}
+            onPress={() => {
+              this.openSupport();
+            }}
+          />
         </ScrollView>
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 24, marginBottom: 40, }}>
-          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', }} onPress={() => { this.logout() }}>
-            <Icon name="logout" size={24} color={"#000"} style={{ marginRight: 16 }} />
-            <Text style={styles.buttonText} uppercase={false}>{"Deslogar"}</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingHorizontal: 24,
+            marginBottom: 40
+          }}
+        >
+          <TouchableOpacity
+            style={{ flexDirection: "row", alignItems: "center" }}
+            onPress={() => {
+              this.logout();
+            }}
+          >
+            <Icon
+              name="logout"
+              size={24}
+              color={"#000"}
+              style={{ marginRight: 16 }}
+            />
+            <Text style={styles.buttonText} uppercase={false}>
+              {"Deslogar"}
+            </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={{}} onPress={() => { this.showVersionScreen() }}>
+          <TouchableOpacity
+            style={{}}
+            onPress={() => {
+              this.showVersionScreen();
+            }}
+          >
             <Text style={styles.version}>{this.getVersion()}</Text>
           </TouchableOpacity>
         </View>
-
       </Container>
     );
   }

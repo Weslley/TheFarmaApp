@@ -32,7 +32,7 @@ export default EStyleSheet.create({
   },
   containerParcel: {
     width: "100%",
-    marginTop: 24
+    marginTop: 16
   },
   row: {
     alignItems: 'center',

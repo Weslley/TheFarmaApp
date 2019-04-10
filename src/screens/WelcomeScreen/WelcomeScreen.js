@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Platform
 } from "react-native";
+import { NavigationEvents } from "react-navigation";
 
 import firebase from "react-native-firebase";
 import type { Notification, NotificationOpen } from "react-native-firebase";
@@ -131,6 +132,9 @@ class WelcomeScreen extends Component {
 
   componentDidMount() {
     StatusBar.setHidden(false);
+    StatusBar.setTranslucent(true);
+    StatusBar.setBackgroundColor('transparent');
+    StatusBar.setBarStyle('light-content');
 
     //Seta imagem de background
     this.setState({ bg: this.getBackgroundScreen() });
@@ -334,7 +338,13 @@ class WelcomeScreen extends Component {
     Geolocation.getCurrentPosition(
       position => {
         this.props.dispatch(getGeocodeAddress(position.coords));
-        this.props.dispatch(updateLocation(this.props.uf, position.coords.latitude, position.coords.longitude));
+        this.props.dispatch(
+          updateLocation(
+            this.props.uf,
+            position.coords.latitude,
+            position.coords.longitude
+          )
+        );
       },
       error => this.setState({ error: error.message }),
       {
@@ -447,6 +457,19 @@ class WelcomeScreen extends Component {
     console.log("Render -> Home", state);
     return (
       <KeyboardAvoidingView style={{ flex: 1 }}>
+
+        <NavigationEvents
+          onWillFocus={payload => {
+            this.setState({ bg: this.getBackgroundScreen() });
+            StatusBar.setBarStyle('light-content');
+          }}
+          onWillBlur={
+            payload => {
+                StatusBar.setBarStyle('dark-content');
+            }
+          }
+        />
+
         <Image
           resizeMode={"cover"}
           style={styles.background}

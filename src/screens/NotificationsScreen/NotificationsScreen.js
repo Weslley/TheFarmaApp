@@ -63,7 +63,7 @@ class NotificationsScreen extends Component {
       <View style={{ flex: 1, }}>
 
         <Header
-          style={{ paddingHorizontal: 24, backgroundColor: "transparent" }}
+          style={{ paddingHorizontal: 24, backgroundColor: "transparent", paddingTop: 0 }}
           title={"Notificações"}
         />
 

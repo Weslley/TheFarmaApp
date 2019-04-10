@@ -194,7 +194,7 @@ class OrderScreen extends Component {
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
         <Header
-          title={`Ordem #${StringUtils.rjust('' + order.id, 8, '0')}`}
+          title={`Ordem #${order.id}`}
           subtitle={"Todos os detalhes do seu pedido está aqui"}
           menuLeft={
             <MenuItem icon="md-arrow-back" onPress={() => { this.onBack() }}

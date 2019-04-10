@@ -6,7 +6,8 @@ import {
   Platform,
   ActionSheetIOS,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  StatusBar
 } from "react-native";
 
 import { Text } from "native-base";
@@ -31,7 +32,9 @@ class ActionSheet extends Component {
   }
   static show(config, callback) {
     this.actionsheetInstance._root.showActionSheet(config, callback);
+    StatusBar.setHidden(true);
   }
+
   showActionSheet(config, callback) {
     if (Platform.OS === "ios") {
       if (typeof config.options[0] == "object") {
@@ -57,6 +60,8 @@ class ActionSheet extends Component {
     }
   }
   componentDidMount() {
+    StatusBar.setHidden(true);
+
     if (this.props.callback) {
       this.setState({ callback: this.props.callback });
     }
@@ -66,7 +71,13 @@ class ActionSheet extends Component {
     }
   }
 
+  componentWillUnmount() {
+    StatusBar.setHidden(false);
+  }
+
+
   render() {
+    StatusBar.setHidden(true);
     return (
       <Modal
         animationType={"fade"}
@@ -75,6 +86,7 @@ class ActionSheet extends Component {
         onRequestClose={() => {
           this.state.callback(this.state.cancelButtonIndex);
           this.setState({ modalVisible: false });
+          StatusBar.setHidden(false);
         }}
       >
         <KeyboardAvoidingView

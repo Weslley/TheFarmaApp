@@ -180,7 +180,7 @@ class VerificationCodeScreen extends Component {
 
   render() {
     return (
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior='padding' enabled>
+      <View style={{ flex: 1 }} >
 
         <Image
           resizeMode={"cover"}
@@ -199,7 +199,7 @@ class VerificationCodeScreen extends Component {
         />
 
         <View style={{ flex: 1, paddingHorizontal: 24, justifyContent: "space-between" }}>
-          <View style={{ paddingTop: 40 }}>
+          <View style={{ paddingTop: 24 }}>
             <Text style={[styles.title, { paddingBottom: 20 }]}>{"Digite o código SMS que enviamos"}</Text>
 
             <ConfirmationCodeInput
@@ -244,7 +244,7 @@ class VerificationCodeScreen extends Component {
             <Loading />
           </View>
         )}
-      </KeyboardAvoidingView>
+      </View>
     );
   }
 }

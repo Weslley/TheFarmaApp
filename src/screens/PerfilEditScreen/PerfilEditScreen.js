@@ -99,6 +99,8 @@ class PerfilEditScreen extends Component {
 
   componentDidMount() {
     StatusBar.setHidden(false);
+    StatusBar.setTranslucent(true);
+
     let client = this.props.client;
     if (client) {
 

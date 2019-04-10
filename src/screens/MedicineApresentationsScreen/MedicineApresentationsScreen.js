@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, ActivityIndicator, Image, TouchableOpacity, FlatList } from "react-native";
+import { View, ScrollView, ActivityIndicator, Image, TouchableOpacity, FlatList, StatusBar } from "react-native";
 import { Container, Button, Text } from "native-base";
 import { TextMask } from "react-native-masked-text";
 
@@ -85,12 +85,14 @@ class MedicineApresentationScreen extends Component {
     this.props.dispatch(removeItemToCart(apresentation));
   }
 
-  _showDeliveryDialog() { this.setState({ showDeliveryDialog: true }); }
+  _showDeliveryDialog() {
+      this.setState({ showDeliveryDialog: true });
+    }
 
   _renderDeliveryDialog() {
     return (
       <ActionSheet
-        callback={buttonIndex => { this.setState({ showDeliveryDialog: false }); }}
+        callback={ buttonIndex => { this.setState({ showDeliveryDialog: false }); }}
         content={
           <View style={styles.containerDelivery}>
             <Text style={styles.titleDialog}>Como deseja obter os seus medicamentos?</Text>

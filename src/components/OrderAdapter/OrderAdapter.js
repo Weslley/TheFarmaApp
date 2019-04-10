@@ -61,16 +61,17 @@ class OrderAdapter extends Component {
   }
 
   render() {
+    let order = this.props.order;
     return (
       <View style={{}}>
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-          <Text style={styles.text}>{DateUtils.toDate(this.props.order.log.data_criacao)}</Text>
+          <Text style={styles.text}>{DateUtils.toDate(order.log.data_criacao)}</Text>
           {this._getOrderStatus()}
         </View>
 
         <View style={{ marginBottom: 8 }}>
           <FlatList
-            data={this.props.order.itens}
+            data={order.itens}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderItem}
           />
@@ -79,7 +80,7 @@ class OrderAdapter extends Component {
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text style={[styles.text, { marginRight: 16 }]}>{"Total"}</Text>
-            <TextMask style={styles.text} value={this.props.order.valor_bruto} type={"money"} options={{}} />
+            <TextMask style={styles.text} value={order.valor_bruto} type={"money"} options={{}} />
           </View>
         </View>
 

@@ -53,7 +53,7 @@ class ProfileScreen extends Component {
     return (
       <Container style={{ backgroundColor: "#FFFFFF" }}>
         <NavigationEvents
-          onWillFocus={payload => this.showLogin()}
+          onWillFocus = { payload => this.showLogin()}
         />
         {Components.renderIfElse(this.props.client,
           <MenuScreen navigation={this.props.navigation} />,

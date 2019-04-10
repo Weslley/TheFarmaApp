@@ -244,6 +244,7 @@ class ConfirmationScreen extends Component {
             {Components.renderIfElse(this.props.order.forma_pagamento === 0,
               <View>
                 {Components.renderIf(this.props.creditCard, <CreditCardAdapter creditCard={this.props.creditCard} />)}
+
                 <View style={[styles.containerParcel, styles.row]}>
                   <Text style={[styles.parcelTitle, { width: '45%' }]} >{"Parcelas"}</Text>
                   <View style={{ width: '55%' }}>
