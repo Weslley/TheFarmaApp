@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Image, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { Badge, Text } from "native-base";
 import PropTypes from "prop-types";
 

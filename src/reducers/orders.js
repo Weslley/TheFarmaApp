@@ -25,7 +25,8 @@ const INITIAL_STATE = {
     next: null,
     previous: null,
     orders: [],
-    success: false
+    success: false,
+    order_history: null
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -69,7 +70,11 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, isLoading: true, order: newOrder, error: null, success: false };
 
         case GET_ORDER_SUCCESS:
-            return { ...state, order: action.data, error: null, isLoading: false };
+            if(action.data.history){
+                return { ...state, order_history: action.data, error: null, isLoading: false, success: true };
+            }
+            return { ...state, order: action.data, error: null, isLoading: false, success: true };
+
 
         case CREATE_ORDER_SUCCESS:
         case UPDATE_ORDER_SUCCESS:

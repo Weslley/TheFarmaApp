@@ -26,6 +26,10 @@ export const getOrder = function* (action) {
         if (order.propostas)
             order.propostas = orderBy(order.propostas, ['possui_todos_itens', 'valor_total'], ['desc', 'asc'])
 
+        if(action.params.history){
+            order.history = true;
+        }
+
         yield put(responseSuccess(GET_ORDER_SUCCESS, order));
     } catch (e) {
         yield put(responseError(GET_ORDER_ERROR, e));

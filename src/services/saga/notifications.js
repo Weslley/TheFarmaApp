@@ -6,7 +6,19 @@ import {
     responseSuccess, responseError,
     GET_NOTIFICATIONS_SUCCESS, GET_NOTIFICATIONS_ERROR,
     GET_NOTIFICATIONS_NEXT_PAGE_SUCCESS, GET_NOTIFICATIONS_NEXT_PAGE_ERROR,
+    VIEW_NOTIFICATION_ERROR, VIEW_NOTIFICATION_SUCCESS
 } from "../../actions/notifications";
+
+export const viewNotification = function* (action) {
+    try {
+        let config = { headers: { 'Authorization': 'Token ' + action.params.client.token } }
+        const response = yield call(axios.get, `${SERVER_API}/notificacoes/${action.params.notificacao.id}/visualizar`, config);
+        console.log(response);
+        yield put(responseSuccess(VIEW_NOTIFICATION_SUCCESS, action.params));
+    } catch (e) {
+        yield put(responseError(VIEW_NOTIFICATION_ERROR, e));
+    }
+}
 
 export const getNotifications = function* (action) {
     try {

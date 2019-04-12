@@ -1,22 +1,21 @@
 import React, { Component } from "react";
-import { View, ScrollView, ActivityIndicator, Image, TouchableOpacity, FlatList, StatusBar } from "react-native";
-import { Container, Button, Text } from "native-base";
-import { TextMask } from "react-native-masked-text";
+import { View, ScrollView, ActivityIndicator, FlatList } from "react-native";
+import { Text } from "native-base";
+import Snackbar from "react-native-snackbar";
 
 import { connect } from "react-redux";
 
 import { createOrder } from "../../actions/orders";
-import { getApresentations, getApresentationsNextPage, clearError } from "../../actions/apresentations";
 import { addItemToCart, removeItemToCart } from "../../actions/carts";
+import { getApresentations, getApresentationsNextPage, clearError } from "../../actions/apresentations";
 
 import { Header } from "../../layout/Header";
 import { BottomBar } from "../../layout/Bar";
 import { ActionSheet } from "../../layout/ActionSheet";
 import { ShoppingBagIcon } from "../../layout/ShoppingBagIcon";
 
-import { Icon } from "../../components/Icon";
-import { Loading } from "../../components/Loading"
-import { MenuItem } from '../../components/MenuItem';
+import { Loading } from "../../components/Loading";
+import { MenuItem } from "../../components/MenuItem";
 import { ButtonCustom } from "../../components/ButtonCustom";
 import { ApresentationDescription } from "../../components/Product";
 
@@ -33,24 +32,55 @@ class MedicineApresentationScreen extends Component {
   }
 
   static navigationOptions = ({ navigation }) => {
-    return { header: null }
+    return { header: null };
   };
 
   componentWillReceiveProps = nextProps => {
-    this.setState({ apresentations: this.props.apresentations });
-    const apresentations = nextProps.apresentations.map(apresentation => ({
-      ...apresentation,
-      quantidade: this.getApresentationQuantity(nextProps, apresentation)
-    }));
-    this.setState({ apresentations });
-    if (nextProps.nextPage !== null) {
-      setTimeout(() => { this.onEndReached(0) }, 500);
+    try {
+
+      if (nextProps && nextProps.error) {
+        let error = nextProps.error;
+
+        if (error.response && (error.response.status >= 400 && error.response.status <= 403) ) {
+          if (error.response.data.detail) {
+            Snackbar.show({ title: error.response.data.detail, duration: Snackbar.LENGTH_SHORT, });
+            return;
+          }
+          Snackbar.show({ title: nextProps.error.message, duration: Snackbar.LENGTH_SHORT });
+        }
+
+        if (error.response && (error.response.status >= 500 && error.response.status <= 504)) {
+            Snackbar.show({ title: "Erro ao conectar com o servidor!", duration: Snackbar.LENGTH_SHORT });
+        }
+
+        if ( error.message && error.message === "Network Error" ) {
+          Snackbar.show({ title: "Sem conexão com a internet", duration: Snackbar.LENGTH_SHORT });
+        }
+      }
+
+      this.setState({ apresentations: this.props.apresentations });
+
+      const apresentations = nextProps.apresentations.map(apresentation => ({
+        ...apresentation,
+        quantidade: this.getApresentationQuantity(nextProps, apresentation)
+      }));
+
+      this.setState({ apresentations });
+
+      if (nextProps.nextPage !== null) {
+        setTimeout(() => { this.onEndReached(0); }, 500);
+      }
+
+    } catch (error) {
+      Snackbar.show({ title: e.message, duration: Snackbar.LENGTH_SHORT });
     }
   };
 
   componentWillMount() {
     this.props.dispatch(clearError());
-    this.props.dispatch(getApresentations(this.props.uf, this.props.selected.nome));
+    this.props.dispatch(
+      getApresentations(this.props.uf, this.props.selected.nome)
+    );
   }
 
   /** Private functions */
@@ -59,11 +89,17 @@ class MedicineApresentationScreen extends Component {
   }
 
   showCart() {
-    this.props.navigation.navigate({ key: 'cart1', routeName: 'Cart', params: {} });
+    this.props.navigation.navigate({
+      key: "cart1",
+      routeName: "Cart",
+      params: {}
+    });
   }
 
   getCartSize() {
-    return (this.props.cartItems && this.props.cartItems.length) ? this.props.cartItems.length : 0;
+    return this.props.cartItems && this.props.cartItems.length
+      ? this.props.cartItems.length
+      : 0;
   }
 
   getApresentationQuantity(nextProps, apresentation) {
@@ -86,79 +122,111 @@ class MedicineApresentationScreen extends Component {
   }
 
   _showDeliveryDialog() {
-      this.setState({ showDeliveryDialog: true });
-    }
+    this.setState({ showDeliveryDialog: true });
+  }
 
   _renderDeliveryDialog() {
     return (
       <ActionSheet
-        callback={ buttonIndex => { this.setState({ showDeliveryDialog: false }); }}
+        callback={buttonIndex => {
+          this.setState({ showDeliveryDialog: false });
+        }}
         content={
           <View style={styles.containerDelivery}>
-            <Text style={styles.titleDialog}>Como deseja obter os seus medicamentos?</Text>
+            <Text style={styles.titleDialog}>
+              Como deseja obter os seus medicamentos?
+            </Text>
             <View style={styles.row}>
               <ButtonCustom
                 image={require("../../assets/images/ic_walking.png")}
                 title="Buscar"
                 description="Opta em ir buscar seu medicamento em uma farmácia mais próxima."
-                onPress={() => { this._showListProposals(); }}
+                onPress={() => {
+                  this._showListProposals();
+                }}
               />
               <ButtonCustom
                 image={require("../../assets/images/ic_delivery.png")}
                 title="Entregar"
                 description="Seu medicamento é entregue em um local de sua escolha."
-                onPress={() => { this._showListAddress(); }}
+                onPress={() => {
+                  this._showListAddress();
+                }}
               />
             </View>
           </View>
         }
       />
-    )
+    );
   }
 
   _showListProposals() {
     if (this.props.client) {
       let order = this.props.order;
-      let itens = []
-      this.props.cartItems.map((item) => { itens.push({ apresentacao: item.id, quantidade: item.quantidade }) })
-      order.itens = itens
+      let itens = [];
+      this.props.cartItems.map(item => {
+        itens.push({ apresentacao: item.id, quantidade: item.quantidade });
+      });
+      order.itens = itens;
       order.latitude = this.props.latitude;
       order.longitude = this.props.longitude;
       order.delivery = false;
-      let params = { client: this.props.client, order: order }
+      let params = { client: this.props.client, order: order };
       this.props.dispatch(createOrder(params));
-      this.props.navigation.navigate({ key: 'list_proposals1', routeName: 'ListProposals', params: {} });
+      this.props.navigation.navigate({
+        key: "list_proposals1",
+        routeName: "ListProposals",
+        params: {}
+      });
     } else {
-      this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: { actionBack: 'MedicineApresentations' } });
+      this.props.navigation.navigate({
+        key: "profile1",
+        routeName: "Profile",
+        params: { actionBack: "MedicineApresentations" }
+      });
     }
     this.setState({ showDeliveryDialog: false });
   }
 
   _showListAddress() {
     if (this.props.client) {
-      this.props.navigation.navigate({ key: 'list_address1', routeName: 'ListAddress', params: { showBottomBar: true } });
+      this.props.navigation.navigate({
+        key: "list_address1",
+        routeName: "ListAddress",
+        params: { showBottomBar: true }
+      });
     } else {
-      this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: { actionBack: 'MedicineApresentations' } });
+      this.props.navigation.navigate({
+        key: "profile1",
+        routeName: "Profile",
+        params: { actionBack: "MedicineApresentations" }
+      });
     }
     this.setState({ showDeliveryDialog: false });
   }
 
   _showProductDetail(item) {
-    this.props.navigation.navigate({ key: 'apresentation_detail1', routeName: 'ApresentationDetail', params: { apresentation: item } });
+    this.props.navigation.navigate({
+      key: "apresentation_detail1",
+      routeName: "ApresentationDetail",
+      params: { apresentation: item }
+    });
   }
 
   onEndReached = ({ distanceFromEnd }) => {
     if (this.props.nextPage) {
-      let params = { client: this.props.client, url: this.props.nextPage }
+      let params = { client: this.props.client, url: this.props.nextPage };
       this.props.dispatch(getApresentationsNextPage(params));
     }
-  }
+  };
 
   _renderItem = ({ item }) => (
     <ApresentationDescription
       apresentation={item}
       showActions={true}
-      onPress={() => { this._showProductDetail(item) }}
+      onPress={() => {
+        this._showProductDetail(item);
+      }}
       onPressMinus={() => this._removeItemToCart(item)}
       onPressPlus={() => this._addItemToCart(item)}
     />
@@ -167,14 +235,13 @@ class MedicineApresentationScreen extends Component {
   renderFooter = () => {
     if (!this.props.isLoading) return null;
     return (
-      <View style={{ alignItems: 'center', paddingVertical: 16, }}>
+      <View style={{ alignItems: "center", paddingVertical: 16 }}>
         <ActivityIndicator color={"#00C7BD"} size={"large"} />
       </View>
     );
   };
 
   render() {
-
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
         <Header
@@ -183,23 +250,38 @@ class MedicineApresentationScreen extends Component {
           menuLeft={
             <MenuItem
               icon="md-arrow-back"
-              onPress={() => { this.onBack() }}
-              style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }} />
+              onPress={() => {
+                this.onBack();
+              }}
+              style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+            />
           }
           menuRight={
             <View style={{ paddingRight: 12 }}>
-              <ShoppingBagIcon value={this.getCartSize()} onPress={() => { this.showCart() }} />
+              <ShoppingBagIcon
+                value={this.getCartSize()}
+                onPress={() => {
+                  this.showCart();
+                }}
+              />
             </View>
           }
         />
-        {Components.renderIfElse(this.props.apresentations && this.props.apresentations.length === 0 && this.props.isLoading === true,
+        {Components.renderIfElse(
+          this.props.apresentations &&
+            this.props.apresentations.length === 0 &&
+            this.props.isLoading === true,
           <Loading />,
-          <ScrollView style={{ paddingHorizontal: 24 }}
-            onScroll={(e) => {
+          <ScrollView
+            style={{ paddingHorizontal: 24 }}
+            onScroll={e => {
               let paddingToBottom = 0;
               paddingToBottom += e.nativeEvent.layoutMeasurement.height;
-              if (e.nativeEvent.contentOffset.y.toFixed(1) === (e.nativeEvent.contentSize.height - paddingToBottom).toFixed(1)) {
-                this.onEndReached(0)
+              if (
+                e.nativeEvent.contentOffset.y.toFixed(1) ===
+                (e.nativeEvent.contentSize.height - paddingToBottom).toFixed(1)
+              ) {
+                this.onEndReached(0);
               }
             }}
           >
@@ -213,18 +295,21 @@ class MedicineApresentationScreen extends Component {
           </ScrollView>
         )}
 
-        {Components.renderIf(this.props.cartItems.length > 0,
+        {Components.renderIf(
+          this.props.cartItems.length > 0,
           <BottomBar
             buttonTitle="Ver propostas"
             price={CartUtils.getValueTotal(this.props.cartItems)}
-            onButtonPress={() => { this._showDeliveryDialog(); }}
+            onButtonPress={() => {
+              this._showDeliveryDialog();
+            }}
           />
         )}
 
-        {Components.renderIf(this.state.showDeliveryDialog,
+        {Components.renderIf(
+          this.state.showDeliveryDialog,
           this._renderDeliveryDialog()
         )}
-
       </View>
     );
   }
@@ -243,7 +328,7 @@ function mapStateToProps(state) {
     apresentations: state.apresentations.apresentations,
     isLoading: state.apresentations.isLoading,
     nextPage: state.apresentations.next,
-    error: state.apresentations.error,
+    error: state.apresentations.error
   };
 }
 

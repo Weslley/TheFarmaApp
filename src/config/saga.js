@@ -13,8 +13,8 @@ import { GET_APRESENTATIONS, GET_APRESENTATIONS_NEXT_PAGE, RANKING_VIEW } from '
 import { getGenerics, getGenericsNextPage } from '../services/saga/generics';
 import { GET_GENERICS, GET_GENERICS_NEXT_PAGE } from '../actions/generics';
 //NOTIFICATIONS
-import { getNotifications, getNotificationsNextPage } from '../services/saga/notifications';
-import { GET_NOTIFICATIONS, GET_NOTIFICATIONS_NEXT_PAGE } from '../actions/notifications';
+import { getNotifications, getNotificationsNextPage, viewNotification } from '../services/saga/notifications';
+import { GET_NOTIFICATIONS, GET_NOTIFICATIONS_NEXT_PAGE, VIEW_NOTIFICATION } from '../actions/notifications';
 //CITIES
 import { getCities } from '../services/saga/cities';
 import { GET_CITIES } from '../actions/cities';
@@ -53,6 +53,7 @@ const rootSaga = function* () {
   yield takeEvery(GET_GENERICS, getGenerics);
   yield takeLatest(GET_GENERICS_NEXT_PAGE, getGenericsNextPage);
 
+  yield takeEvery(VIEW_NOTIFICATION, viewNotification);
   yield takeEvery(GET_NOTIFICATIONS, getNotifications);
   yield takeLatest(GET_NOTIFICATIONS_NEXT_PAGE, getNotificationsNextPage);
 

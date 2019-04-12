@@ -1,7 +1,11 @@
-import React from 'react';
-import { Animated, Easing } from 'react-native';
+import React from "react";
+import { Animated, Easing, View } from "react-native";
 
-import { createStackNavigator, createBottomTabNavigator, createAppContainer } from "react-navigation";
+import {
+  createStackNavigator,
+  createBottomTabNavigator,
+  createAppContainer
+} from "react-navigation";
 
 import { WelcomeScreen } from "../screens/WelcomeScreen";
 import { ProfileScreen } from "../screens/ProfileScreen";
@@ -12,7 +16,14 @@ import { MedicineApresentationsScreen } from "../screens/MedicineApresentationsS
 import { ApresentationDetailScreen } from "../screens/ApresentationDetailScreen";
 import { CartScreen } from "../screens/CartScreen";
 import { LoginScreen } from "../screens/LoginScreen";
-import { RegisterScreen, NameScreen, EmailScreen, PasswordScreen, PhoneScreen, VerificationCodeScreen } from "../screens/RegisterScreen";
+import {
+  RegisterScreen,
+  NameScreen,
+  EmailScreen,
+  PasswordScreen,
+  PhoneScreen,
+  VerificationCodeScreen
+} from "../screens/RegisterScreen";
 import { ListProposalsScreen } from "../screens/ListProposalsScreen";
 import { ListAddressScreen } from "../screens/ListAddressScreen";
 import { ListCreditCardsScreen } from "../screens/ListCreditCardsScreen";
@@ -33,6 +44,7 @@ import { PerfilEditScreen } from "../screens/PerfilEditScreen";
 import { ProposalNotFoundScreen } from "../screens/ProposalNotFoundScreen";
 
 import { Icon } from "../components/Icon";
+import { IconWithBadge } from "../components/IconWithBadge";
 
 const transitionConfig = () => {
   return {
@@ -40,23 +52,23 @@ const transitionConfig = () => {
       duration: 750,
       easing: Easing.out(Easing.poly(4)),
       timing: Animated.timing,
-      useNativeDriver: true,
+      useNativeDriver: true
     },
     screenInterpolator: sceneProps => {
-      const { layout, position, scene } = sceneProps
+      const { layout, position, scene } = sceneProps;
 
-      const thisSceneIndex = scene.index
-      const width = layout.initWidth
+      const thisSceneIndex = scene.index;
+      const width = layout.initWidth;
 
       const translateX = position.interpolate({
         inputRange: [thisSceneIndex - 1, thisSceneIndex],
-        outputRange: [width, 0],
-      })
+        outputRange: [width, 0]
+      });
 
-      return { transform: [{ translateX }] }
-    },
-  }
-}
+      return { transform: [{ translateX }] };
+    }
+  };
+};
 
 export const TabsNavigator = createBottomTabNavigator(
   {
@@ -73,9 +85,6 @@ export const TabsNavigator = createBottomTabNavigator(
       screen: NotificationsScreen,
       navigationOptions: {
         header: null,
-        tabBarIcon: ({ focused, tintColor }) => (
-          <Icon name="notification" size={24} color={tintColor} />
-        )
       }
     },
     Profile: {
@@ -86,7 +95,7 @@ export const TabsNavigator = createBottomTabNavigator(
           <Icon name="profile" size={24} color={tintColor} />
         )
       }
-    },
+    }
   },
   {
     swipeEnabled: false,
@@ -101,7 +110,7 @@ export const TabsNavigator = createBottomTabNavigator(
       inactiveTintColor: "#CCCCCC",
       inactiveBackgroundColor: "#FFFFFF",
       indicatorStyle: {
-        backgroundColor: 'transparent',
+        backgroundColor: "transparent"
       },
       style: {
         backgroundColor: "#FFFFFF",
@@ -117,7 +126,6 @@ export const TabsNavigator = createBottomTabNavigator(
 
 export const MainNavigator = createStackNavigator(
   {
-
     //Phone: { screen: PhoneScreen },
 
     Tabs: {
@@ -156,7 +164,7 @@ export const MainNavigator = createStackNavigator(
 
     Camera: { screen: CameraScreen },
     Version: { screen: VersionScreen },
-    PerfilEdit: { screen: PerfilEditScreen },
+    PerfilEdit: { screen: PerfilEditScreen }
   },
   {
     mode: "modal",

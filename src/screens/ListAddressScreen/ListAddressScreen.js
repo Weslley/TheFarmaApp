@@ -43,7 +43,7 @@ class ListAddressScreen extends Component {
 
       if (nextProps && nextProps.error) {
         if (nextProps.error.response && (nextProps.error.response.status >= 500 && nextProps.error.response.status <= 504)) {
-          Snackbar.show({ title: "Erro em nosso servidor!", duration: Snackbar.LENGTH_SHORT });
+          Snackbar.show({ title: "Erro ao conectar com o servidor!", duration: Snackbar.LENGTH_SHORT });
         }
 
         if (nextProps.error.response && (nextProps.error.response.status >= 400 && nextProps.error.response.status <= 403)) {

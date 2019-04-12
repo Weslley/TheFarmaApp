@@ -207,74 +207,50 @@ class WelcomeScreen extends Component {
   }
 
   async createNotificationListeners() {
-    const channel = new firebase.notifications.Android.Channel(
-      "fcm_default_channel",
-      "TheFarma",
-      firebase.notifications.Android.Importance.High
-    ).setDescription("Teste"); //.setSound('sampleaudio.mp3');
-    firebase.notifications().android.createChannel(channel);
 
-    this.notificationDisplayedListener = firebase
-      .notifications()
-      .onNotificationDisplayed(notification => {
-        // Process your notification as required
-        // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
-        console.log("notificationDisplayed", notification);
-      });
+    //.setSound('taxi');
+    const channel = new firebase.notifications.Android.Channel('fcm_default_channel', 'TheFarma', firebase.notifications.Android.Importance.Max).setDescription('TheFarma');
+    firebase.notifications().android.createChannel(channel);
 
     /*
      * Triggered when a particular notification has been received in foreground
      * */
-    this.notificationListener = firebase
-      .notifications()
-      .onNotification(notification => {
+    this.notificationListener = firebase.notifications().onNotification(notification => {
         const { title, body } = notification;
         console.log("notificationListener", notification);
         this.handleFcmMessage(notification.data, title, body);
+    });
 
-        /*
-        //sound: 'sampleaudio',
-        const localNotification = new firebase.notifications.Notification({show_in_foreground: true,})
-            .setNotificationId(111)
-            .setTitle("TáxiThe - Motorista")
-            .setBody("")
-            .setData(notification.data)
-            .android.setChannelId('fcm_default_channel') // e.g. the id you chose above
-            .android.setSmallIcon('@drawable/ic_launcher') // create this icon in Android Studio
-            .android.setColor('#000000') // you can set a color here
-            .android.setPriority(firebase.notifications.Android.Priority.High);
-
-        firebase.notifications().displayNotification(localNotification).catch(err => console.error(err));
-        */
-      });
+    this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed(notification => {
+        // Process your notification as required
+        // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
+        console.log("notificationDisplayed", notification);
+    });
 
     /*
      * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
      * */
-    this.notificationOpenedListener = firebase
-      .notifications()
-      .onNotificationOpened(notificationOpen => {
+    this.notificationOpenedListener = firebase.notifications().onNotificationOpened(notificationOpen => {
         console.log("notificationOpenedListener", notificationOpen);
-      });
+    });
 
     /*
      * If your app is closed, you can check if it was opened by a notification being clicked / tapped / opened as follows:
      * */
-    firebase
-      .notifications()
-      .getInitialNotification()
-      .then((notificationOpen: NotificationOpen) => {
+    firebase.notifications().getInitialNotification().then((notificationOpen: NotificationOpen) => {
         if (notificationOpen) {
           try {
             console.log("notificationOpen", notificationOpen);
+
             const action = notificationOpen.action;
             const notification: Notification = notificationOpen.notification;
+
             this.handleFcmMessage(notification.data);
           } catch (error) {
             console.log("notificationOpenError", error);
           }
         }
-      });
+    });
 
     /*
      * Triggered for data only payload in foreground
@@ -286,17 +262,21 @@ class WelcomeScreen extends Component {
 
   handleFcmMessage(message = {}, title = null, body = null) {
     try {
-      let type = parseInt(message.type);
+
       let data = JSON.parse(message.data);
-      switch (type) {
-        case 1:
-          break;
-        default:
-          if (title && body) {
-            this.showAlert(title, body);
-          }
-          break;
+
+      if(data.pedido){
+        return;
+      };
+
+      if(data.notificacao_id){
+        return;
+      };
+
+      if (title && body) {
+        this.showAlert(title, body);
       }
+
     } catch (error) {
       console.log("Erro ao tratar notificação");
     }
