@@ -133,8 +133,8 @@ class WelcomeScreen extends Component {
   componentDidMount() {
     StatusBar.setHidden(false);
     StatusBar.setTranslucent(true);
-    StatusBar.setBackgroundColor('transparent');
-    StatusBar.setBarStyle('light-content');
+    StatusBar.setBackgroundColor("transparent");
+    StatusBar.setBarStyle("light-content");
 
     //Seta imagem de background
     this.setState({ bg: this.getBackgroundScreen() });
@@ -207,37 +207,49 @@ class WelcomeScreen extends Component {
   }
 
   async createNotificationListeners() {
-
     //.setSound('taxi');
-    const channel = new firebase.notifications.Android.Channel('fcm_default_channel', 'TheFarma', firebase.notifications.Android.Importance.Max).setDescription('TheFarma');
+    const channel = new firebase.notifications.Android.Channel(
+      "fcm_default_channel",
+      "TheFarma",
+      firebase.notifications.Android.Importance.Max
+    ).setDescription("TheFarma");
     firebase.notifications().android.createChannel(channel);
 
     /*
      * Triggered when a particular notification has been received in foreground
      * */
-    this.notificationListener = firebase.notifications().onNotification(notification => {
+    this.notificationListener = firebase
+      .notifications()
+      .onNotification(notification => {
         const { title, body } = notification;
         console.log("notificationListener", notification);
         this.handleFcmMessage(notification.data, title, body);
-    });
+      });
 
-    this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed(notification => {
+    this.notificationDisplayedListener = firebase
+      .notifications()
+      .onNotificationDisplayed(notification => {
         // Process your notification as required
         // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
         console.log("notificationDisplayed", notification);
-    });
+      });
 
     /*
      * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
      * */
-    this.notificationOpenedListener = firebase.notifications().onNotificationOpened(notificationOpen => {
+    this.notificationOpenedListener = firebase
+      .notifications()
+      .onNotificationOpened(notificationOpen => {
         console.log("notificationOpenedListener", notificationOpen);
-    });
+      });
 
     /*
      * If your app is closed, you can check if it was opened by a notification being clicked / tapped / opened as follows:
      * */
-    firebase.notifications().getInitialNotification().then((notificationOpen: NotificationOpen) => {
+    firebase
+      .notifications()
+      .getInitialNotification()
+      .then((notificationOpen: NotificationOpen) => {
         if (notificationOpen) {
           try {
             console.log("notificationOpen", notificationOpen);
@@ -250,7 +262,7 @@ class WelcomeScreen extends Component {
             console.log("notificationOpenError", error);
           }
         }
-    });
+      });
 
     /*
      * Triggered for data only payload in foreground
@@ -262,21 +274,19 @@ class WelcomeScreen extends Component {
 
   handleFcmMessage(message = {}, title = null, body = null) {
     try {
-
       let data = JSON.parse(message.data);
 
-      if(data.pedido){
+      if (data.pedido) {
         return;
-      };
+      }
 
-      if(data.notificacao_id){
+      if (data.notificacao_id) {
         return;
-      };
+      }
 
       if (title && body) {
         this.showAlert(title, body);
       }
-
     } catch (error) {
       console.log("Erro ao tratar notificação");
     }
@@ -366,14 +376,17 @@ class WelcomeScreen extends Component {
   }
 
   onSearch = showCamera => {
-    Permissions.request("location").then(response => {
-      if (response === "authorized") {
-        this.getLocation();
-      } else {
-        this.alertLocation();
-      }
-    });
-    this.props.navigation.navigate("SearchMedicine", { showCamera });
+    if (this.state.locationPermission === "authorized") {
+      this.props.navigation.navigate("SearchMedicine", { showCamera });
+    } else {
+      Permissions.request("location").then(response => {
+        if (response === "authorized") {
+          this.getLocation();
+        } else {
+          this.alertLocation();
+        }
+      });
+    }
   };
 
   showCart() {
@@ -437,17 +450,14 @@ class WelcomeScreen extends Component {
     console.log("Render -> Home", state);
     return (
       <KeyboardAvoidingView style={{ flex: 1 }}>
-
         <NavigationEvents
           onWillFocus={payload => {
             this.setState({ bg: this.getBackgroundScreen() });
-            StatusBar.setBarStyle('light-content');
+            StatusBar.setBarStyle("light-content");
           }}
-          onWillBlur={
-            payload => {
-                StatusBar.setBarStyle('dark-content');
-            }
-          }
+          onWillBlur={payload => {
+            StatusBar.setBarStyle("dark-content");
+          }}
         />
 
         <Image

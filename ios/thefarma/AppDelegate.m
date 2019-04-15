@@ -15,9 +15,6 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FBSDKLoginKit/FBSDKLoginKit.h>
-#import <FBSDKShareKit/FBSDKShareKit.h>
 
 @implementation AppDelegate
 
@@ -39,23 +36,12 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   
-  [FBSDKProfile enableUpdatesOnAccessTokenChange:YES];
-  [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
   
   [FIRApp configure];
   [[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];
   [RNFirebaseNotifications configure];
 
   return YES;
-}
-
-- (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
-            options:(nonnull NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
-{
-  return [[FBSDKApplicationDelegate sharedInstance] application:application
-                                                        openURL:url
-                                                        options:options];
 }
 
 
