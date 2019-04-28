@@ -61,12 +61,15 @@
 		D568270521567C05007F926E /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A0DD581820C748CA00C78591 /* libReactNativePermissions.a */; };
 		D568270621567C0D007F926E /* libRealmReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A0DD581B20C748CA00C78591 /* libRealmReact.a */; };
 		D58638DD21567334006EF7AE /* libRNCardIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A0E24EB520C8B6EE0014A5DB /* libRNCardIO.a */; };
+		D5B4DD29227651DB00A8B057 /* libRNCAsyncStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5555D672264C5BE000480B8 /* libRNCAsyncStorage.a */; };
+		D5B4DD2F2276615D00A8B057 /* libFirebaseCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5B4DD2E2276615D00A8B057 /* libFirebaseCore.a */; };
+		D5B4DD312276616600A8B057 /* libFirebaseMessaging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5B4DD302276616600A8B057 /* libFirebaseMessaging.a */; };
+		D5B4DD332276617400A8B057 /* libRealmJS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5B4DD322276617400A8B057 /* libRealmJS.a */; };
+		D5B4DD352276618000A8B057 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5B4DD342276618000A8B057 /* JavaScriptCore.framework */; };
+		D5B4DD372276630300A8B057 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D5B4DD362276630200A8B057 /* GoogleService-Info.plist */; };
 		D65AE87167BB41FD808B19BF /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = BEFDC86662884B1AA586F032 /* libz.tbd */; };
 		DA9C4A7CF9B144A3BC08A6CC /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3EA0863774FB47F98EC56059 /* Roboto-Regular.ttf */; };
-		E5555E592264D51B000480B8 /* libFirebaseCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5555E582264D51B000480B8 /* libFirebaseCore.a */; };
-		E5555E5B2264D521000480B8 /* libFirebaseMessaging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5555E5A2264D521000480B8 /* libFirebaseMessaging.a */; };
 		E5555E5C2264D530000480B8 /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5555D642264C5BE000480B8 /* libRNCamera.a */; };
-		E5555E5E2264D546000480B8 /* libRealmJS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5555E5D2264D546000480B8 /* libRealmJS.a */; };
 		E5555E5F2264D55B000480B8 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5B731C4211B862E00800EBF /* libRNDeviceInfo.a */; };
 		E5555E602264D567000480B8 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5555D6E2264C5BE000480B8 /* libRNGestureHandler.a */; };
 		E5555E612264D570000480B8 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5555D6A2264C5BE000480B8 /* libRNFirebase.a */; };
@@ -508,13 +511,18 @@
 		D06AA06324234ADEA42A8E39 /* TheFarma.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = TheFarma.ttf; path = ../src/assets/fonts/TheFarma.ttf; sourceTree = "<group>"; };
 		D0CB5B9F7F3240ECB5E5F471 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Bold.ttf"; path = "../src/assets/fonts/Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		D237193D736B419EAABE3FAE /* Roboto-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-LightItalic.ttf"; path = "../src/assets/fonts/Roboto-LightItalic.ttf"; sourceTree = "<group>"; };
+		D5B4DCF42276519A00A8B057 /* thefarma.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = thefarma.app; path = "/Users/henriquecarvalho/Developer/React Native/thefarma/ios/build/Debug-iphoneos/thefarma.app"; sourceTree = "<absolute>"; };
+		D5B4DD2E2276615D00A8B057 /* libFirebaseCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFirebaseCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5B4DD302276616600A8B057 /* libFirebaseMessaging.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFirebaseMessaging.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5B4DD322276617400A8B057 /* libRealmJS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRealmJS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5B4DD342276618000A8B057 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		D5B4DD362276630200A8B057 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D5FBF1292D55469FAB7B097C /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/native-base/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		D89136237A86437E906D746A /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/native-base/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		D89E5FC1CABE445DBBB9BBC7 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/native-base/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		DAB012CB1F9B4272B655A193 /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNGestureHandler.xcodeproj; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; };
 		E0A543B0799847C280A0F259 /* Roboto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto.ttf; path = "../node_modules/native-base/Fonts/Roboto.ttf"; sourceTree = "<group>"; };
 		E27E9B31ADED4C079CB02D78 /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
-		E50F43D72264D95B00ECC6A2 /* thefarma.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = thefarma.app; path = "/Users/weslley/projects/thefarma/ios/build/Debug-iphoneos/thefarma.app"; sourceTree = "<absolute>"; };
 		E5555E582264D51B000480B8 /* libFirebaseCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFirebaseCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5555E5A2264D521000480B8 /* libFirebaseMessaging.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFirebaseMessaging.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5555E5D2264D546000480B8 /* libRealmJS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRealmJS.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -532,13 +540,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5B4DD352276618000A8B057 /* JavaScriptCore.framework in Frameworks */,
+				D5B4DD332276617400A8B057 /* libRealmJS.a in Frameworks */,
+				D5B4DD312276616600A8B057 /* libFirebaseMessaging.a in Frameworks */,
+				D5B4DD2F2276615D00A8B057 /* libFirebaseCore.a in Frameworks */,
+				D5B4DD29227651DB00A8B057 /* libRNCAsyncStorage.a in Frameworks */,
 				E5555E612264D570000480B8 /* libRNFirebase.a in Frameworks */,
 				E5555E602264D567000480B8 /* libRNGestureHandler.a in Frameworks */,
 				E5555E5F2264D55B000480B8 /* libRNDeviceInfo.a in Frameworks */,
-				E5555E5E2264D546000480B8 /* libRealmJS.a in Frameworks */,
 				E5555E5C2264D530000480B8 /* libRNCamera.a in Frameworks */,
-				E5555E5B2264D521000480B8 /* libFirebaseMessaging.a in Frameworks */,
-				E5555E592264D51B000480B8 /* libFirebaseCore.a in Frameworks */,
 				D568270621567C0D007F926E /* libRealmReact.a in Frameworks */,
 				D568270521567C05007F926E /* libReactNativePermissions.a in Frameworks */,
 				D58638DD21567334006EF7AE /* libRNCardIO.a in Frameworks */,
@@ -631,6 +641,7 @@
 		13B07FAE1A68108700A75B9A /* thefarma */ = {
 			isa = PBXGroup;
 			children = (
+				D5B4DD362276630200A8B057 /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -667,6 +678,10 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D5B4DD342276618000A8B057 /* JavaScriptCore.framework */,
+				D5B4DD322276617400A8B057 /* libRealmJS.a */,
+				D5B4DD302276616600A8B057 /* libFirebaseMessaging.a */,
+				D5B4DD2E2276615D00A8B057 /* libFirebaseCore.a */,
 				E5555E5D2264D546000480B8 /* libRealmJS.a */,
 				E5555E5A2264D521000480B8 /* libFirebaseMessaging.a */,
 				E5555E582264D51B000480B8 /* libFirebaseCore.a */,
@@ -931,7 +946,7 @@
 			);
 			name = thefarma;
 			productName = "Hello World";
-			productReference = E50F43D72264D95B00ECC6A2 /* thefarma.app */;
+			productReference = D5B4DCF42276519A00A8B057 /* thefarma.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1473,6 +1488,7 @@
 				A7CDF7B5BA0D47E6AF41E87D /* FontAwesome5_Brands.ttf in Resources */,
 				6E87DD702D0247E6BC7A5BCD /* FontAwesome5_Regular.ttf in Resources */,
 				8D154E3C9833467DBAE97C85 /* FontAwesome5_Solid.ttf in Resources */,
+				D5B4DD372276630300A8B057 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

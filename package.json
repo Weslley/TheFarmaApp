@@ -22,7 +22,7 @@
     "native-base": "^2.12.1",
     "prop-types": "^15.7.2",
     "react": "16.8.3",
-    "react-native": "^0.58.6",
+    "react-native": "^0.59.2",
     "react-native-awesome-card-io": "^0.8.2",
     "react-native-camera": "^1.13.1",
     "react-native-communications": "^2.2.1",
@@ -40,7 +40,7 @@
     "react-native-vector-icons": "^6.4.2",
     "react-navigation": "^3.5.1",
     "react-redux": "^6.0.1",
-    "realm": "^2.25.0",
+    "realm": "^2.26.1",
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
     "redux-saga": "^1.0.2"

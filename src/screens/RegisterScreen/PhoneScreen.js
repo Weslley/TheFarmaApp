@@ -192,7 +192,7 @@ class PhoneScreen extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <KeyboardAvoidingView style={{ flex: 1 }} enabled>
         <Image
           resizeMode={"cover"}
           style={styles.background}
@@ -303,7 +303,7 @@ class PhoneScreen extends Component {
             <Loading />
           </View>
         )}
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }

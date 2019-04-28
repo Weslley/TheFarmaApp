@@ -3,6 +3,8 @@ package br.com.infog2.thefarma;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
+import org.reactnative.camera.RNCameraPackage;
 
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
@@ -52,6 +54,8 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                 new MainReactPackage(),
+            new RNFusedLocationPackage(),
+            new RNCameraPackage(),
                 new AsyncStoragePackage(),
                 new RNGestureHandlerPackage(),
                 new RNFirebasePackage(),
