@@ -491,7 +491,7 @@ class WelcomeScreen extends Component {
             >
               <View style={{ flexDirection: "row" }}>
                 <Icon name="search" size={24} color={"rgba(0,0,0,0.32)"} style={[{ marginRight: 12 }]}/>
-                <Text style={[ styles.searchBarText, Platform.OS === "ios" ? { fontSize: 12 } : {} ]} >
+                <Text style={[ styles.searchBarText, Platform.OS === "ios" ? {} : {} ]} >
                   {"Nome do medicamento"}
                 </Text>
               </View>
