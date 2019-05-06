@@ -314,11 +314,10 @@ class OrderScreen extends Component {
     } else {
       if (this.state.order.farmacia) {
         return (
-          <View style={[styles.container]}>
-            <View style={[styles.row, { marginBottom: 16 }]}>
-              <Text style={[styles.title, { marginBottom: 0 }]}>
-                {"Endereço da farmácia"}
-              </Text>
+          <View style={[styles.container, {paddingBottom: 16}]}>
+            <View style={[styles.row, { marginBottom: 0 }]}>
+              <Text style={[styles.title, { marginBottom: 0 }]}>{"Endereço da farmácia"}</Text>
+              {/* 
               <View style={{ flexDirection: "row", marginRight: -24 }}>
                 <MenuItem
                   icon="call"
@@ -335,15 +334,10 @@ class OrderScreen extends Component {
                   style={{ paddingVertical: 5, paddingHorizontal: 12 }}
                 />
               </View>
+              */}
             </View>
 
-            <View
-              style={{
-                marginHorizontal: -24,
-                paddingHorizontal: 24,
-                backgroundColor: "#F8F8F8"
-              }}
-            >
+            <View style={{ marginHorizontal: -24, paddingHorizontal: 24 }}>
               <AddressAdapter address={this.state.order.farmacia.endereco} />
             </View>
           </View>
