@@ -25,7 +25,7 @@ class MenuItem extends Component {
               name={this.props.icon}
               size={this.props.iconSize}
               color={this.props.iconColor}
-              style={[{ width: 24, height: 24 }, this.props.iconStyle]} />
+              style={this.props.iconStyle} />
           )}
           {Components.renderIf(this.props.text, <Text style={styles.text}>{this.props.text}</Text>)}
         </View>

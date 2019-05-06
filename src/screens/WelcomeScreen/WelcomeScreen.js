@@ -487,32 +487,15 @@ class WelcomeScreen extends Component {
             <Text style={styles.subtitle}>{"Deseja algum medicamento?"}</Text>
             <TouchableOpacity
               style={[styles.searchBar, { justifyContent: "space-between" }]}
-              onPress={() => {
-                this.onSearch(false);
-              }}
+              onPress={() => { this.onSearch(false); }}
             >
               <View style={{ flexDirection: "row" }}>
-                <Icon
-                  name="search"
-                  size={24}
-                  color={"#FFF"}
-                  style={[{ marginRight: 12 }]}
-                />
-                <Text
-                  style={[
-                    styles.subtitle,
-                    Platform.OS === "ios" ? { fontSize: 12 } : {}
-                  ]}
-                >
-                  Nome do medicamento
+                <Icon name="search" size={24} color={"rgba(0,0,0,0.32)"} style={[{ marginRight: 12 }]}/>
+                <Text style={[ styles.searchBarText, Platform.OS === "ios" ? { fontSize: 12 } : {} ]} >
+                  {"Nome do medicamento"}
                 </Text>
               </View>
-              <TouchableOpacity
-                style={{ alignSelf: "flex-end" }}
-                onPress={() => {
-                  this.onSearch(true);
-                }}
-              >
+              <TouchableOpacity style={{ alignSelf: "flex-end" }} onPress={() => { this.onSearch(true); }} >
                 <Icon
                   name="barcode"
                   size={24}

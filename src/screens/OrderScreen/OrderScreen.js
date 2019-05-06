@@ -97,6 +97,135 @@ class OrderScreen extends Component {
     );
   }
 
+  _getOrderStatus() {
+    let order = this.state.order;
+    let status = StatusPedido[order.status][1];
+    switch (order.status) {
+      case 2:
+      case 3:
+      case 9:
+        return (
+          <View style={[styles.tag, styles.tagWarning]}>
+            <Text style={[styles.tagText, styles.tagWarningText]}>
+              {status}
+            </Text>
+          </View>
+        );
+      case 4:
+      case 5:
+        return (
+          <View style={[styles.tag]}>
+            <Text style={styles.tagText}>{status}</Text>
+          </View>
+        );
+      case 6:
+      case 7:
+      case 8:
+      case 10:
+        return (
+          <View style={[styles.tag, styles.tagDanger]}>
+            <Text style={[styles.tagText, styles.tagDangerText]}>{status}</Text>
+          </View>
+        );
+      default:
+        return <Text style={styles.text}>{status}</Text>;
+    }
+  }
+
+  _renderHeader() {
+    let order = this.state.order;
+    let status = StatusPedido[order.status][1];
+    let farmacia = order.farmacia;
+
+    if (farmacia) {
+      return (
+        <View style={{ paddingHorizontal: 24, borderBottomColor: "#EEE", borderBottomWidth: 0.5 }}>
+          <Header
+            separator={false}
+            title={`${farmacia.nome_fantasia}`}
+            style={{
+              paddingHorizontal: 0,
+              paddingTop: 24,
+              paddingBottom: 0,
+            }}
+            menuLeft={
+              <MenuItem
+                icon="md-arrow-back"
+                onPress={() => {
+                  this.onBack();
+                }}
+                style={{
+                  paddingVertical: 12,
+                  paddingRight: 12,
+                  paddingLeft: 24
+                }}
+              />
+            }
+            menuRight={
+              <View style={{ flexDirection: "row" }}>
+                <MenuItem
+                  icon="call-o"
+                  iconSize={20}
+                  onPress={() => {
+                    this._callPhone();
+                  }}
+                  style={{ paddingVertical: 12, paddingHorizontal: 12 }}
+                />
+                <MenuItem
+                  icon="place"
+                  iconSize={20}
+                  onPress={() => {
+                    this._callMap();
+                  }}
+                  style={{ paddingVertical: 12, paddingHorizontal: 12 }}
+                />
+              </View>
+            }
+          />
+          <View
+            style={{
+              width: "100%",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: 16,
+              alignContent: "center"
+            }}
+          >
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                alignSelf: "center"
+              }}
+            >
+              <Text style={styles.subtitle}>{`Ordem #${order.id}`}</Text>
+            </View>
+            <View style={{ alignItems: "center", justifyContent: "center" }}>
+              {this._getOrderStatus()}
+            </View>
+          </View>
+        </View>
+      );
+    } else {
+      return (
+        <Header
+          title={`Ordem #${order.id}`}
+          subtitle={"Todos os detalhes do seu pedido está aqui"}
+          menuLeft={
+            <MenuItem
+              icon="md-arrow-back"
+              onPress={() => {
+                this.onBack();
+              }}
+              style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+            />
+          }
+        />
+      );
+    }
+  }
+
   _renderParcel() {
     let numero_parcelas = this.state.order.numero_parcelas;
     let valor = (this.state.order.valor_bruto / numero_parcelas).toFixed(2);
@@ -151,11 +280,7 @@ class OrderScreen extends Component {
           <Text style={styles.title}>{"Forma de Pagamento"}</Text>
           <View>
             <Text style={[{ fontFamily: "Roboto-Light" }]}>
-              <Text style={styles.title}>Dinheiro</Text>
-              {` (Troco para ${MaskService.toMask(
-                "money",
-                this.state.order.troco
-              )})`}
+              {`Dinheiro (Troco para ${MaskService.toMask("money", this.state.order.troco )})`}
             </Text>
           </View>
         </View>
@@ -242,12 +367,12 @@ class OrderScreen extends Component {
         <TextMask
           type={"money"}
           value={frete}
-          style={styles.footerOrderTitle}
+          style={styles.subtitle}
         />
       );
     } else {
       return (
-        <Text style={[styles.footerOrderText, { fontSize: 14 }]}>
+        <Text style={[styles.subtitle, { fontSize: 14 }]}>
           {"GRÁTIS"}
         </Text>
       );
@@ -258,19 +383,8 @@ class OrderScreen extends Component {
     let order = this.state.order;
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
-        <Header
-          title={`Ordem #${order.id}`}
-          subtitle={"Todos os detalhes do seu pedido está aqui"}
-          menuLeft={
-            <MenuItem
-              icon="md-arrow-back"
-              onPress={() => {
-                this.onBack();
-              }}
-              style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
-            />
-          }
-        />
+        {this._renderHeader()}
+
         <ScrollView>
           <View style={styles.container}>
             <View
@@ -284,7 +398,6 @@ class OrderScreen extends Component {
               <Text style={styles.title}>
                 {DateUtils.toDate(order.log.data_criacao)}
               </Text>
-              <Text style={styles.title}>{StatusPedido[order.status][1]}</Text>
             </View>
 
             {Components.renderIf(
@@ -297,56 +410,39 @@ class OrderScreen extends Component {
             )}
 
             <View style={[styles.row, { marginTop: 16 }]}>
-              <View />
-              <View style={[styles.row, { width: "60%" }]}>
-                <Text style={[styles.footerOrderTitle, { textAlign: "right" }]}>
-                  {"Subtotal"}
-                </Text>
-                <TextMask
-                  type={"money"}
-                  value={this.getSubTotal()}
-                  style={styles.footerOrderTitle}
-                />
-              </View>
+              <Text
+                style={[styles.subtitle, { textAlign: "right", fontSize: 14 }]}
+              >
+                {"Subtotal"}
+              </Text>
+              <TextMask
+                type={"money"}
+                value={this.getSubTotal()}
+                style={styles.subtitle}
+              />
             </View>
 
             <View style={[styles.row, { marginTop: 8 }]}>
-              <View />
-              <View style={[styles.row, { width: "60%" }]}>
-                <Text style={[styles.footerOrderTitle, { textAlign: "right" }]}>
-                  {"Frete"}
-                </Text>
-                {this.getFrete()}
-              </View>
+              <Text
+                style={[
+                    styles.subtitle,
+                  { textAlign: "right", fontSize: 14 }
+                ]}
+              >
+                {"Frete"}
+              </Text>
+              {this.getFrete()}
             </View>
 
             <View style={[styles.row, { marginTop: 8 }]}>
-              <View />
-              <View style={[styles.row, { width: "60%" }]}>
-                <Text
-                  style={[
-                    styles.footerOrderTitle,
-                    {
-                      color: "rgba(0,0,0,0.80)",
-                      textAlign: "right",
-                      fontFamily: "Roboto-Medium"
-                    }
-                  ]}
-                >
-                  {"Total"}
-                </Text>
-                <TextMask
-                  style={styles.footerOrderText}
-                  type={"money"}
-                  value={order.valor_bruto}
-                />
-              </View>
+              <Text style={[styles.footerOrderText ]}>{"Total"}</Text>
+              <TextMask style={styles.footerOrderText} type={"money"} value={order.valor_bruto} />
             </View>
           </View>
 
-          {this._renderPagamento()}
-
           {this._renderEndereco()}
+
+          {this._renderPagamento()}
 
           <View style={[styles.container, { marginBottom: 90 }]}>
             <Text style={styles.title}>{"Alguma dúvida ou problema?"}</Text>

@@ -19,17 +19,16 @@ export default EStyleSheet.create({
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(255,255,255, 0.60)",
+    backgroundColor: "#FFFFFF",
     marginTop: 16,
     paddingHorizontal: 12,
     paddingVertical: 12,
     borderRadius: 12
   },
-  text: {
-    flex: 1,
-    fontSize: 14,
-    color: "#000000",
-    color: "rgba(0,0,0,0.48)",
+  searchBarText: {
+    fontFamily: 'Roboto-Regular',
+    fontSize: 16,
+    color: 'rgba(0,0,0,0.32)',
   },
   avatarContainer: {
     width: 24,
@@ -49,6 +48,6 @@ export default EStyleSheet.create({
   subtitle: {
     fontFamily: 'Roboto-Regular',
     fontSize: 16,
-    color: '#FFFFFF',
+    color: '#FFF'
   }
 });

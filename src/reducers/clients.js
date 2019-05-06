@@ -6,7 +6,8 @@ import {
   REGISTER_CLIENT, REGISTER_CLIENT_ERROR, REGISTER_CLIENT_SUCCESS,
   UPDATE_CLIENT, UPDATE_CLIENT_ERROR, UPDATE_CLIENT_SUCCESS, LOGOUT,
   GET_CURRENT_CLIENT, GET_CURRENT_CLIENT_ERROR, GET_CURRENT_CLIENT_SUCCESS,
-  SET_FCM_TOKEN, SET_FCM_TOKEN_ERROR, SET_FCM_TOKEN_SUCCESS
+  SET_FCM_TOKEN, SET_FCM_TOKEN_ERROR, SET_FCM_TOKEN_SUCCESS,
+  SET_CLIENT, SET_CLIENT_ERROR, SET_CLIENT_SUCCESS
 } from '../actions/clients';
 
 const INITIAL_STATE = {
@@ -20,6 +21,7 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
 
+    case SET_CLIENT:
     case SET_FCM_TOKEN:
     case SET_FCM_TOKEN_ERROR:
     case SET_FCM_TOKEN_SUCCESS:
@@ -36,6 +38,7 @@ export default (state = INITIAL_STATE, action) => {
     case GET_CURRENT_CLIENT:
       return { ...state, loading: true, error: null, success: false };
 
+    case SET_CLIENT_SUCCESS:
     case SEND_SMS_SUCCESS:
     case REQUEST_LOGIN_SUCCESS:
     case REGISTER_CLIENT_SUCCESS:
@@ -44,6 +47,7 @@ export default (state = INITIAL_STATE, action) => {
     case UPDATE_CLIENT_V2_SUCCESS:
       return { ...state, client: action.client, loading: false, error: null, success: true };
 
+    case SET_CLIENT_ERROR:
     case SEND_SMS_ERROR:
     case REQUEST_LOGIN_ERROR:
     case REGISTER_CLIENT_ERROR:

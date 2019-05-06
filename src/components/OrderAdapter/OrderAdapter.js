@@ -42,6 +42,7 @@ class OrderAdapter extends Component {
       case 6:
       case 7:
       case 8:
+      case 10:
         return (
           <View style={[styles.tag, styles.tagDanger]}>
             <Text style={[styles.tagText, styles.tagDangerText]}>{status}</Text>
@@ -77,11 +78,9 @@ class OrderAdapter extends Component {
           />
         </View>
 
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
             <Text style={[styles.text, { marginRight: 16 }]}>{"Total"}</Text>
             <TextMask style={styles.text} value={order.valor_bruto} type={"money"} options={{}} />
-          </View>
         </View>
 
       </View>

@@ -22,8 +22,8 @@ import { GET_CITIES } from '../actions/cities';
 import { getDistricts } from '../services/saga/districts';
 import { GET_DISTRICTS } from '../actions/districts';
 //CLIENTS
-import { login, register, updateClient, updateClientV2, getCurrentClient, logout, setFcmToken } from '../services/saga/clients';
-import { REQUEST_LOGIN, REGISTER_CLIENT, UPDATE_CLIENT, UPDATE_CLIENT_V2, GET_CURRENT_CLIENT, LOGOUT, SET_FCM_TOKEN } from '../actions/clients';
+import { login, register, updateClient, updateClientV2, getCurrentClient, logout, setFcmToken, setClient } from '../services/saga/clients';
+import { REQUEST_LOGIN, REGISTER_CLIENT, UPDATE_CLIENT, UPDATE_CLIENT_V2, GET_CURRENT_CLIENT, LOGOUT, SET_FCM_TOKEN, SET_CLIENT } from '../actions/clients';
 //ADDRESSES
 import { getAddresses, createAddress, updateAddress, removeAddress } from '../services/saga/addresses';
 import { LIST_ADDRESS, SAVE_ADDRESS, UPDATE_ADDRESS, REMOVE_ADDRESS } from '../actions/addresses';
@@ -57,6 +57,7 @@ const rootSaga = function* () {
   yield takeEvery(GET_NOTIFICATIONS, getNotifications);
   yield takeLatest(GET_NOTIFICATIONS_NEXT_PAGE, getNotificationsNextPage);
 
+  yield takeLatest(SET_CLIENT, setClient);
   yield takeLatest(REQUEST_LOGIN, login);
   yield takeLatest(REGISTER_CLIENT, register);
   yield takeEvery(UPDATE_CLIENT, updateClient);

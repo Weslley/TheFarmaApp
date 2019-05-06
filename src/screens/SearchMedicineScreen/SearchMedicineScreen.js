@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { AsyncStorage, View, ScrollView, ActivityIndicator, Image, TouchableOpacity, FlatList } from 'react-native';
+import { View, ScrollView, ActivityIndicator, Image, TouchableOpacity, FlatList } from 'react-native';
 import { Text, Button } from "native-base";
+
 import Snackbar from 'react-native-snackbar';
+import AsyncStorage from "@react-native-community/async-storage";
 
 import { connect } from 'react-redux';
 import { setFcmToken } from "../../actions/clients"
@@ -74,9 +76,9 @@ class SearchMedicineScreen extends Component {
 
   async sendFcmToken() {
     let client = this.props.client;
-    let token = await AsyncStorage.getItem('fcmToken', null);
-    if (client && token) {
-      let params = { client: this.props.client, fields: { fcm: token } }
+    let fcmToken = await AsyncStorage.getItem("@fcm_token", null);
+    if (client && fcmToken) {
+      let params = { client: this.props.client, fields: { fcm: fcmToken } }
       this.props.dispatch(setFcmToken(params));
     }
   }

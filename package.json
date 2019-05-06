@@ -22,7 +22,7 @@
     "native-base": "^2.12.1",
     "prop-types": "^15.7.2",
     "react": "16.8.3",
-    "react-native": "^0.58.6",
+    "react-native": "^0.59.4",
     "react-native-awesome-card-io": "^0.8.2",
     "react-native-camera": "^1.13.1",
     "react-native-communications": "^2.2.1",

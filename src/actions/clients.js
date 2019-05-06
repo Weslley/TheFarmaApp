@@ -2,6 +2,10 @@ export const LOGOUT = "LOGOUT";
 
 export const CLEAR_ERROR = "CLEAR_ERROR";
 
+export const SET_CLIENT = "SET_CLIENT";
+export const SET_CLIENT_ERROR = "SET_CLIENT_ERROR";
+export const SET_CLIENT_SUCCESS = "SET_CLIENT_SUCCESS";
+
 export const GET_CURRENT_CLIENT = "GET_CURRENT_CLIENT";
 export const GET_CURRENT_CLIENT_ERROR = "GET_CURRENT_CLIENT_ERROR";
 export const GET_CURRENT_CLIENT_SUCCESS = "GET_CURRENT_CLIENT_SUCCESS";
@@ -33,6 +37,10 @@ export const SET_PHOTO_SUCCESS = "SET_PHOTO_SUCCESS";
 export const SET_FCM_TOKEN = "SET_FCM_TOKEN";
 export const SET_FCM_TOKEN_ERROR = "SET_FCM_TOKEN_ERROR";
 export const SET_FCM_TOKEN_SUCCESS = "SET_FCM_TOKEN_SUCCESS";
+
+export const setClient = params => ({
+    type: SET_CLIENT, params
+});
 
 export const getCurrentClient = () => ({
   type: GET_CURRENT_CLIENT

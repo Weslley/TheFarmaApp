@@ -12,8 +12,13 @@ export default EStyleSheet.create({
     borderBottomColor: "#CCC"
   },
   title: {
-    marginBottom: 16,
+    marginBottom: 8,
     fontFamily: "Roboto-Bold",
+    fontSize: 16,
+    color: "rgba(0,0,0,0.80)"
+  },
+  subtitle:{
+    fontFamily: "Roboto-Light",
     fontSize: 16,
     color: "rgba(0,0,0,0.80)"
   },
@@ -25,10 +30,9 @@ export default EStyleSheet.create({
     textAlign: 'right',
   },
   footerOrderText: {
-    fontFamily: "Roboto-Medium",
+    fontFamily: "Roboto-Bold",
     fontSize: 18,
     color: "rgba(0,0,0,0.80)",
-    textAlign: 'right',
   },
   containerParcel: {
     width: "100%",
@@ -65,5 +69,30 @@ export default EStyleSheet.create({
     fontFamily: "Roboto-Bold",
     fontSize: 16,
     color: "#FFFFFF"
-  }
+  },
+  tag: {
+    backgroundColor: 'rgba(56,191,192,0.16);',
+    borderRadius: 4,
+    paddingVertical: 5,
+    paddingHorizontal: 7,
+    alignItems: "center"
+  },
+  tagText: {
+    fontSize: 11,
+    color: "#009688",
+    fontFamily: 'Roboto-Regular',
+    textAlign: 'center',
+  },
+  tagDanger: {
+    backgroundColor: 'rgba(240,22,109,0.16);'
+  },
+  tagDangerText: {
+    color: '#F0166D',
+  },
+  tagWarning: {
+    backgroundColor: 'rgba(245,166,35,0.16);'
+  },
+  tagWarningText: {
+    color: '#F57223',
+  },
 });

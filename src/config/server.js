@@ -9,7 +9,7 @@ export const USER_APPLE = {
     cpf: '',
     celular: '86900000000',
     facebook_id: null,
-    nome: 'Usuario Teste',
+    nome: 'Usuário Teste',
     email: 'teste@teste.com',
     token: '0b969ee8afc8725972f908473136639c8291045e'
 }

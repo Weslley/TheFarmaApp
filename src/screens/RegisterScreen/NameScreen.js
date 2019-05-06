@@ -159,8 +159,7 @@ class NameScreen extends Component {
           </View>
 
           <View style={{ paddingVertical: 16, flexDirection: 'row', }}>
-            <View style={{ width: '50%' }} />
-            <TouchableOpacity style={{ width: '50%' }} onPress={() => { this.submit() }} >
+            <TouchableOpacity style={{ width: '100%' }} onPress={() => { this.submit() }} >
               <LinearGradient colors={["#00C7BD", "#009999"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ borderRadius: 8, paddingHorizontal: 28, paddingVertical: 14 }}>
                 <Text style={[styles.buttonText, { textAlign: 'center' }]}>{"Continuar"}</Text>
               </LinearGradient>

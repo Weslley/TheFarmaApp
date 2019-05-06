@@ -92,7 +92,7 @@ class ListOrdersScreen extends Component {
             <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
 
                 <Header
-                    title={"Minhas compras"}
+                    title={"Pedidos"}
                     menuLeft={
                         <MenuItem
                             icon="md-arrow-back"

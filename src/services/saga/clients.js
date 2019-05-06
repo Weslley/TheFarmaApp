@@ -18,7 +18,8 @@ import {
   GET_CURRENT_CLIENT_SUCCESS,
   GET_CURRENT_CLIENT_ERROR,
   SET_FCM_TOKEN_SUCCESS,
-  SET_FCM_TOKEN_ERROR
+  SET_FCM_TOKEN_ERROR,
+  SET_CLIENT_ERROR, SET_CLIENT_SUCCESS
 } from "../../actions/clients";
 
 export const login = function* (action) {
@@ -87,4 +88,14 @@ export const getCurrentClient = function* (action) {
 
 export const logout = function* (action) {
   yield call(removeAll);
+}
+
+export const setClient = function* (action) {
+    try {
+      let client = action.params.client;
+      yield call(save, client);
+      yield put(responseSuccess(SET_CLIENT_SUCCESS, client));
+    } catch (e) {
+      yield put(responseError(SET_CLIENT_ERROR, e));
+    }
 }

@@ -101,7 +101,6 @@ class MenuScreen extends Component {
             this.showPerfil();
           }}
           title={this.props.client.nome}
-          subtitle={"Visualizar e editar o seu perfil"}
           avatar={this.getPhoto()}
           menuLeft={
             <MenuItem
@@ -117,7 +116,7 @@ class MenuScreen extends Component {
         <ScrollView style={{ paddingHorizontal: 24 }}>
           <ProfileMenuItem
             icon="history"
-            text={"Minhas compras"}
+            text={"Pedidos"}
             onPress={() => {
               this.props.navigation.navigate({
                 key: "list_orders1",
@@ -129,7 +128,7 @@ class MenuScreen extends Component {
 
           <ProfileMenuItem
             icon="marker"
-            text={"Meus Endereços"}
+            text={"Endereços"}
             onPress={() => {
               this.props.navigation.navigate({
                 key: "list_address1",
@@ -141,7 +140,7 @@ class MenuScreen extends Component {
 
           <ProfileMenuItem
             icon="card-a"
-            text={"Meus Cartões"}
+            text={"Forma de Pagamento"}
             onPress={() => {
               this.props.navigation.navigate({
                 key: "list_credit1",
@@ -158,6 +157,14 @@ class MenuScreen extends Component {
               this.openSupport();
             }}
           />
+
+          <ProfileMenuItem
+            icon="logout"
+            text={"Deslogar"}
+            onPress={() => {
+                this.logout();
+            }}
+          />
         </ScrollView>
 
         <View
@@ -166,26 +173,9 @@ class MenuScreen extends Component {
             alignItems: "center",
             justifyContent: "space-between",
             paddingHorizontal: 24,
-            marginBottom: 40
+            marginBottom: 16
           }}
         >
-          <TouchableOpacity
-            style={{ flexDirection: "row", alignItems: "center" }}
-            onPress={() => {
-              this.logout();
-            }}
-          >
-            <Icon
-              name="logout"
-              size={24}
-              color={"#000"}
-              style={{ marginRight: 16 }}
-            />
-            <Text style={styles.buttonText} uppercase={false}>
-              {"Deslogar"}
-            </Text>
-          </TouchableOpacity>
-
           <TouchableOpacity
             style={{}}
             onPress={() => {

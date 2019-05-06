@@ -10,7 +10,8 @@ class ProfileMenuItem extends Component {
   static defaultProps = {
     iconSize: 24,
     iconColor: "#000",
-    iconStyle: {}
+    iconStyle: {},
+    divider: false
   }
   constructor(props) {
     super(props);
@@ -30,7 +31,12 @@ class ProfileMenuItem extends Component {
               color={this.props.iconColor} />
           )}
 
-          <Text style={styles.text}>{this.props.text}</Text>
+          <View style={{flex: 2 }}>
+            <Text style={styles.text}>{this.props.text}</Text>
+            {Components.renderIf(this.props.divider,
+                <View style={{ borderBottomColor: "#EEEEEE", borderWidth: 0.5 }} />
+            )}
+          </View>
 
           {Components.renderIf(this.props.badge,
             <View style={styles.badge}>

@@ -1,19 +1,20 @@
 import EStyleSheet from "react-native-extended-stylesheet";
 export default EStyleSheet.create({
     container: {
-        width: '100%',        
+        width: '100%',
         flexDirection: 'row',
-        paddingTop: 23,
-        paddingBottom: 22
     },
     icon: {
         alignSelf: "center",
-        marginRight: 16        
+        marginRight: 16
     },
     text: {
+        width: '100%',
         fontFamily: "Roboto-Medium",
         fontSize: 16,
-        color: '$textColorPrimary'
+        color: '$textColorPrimary',
+        paddingTop: 22,
+        paddingBottom: 22
     },
     badge: {
         backgroundColor: "#FF1967",
