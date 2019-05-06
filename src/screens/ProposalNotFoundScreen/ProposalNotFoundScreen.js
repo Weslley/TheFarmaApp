@@ -19,7 +19,7 @@ class ProposalNotFoundScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1, justifyContent: 'space-between', paddingHorizontal: 24, paddingVertical: 32, paddingTop: 64, backgroundColor: "#FFF" }}>
-        <Image style={styles.background} source={require("./images/bg.jpg")} resizeMode="contain" />
+        {/*<Image style={styles.background} source={require("./images/bg.jpg")} resizeMode="contain" />*/}
 
         {Components.renderIfElse(this.props.timeout,
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>

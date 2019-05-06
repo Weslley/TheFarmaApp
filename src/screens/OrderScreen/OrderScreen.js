@@ -262,7 +262,7 @@ class OrderScreen extends Component {
       if (this.state.order.cartao) {
         return (
           <View style={styles.container}>
-            <Text style={[styles.title]}>{"Forma de Pagamento"}</Text>
+            <Text style={[styles.title, {marginBottom: 16}]}>{"Forma de Pagamento"}</Text>
 
             <View>
               <CreditCardAdapter creditCard={this.state.order.cartao} />
@@ -277,7 +277,7 @@ class OrderScreen extends Component {
     } else {
       return (
         <View style={styles.container}>
-          <Text style={styles.title}>{"Forma de Pagamento"}</Text>
+          <Text style={[styles.title, {marginBottom: 16}]}>{"Forma de Pagamento"}</Text>
           <View>
             <Text style={[{ fontFamily: "Roboto-Light" }]}>
               {`Dinheiro (Troco para ${MaskService.toMask("money", this.state.order.troco )})`}
@@ -317,7 +317,7 @@ class OrderScreen extends Component {
           <View style={[styles.container, {paddingBottom: 16}]}>
             <View style={[styles.row, { marginBottom: 0 }]}>
               <Text style={[styles.title, { marginBottom: 0 }]}>{"Endereço da farmácia"}</Text>
-              {/* 
+              {/*
               <View style={{ flexDirection: "row", marginRight: -24 }}>
                 <MenuItem
                   icon="call"
@@ -413,12 +413,8 @@ class OrderScreen extends Component {
           {this._renderPagamento()}
 
           <View style={[styles.container, { marginBottom: 90 }]}>
-            <Text style={styles.title}>{"Alguma dúvida ou problema?"}</Text>
-            <TouchableOpacity
-              onPress={() => {
-                this.openSupport();
-              }}
-            >
+            <Text style={[styles.title, {marginBottom: 16 }]}>{"Alguma dúvida ou problema?"}</Text>
+            <TouchableOpacity onPress={() => { this.openSupport(); }} >
               <LinearGradient
                 colors={["#00C7BD", "#009999"]}
                 start={{ x: 0, y: 0 }}

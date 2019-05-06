@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { NavigationActions, StackActions } from 'react-navigation';
 import { Alert, View, ScrollView, TouchableOpacity, FlatList, BackHandler } from "react-native";
-import { Container, Text } from "native-base";
-import LinearGradient from "react-native-linear-gradient";
+import { Text } from "native-base";
+
+import Snackbar from "react-native-snackbar";
 
 import { connect } from "react-redux";
 import { getOrder, cancelOrder, clearError, updateOrder, selectProposal } from "../../actions/orders";
@@ -10,7 +10,6 @@ import { getOrder, cancelOrder, clearError, updateOrder, selectProposal } from "
 import { Header } from "../../layout/Header"
 import { MenuItem } from "../../components/MenuItem"
 import { ButtonDefault } from "../../components/ButtonDefault"
-import { TimerCountdown } from "../../components/TimerCountdown"
 
 import { ProposalDescription } from "../../components/Proposal";
 import { ProposalNotFoundScreen } from "../ProposalNotFoundScreen";

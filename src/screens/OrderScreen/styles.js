@@ -8,8 +8,8 @@ export default EStyleSheet.create({
   container: {
     paddingVertical: 24,
     paddingHorizontal: 24,
-    borderBottomWidth: 1,
-    borderBottomColor: "#CCC"
+    borderBottomWidth: 0.5,
+    borderBottomColor: "#EEEEEE"
   },
   title: {
     marginBottom: 8,

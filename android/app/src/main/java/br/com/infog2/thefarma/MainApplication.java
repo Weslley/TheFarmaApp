@@ -54,8 +54,6 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                 new MainReactPackage(),
-            new RNFusedLocationPackage(),
-            new RNCameraPackage(),
                 new AsyncStoragePackage(),
                 new RNGestureHandlerPackage(),
                 new RNFirebasePackage(),
