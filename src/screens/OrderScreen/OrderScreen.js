@@ -387,21 +387,10 @@ class OrderScreen extends Component {
 
         <ScrollView>
           <View style={styles.container}>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: 16
-              }}
-            >
-              <Text style={styles.title}>
-                {DateUtils.toDate(order.log.data_criacao)}
-              </Text>
-            </View>
 
-            {Components.renderIf(
-              order && order.itens,
+            <Text style={[styles.title, {marginBottom: 16}]}>{DateUtils.toDate(order.log.data_criacao)}</Text>
+
+            {Components.renderIf(order && order.itens,
               <FlatList
                 data={order.itens}
                 keyExtractor={item => item.apresentacao.id.toString()}
@@ -410,27 +399,12 @@ class OrderScreen extends Component {
             )}
 
             <View style={[styles.row, { marginTop: 16 }]}>
-              <Text
-                style={[styles.subtitle, { textAlign: "right", fontSize: 14 }]}
-              >
-                {"Subtotal"}
-              </Text>
-              <TextMask
-                type={"money"}
-                value={this.getSubTotal()}
-                style={styles.subtitle}
-              />
+              <Text style={[styles.subtitle, { textAlign: "right", fontSize: 14 }]}> {"Subtotal"}</Text>
+              <TextMask type={"money"} value={this.getSubTotal()} style={styles.subtitle}/>
             </View>
 
             <View style={[styles.row, { marginTop: 8 }]}>
-              <Text
-                style={[
-                    styles.subtitle,
-                  { textAlign: "right", fontSize: 14 }
-                ]}
-              >
-                {"Frete"}
-              </Text>
+              <Text style={[ styles.subtitle, { textAlign: "right", fontSize: 14 }]}>{"Frete"}</Text>
               {this.getFrete()}
             </View>
 

@@ -95,4 +95,10 @@ export default EStyleSheet.create({
   tagWarningText: {
     color: '#F57223',
   },
+  bgWarning:{
+    backgroundColor: '#FF8D00'
+  },
+  bgDanger:{
+    backgroundColor: '#FF0000'
+  }
 });
