@@ -10,7 +10,8 @@ import {
   TouchableOpacity,
   Keyboard,
   ScrollView,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Platform
 } from "react-native";
 
 import Snackbar from "react-native-snackbar";
@@ -194,7 +195,12 @@ class PhoneScreen extends Component {
 
   render() {
     return (
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={"padding"} enabled>
+      <KeyboardAvoidingView
+        enabled
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : null}
+        >
+
         <Image
           resizeMode={"cover"}
           style={styles.background}
