@@ -5,7 +5,8 @@ import {
   Text,
   TextInput,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  Platform
 } from "react-native";
 import { NavigationActions, StackActions } from "react-navigation";
 import Snackbar from "react-native-snackbar";
