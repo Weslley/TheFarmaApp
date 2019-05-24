@@ -1,11 +1,14 @@
 import React, { Component } from "react";
-import { View, ScrollView, ActivityIndicator, FlatList } from "react-native";
-import { Text } from "native-base";
+import { Alert, View, Text, ScrollView, ActivityIndicator, FlatList } from "react-native";
+
 import Snackbar from "react-native-snackbar";
+import Permissions from "react-native-permissions";
+import RNGooglePlaces from "react-native-google-places";
 
 import { connect } from "react-redux";
 
 import { createOrder } from "../../actions/orders";
+import { getLocation, getGeocodeAddress, updateLocation } from "../../actions/locations";
 import { addItemToCart, removeItemToCart } from "../../actions/carts";
 import { getApresentations, getApresentationsNextPage, clearError } from "../../actions/apresentations";
 
@@ -17,7 +20,10 @@ import { ShoppingBagIcon } from "../../layout/ShoppingBagIcon";
 import { Loading } from "../../components/Loading";
 import { MenuItem } from "../../components/MenuItem";
 import { ButtonCustom } from "../../components/ButtonCustom";
-import { ApresentationDescription } from "../../components/Product";
+import { ApresentationDescription } from "../../components/Product";;
+
+import { GooglePlaces } from "../../components/GooglePlaces";
+import { LocationListItem } from "../../components/LocationListItem";
 
 import { Components, CartUtils } from "../../helpers";
 import styles from "./styles";
@@ -26,8 +32,11 @@ class MedicineApresentationScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      places: [],
       apresentations: [],
-      showDeliveryDialog: false
+      show_places: false,
+      show_delivery_dialog: false,
+      location_permission: '',
     };
   }
 
@@ -41,8 +50,27 @@ class MedicineApresentationScreen extends Component {
       if (nextProps && nextProps.error) {
         let error = nextProps.error;
 
-        if (error.response && (error.response.status >= 400 && error.response.status <= 403) ) {
+        if (error.response && (error.response.status >= 400 && error.response.status <= 403)) {
           if (error.response.data.detail) {
+            <Header
+              title={this.props.selected.nome}
+              style={{ backgroundColor: "#FFF" }}
+              menuLeft={
+                <MenuItem
+                  icon="md-arrow-back"
+                  onPress={() => { this.onBack(); }}
+                  style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+                />
+              }
+              menuRight={
+                <View style={{ paddingRight: 12 }}>
+                  <ShoppingBagIcon
+                    value={this.getCartSize()}
+                    onPress={() => { this.showCart(); }}
+                  />
+                </View>
+              }
+            />
             Snackbar.show({ title: error.response.data.detail, duration: Snackbar.LENGTH_SHORT, });
             return;
           }
@@ -50,10 +78,10 @@ class MedicineApresentationScreen extends Component {
         }
 
         if (error.response && (error.response.status >= 500 && error.response.status <= 504)) {
-            Snackbar.show({ title: "Erro ao conectar com o servidor!", duration: Snackbar.LENGTH_SHORT });
+          Snackbar.show({ title: "Erro ao conectar com o servidor!", duration: Snackbar.LENGTH_SHORT });
         }
 
-        if ( error.message && error.message === "Network Error" ) {
+        if (error.message && error.message === "Network Error") {
           Snackbar.show({ title: "Sem conexão com a internet", duration: Snackbar.LENGTH_SHORT });
         }
       }
@@ -78,9 +106,14 @@ class MedicineApresentationScreen extends Component {
 
   componentWillMount() {
     this.props.dispatch(clearError());
-    this.props.dispatch(
-      getApresentations(this.props.uf, this.props.selected.nome)
-    );
+    this.props.dispatch(getApresentations(this.props.uf, this.props.selected.nome));
+
+    Permissions.check("location").then(response => {
+      this.setState({ location_permission: response });
+      if (response === "authorized") {
+        this.props.dispatch(getLocation());
+      }
+    });
   }
 
   /** Private functions */
@@ -88,25 +121,43 @@ class MedicineApresentationScreen extends Component {
     this.props.navigation.goBack(null);
   }
 
+  setPlace(place) {
+    if (place.place_id) {
+      RNGooglePlaces.lookUpPlaceByID(place.place_id).then(result => {
+        let latitude = result.location.latitude;
+        let longitude = result.location.longitude;
+
+        this.props.dispatch(getGeocodeAddress({latitude, longitude}));
+        this.props.dispatch(updateLocation(this.props.uf, latitude, longitude));
+        this._createOrder({ latitude, longitude });
+        this.setState({show_places: false});
+
+      }).catch(error => {
+        console.log(error.message);
+        Alert.alert("TheFarma", "Não foi possível obter as coordenadas. Verifique sua conexão.",
+          [{ text: "OK", onPress: () => { } }],
+          { cancelable: false }
+        );
+      });
+    }
+  }
+
+  _renderPlaceItem = ({ item }) => (
+    <LocationListItem address={item} onPress={() => { this.setPlace(item); }} />
+  );
+
   showCart() {
-    this.props.navigation.navigate({
-      key: "cart1",
-      routeName: "Cart",
-      params: {}
-    });
+    this.props.navigation.navigate({ key: "cart1", routeName: "Cart", params: {} });
   }
 
   getCartSize() {
-    return this.props.cartItems && this.props.cartItems.length
-      ? this.props.cartItems.length
-      : 0;
+    let cItems = this.props.cartItems;
+    return (cItems && cItems.length) ? cItems.length : 0;
   }
 
   getApresentationQuantity(nextProps, apresentation) {
     try {
-      const cItem = nextProps.cartItems.find(
-        item => item.id === apresentation.id
-      );
+      const cItem = nextProps.cartItems.find(item => item.id === apresentation.id);
       return cItem ? cItem.quantidade : 0;
     } catch (error) {
       return 0;
@@ -122,20 +173,22 @@ class MedicineApresentationScreen extends Component {
   }
 
   _showDeliveryDialog() {
-    this.setState({ showDeliveryDialog: true });
+    this.setState({ show_delivery_dialog: true });
+  }
+
+  _showGooglePlaces() {
+    this.setState({ show_places: true });
   }
 
   _renderDeliveryDialog() {
     return (
       <ActionSheet
         callback={buttonIndex => {
-          this.setState({ showDeliveryDialog: false });
+          this.setState({ show_delivery_dialog: false });
         }}
         content={
           <View style={styles.containerDelivery}>
-            <Text style={styles.titleDialog}>
-              Como deseja obter os seus medicamentos?
-            </Text>
+            <Text style={styles.titleDialog}>{"Como deseja obter os seus medicamentos?"}</Text>
             <View style={styles.row}>
               <ButtonCustom
                 image={require("../../assets/images/ic_walking.png")}
@@ -160,57 +213,57 @@ class MedicineApresentationScreen extends Component {
     );
   }
 
-  _showListProposals() {
-    if (this.props.client) {
-      let order = this.props.order;
-      let itens = [];
-      this.props.cartItems.map(item => {
-        itens.push({ apresentacao: item.id, quantidade: item.quantidade });
-      });
+  _createOrder(coords = {}) {
+    let itens = [];
+    let order = this.props.order;
+    let client = this.props.client;
+    let cItems = this.props.cartItems;
+
+    let latitude = coords.latitude || this.props.latitude;
+    let longitude = coords.longitude || this.props.longitude;
+
+    if (client) {
+      cItems.map(i => { itens.push({ apresentacao: i.id, quantidade: i.quantidade }); });
       order.itens = itens;
-      order.latitude = this.props.latitude;
-      order.longitude = this.props.longitude;
+      order.latitude = latitude;
+      order.longitude = longitude;
       order.delivery = false;
-      let params = { client: this.props.client, order: order };
+      let params = { client, order };
       this.props.dispatch(createOrder(params));
-      this.props.navigation.navigate({
-        key: "list_proposals1",
-        routeName: "ListProposals",
-        params: {}
-      });
+      this.props.navigation.navigate({ key: "list_proposals1", routeName: "ListProposals", params: {} });
     } else {
-      this.props.navigation.navigate({
-        key: "profile1",
-        routeName: "Profile",
-        params: { actionBack: "MedicineApresentations" }
-      });
+      this.props.navigation.navigate({ key: "profile1", routeName: "Profile", params: { actionBack: "MedicineApresentations" } });
     }
-    this.setState({ showDeliveryDialog: false });
+  }
+
+  _showListProposals() {
+    let location_permission = this.state.location_permission;
+    if (location_permission === 'authorized') {
+      this.props.dispatch(getLocation());
+      this._createOrder();
+    } else {
+      this.setState({ show_places: true })
+    }
+    this.setState({ show_delivery_dialog: false });
   }
 
   _showListAddress() {
+    let key = "profile1";
+    let routeName = "Profile";
+    let params = { actionBack: "MedicineApresentations" }
+
     if (this.props.client) {
-      this.props.navigation.navigate({
-        key: "list_address1",
-        routeName: "ListAddress",
-        params: { showBottomBar: true }
-      });
-    } else {
-      this.props.navigation.navigate({
-        key: "profile1",
-        routeName: "Profile",
-        params: { actionBack: "MedicineApresentations" }
-      });
+      key = "list_address1";
+      routeName = "ListAddress";
+      params = { showBottomBar: true };
     }
-    this.setState({ showDeliveryDialog: false });
+
+    this.props.navigation.navigate({ key, routeName, params });
+    this.setState({ show_delivery_dialog: false });
   }
 
   _showProductDetail(item) {
-    this.props.navigation.navigate({
-      key: "apresentation_detail1",
-      routeName: "ApresentationDetail",
-      params: { apresentation: item }
-    });
+    this.props.navigation.navigate({ key: "apresentation_detail1", routeName: "ApresentationDetail", params: { apresentation: item } });
   }
 
   onEndReached = ({ distanceFromEnd }) => {
@@ -224,16 +277,14 @@ class MedicineApresentationScreen extends Component {
     <ApresentationDescription
       apresentation={item}
       showActions={true}
-      onPress={() => {
-        this._showProductDetail(item);
-      }}
+      onPress={() => { this._showProductDetail(item); }}
       onPressMinus={() => this._removeItemToCart(item)}
       onPressPlus={() => this._addItemToCart(item)}
     />
   );
 
   renderFooter = () => {
-    if (!this.props.isLoading) return null;
+    if (!this.props.loading) return null;
     return (
       <View style={{ alignItems: "center", paddingVertical: 16 }}>
         <ActivityIndicator color={"#00C7BD"} size={"large"} />
@@ -241,74 +292,78 @@ class MedicineApresentationScreen extends Component {
     );
   };
 
+  _renderPlaceItem = ({ item }) => (
+    <LocationListItem address={item} onPress={() => { this.setPlace(item) }} />
+  );
+
   render() {
+    let cItems = this.props.cartItems;
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
-        <Header
-          title={this.props.selected.nome}
-          style={{ backgroundColor: "#FFF" }}
-          menuLeft={
-            <MenuItem
-              icon="md-arrow-back"
-              onPress={() => {
-                this.onBack();
-              }}
-              style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
-            />
-          }
-          menuRight={
-            <View style={{ paddingRight: 12 }}>
-              <ShoppingBagIcon
-                value={this.getCartSize()}
-                onPress={() => {
-                  this.showCart();
-                }}
-              />
-            </View>
-          }
-        />
-        {Components.renderIfElse(
-          this.props.apresentations &&
-            this.props.apresentations.length === 0 &&
-            this.props.isLoading === true,
-          <Loading />,
-          <ScrollView
-            style={{ paddingHorizontal: 24 }}
-            onScroll={e => {
-              let paddingToBottom = 0;
-              paddingToBottom += e.nativeEvent.layoutMeasurement.height;
-              if (
-                e.nativeEvent.contentOffset.y.toFixed(1) ===
-                (e.nativeEvent.contentSize.height - paddingToBottom).toFixed(1)
-              ) {
-                this.onEndReached(0);
+        {Components.renderIfElse(this.state.show_places,
+          <GooglePlaces
+            renderPlaceItem={this._renderPlaceItem}
+            onBackPress={() => { this.setState({ show_places: false }) }}
+          />,
+          <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+            <Header
+              title={this.props.selected.nome}
+              style={{ backgroundColor: "#FFF" }}
+              menuLeft={
+                <MenuItem
+                  icon="md-arrow-back"
+                  onPress={() => { this.onBack(); }}
+                  style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+                />
               }
-            }}
-          >
-            <FlatList
-              style={{ paddingBottom: 90 }}
-              data={this.state.apresentations}
-              keyExtractor={(item, index) => item.id.toString()}
-              renderItem={this._renderItem}
-              ListFooterComponent={this.renderFooter()}
+              menuRight={
+                <View style={{ paddingRight: 12 }}>
+                  <ShoppingBagIcon
+                    value={this.getCartSize()}
+                    onPress={() => { this.showCart(); }}
+                  />
+                </View>
+              }
             />
-          </ScrollView>
-        )}
 
-        {Components.renderIf(
-          this.props.cartItems.length > 0,
-          <BottomBar
-            buttonTitle="Ver propostas"
-            price={CartUtils.getValueTotal(this.props.cartItems)}
-            onButtonPress={() => {
-              this._showDeliveryDialog();
-            }}
-          />
-        )}
+            {Components.renderIfElse(
+              this.props.apresentations &&
+              this.props.apresentations.length === 0 &&
+              this.props.loading === true,
+              <Loading />,
+              <ScrollView
+                style={{ paddingHorizontal: 24 }}
+                onScroll={e => {
+                  let paddingToBottom = 0;
+                  paddingToBottom += e.nativeEvent.layoutMeasurement.height;
+                  if (
+                    e.nativeEvent.contentOffset.y.toFixed(1) ===
+                    (e.nativeEvent.contentSize.height - paddingToBottom).toFixed(1)
+                  ) {
+                    this.onEndReached(0);
+                  }
+                }}
+              >
+                <FlatList
+                  style={{ paddingBottom: 90 }}
+                  data={this.state.apresentations}
+                  keyExtractor={(item, index) => item.id.toString()}
+                  renderItem={this._renderItem}
+                  ListFooterComponent={this.renderFooter()}
+                />
+              </ScrollView>
+            )}
 
-        {Components.renderIf(
-          this.state.showDeliveryDialog,
-          this._renderDeliveryDialog()
+            {Components.renderIf(this.state.show_delivery_dialog, this._renderDeliveryDialog())}
+
+            {Components.renderIf(cItems.length > 0,
+              <BottomBar
+                buttonTitle="Ver propostas"
+                price={CartUtils.getValueTotal(cItems)}
+                onButtonPress={() => { this._showDeliveryDialog(); }}
+              />
+            )}
+          </View>
         )}
       </View>
     );
@@ -326,7 +381,7 @@ function mapStateToProps(state) {
     order: state.orders.order,
 
     apresentations: state.apresentations.apresentations,
-    isLoading: state.apresentations.isLoading,
+    loading: state.apresentations.isLoading,
     nextPage: state.apresentations.next,
     error: state.apresentations.error
   };

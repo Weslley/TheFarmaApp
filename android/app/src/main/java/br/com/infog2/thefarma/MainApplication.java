@@ -3,6 +3,7 @@ package br.com.infog2.thefarma;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.arttitude360.reactnative.rngoogleplaces.RNGooglePlacesPackage;
 import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
 import org.reactnative.camera.RNCameraPackage;
 
@@ -54,6 +55,7 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                 new MainReactPackage(),
+            new RNGooglePlacesPackage(),
                 new AsyncStoragePackage(),
                 new RNGestureHandlerPackage(),
                 new RNFirebasePackage(),

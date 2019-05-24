@@ -1,7 +1,5 @@
-import { debounce } from 'lodash';
-
 import React, { Component } from 'react';
-import { View, Image, TextInput, TouchableOpacity, Platform } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { Input, Item } from "native-base";
 
 import { connect } from 'react-redux';
@@ -14,25 +12,21 @@ import styles from './styles';
 
 class SearchHeader extends Component {
     static defaultProps = {
+        query: "",
+        style: {},
+        inputStyle: {},
         separator: true,
-        style: {}
+        onQueryChange: () => {},
+        onClearSearch: () => {},
+        placeholder: "Nome do medicamento",
+        placeholderTextColor: "#CCC",
     }
 
     constructor(props) {
         super(props);
-        this.state = { query: "" }
+        this.state = {}
     }
 
-    /** Private functions */
-    onSearch = query => {
-        this.setState({ query });
-        this.props.dispatch(searchProducts(this.props.uf, query));
-    }
-
-    onClearSearch = () => {
-        this.setState({ query: "" });
-        this.props.dispatch(getHistory());
-    }
     render() {
         return (
             <View style={[styles.container, this.props.style]}>
@@ -51,16 +45,17 @@ class SearchHeader extends Component {
                 <Item>
                     <Input
                         autoFocus={true}
-                        style={{ fontFamily: "Roboto-Bold", fontSize: 24, paddingLeft: 0, marginLeft: 0 }}
-                        placeholder="Nome do medicamento "
-                        placeholderTextColor="#CCC"
+                        style={[styles.input, this.props.inputStyle]}
                         multiline={false}
-                        onChangeText={this.onSearch}
-                        value={this.state.query}
-                        underlineColorAndroid="transparent" />
+                        value={this.props.query}
+                        underlineColorAndroid="transparent"
+                        placeholder={this.props.placeholder}
+                        onChangeText={this.props.onQueryChange}
+                        placeholderTextColor={this.props.placeholderTextColor}
+                    />
 
-                    {Components.renderIf(this.state.query,
-                        <TouchableOpacity onPress={this.onClearSearch}>
+                    {Components.renderIf(this.props.query,
+                        <TouchableOpacity onPress={this.props.onClearSearch}>
                             <Icon style={{ color: "#000", fontSize: 30 }} name="ios-close-empty" />
                         </TouchableOpacity>
                     )}

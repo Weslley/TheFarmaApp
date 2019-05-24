@@ -1,22 +1,25 @@
 import React, { Component } from "react";
-import { Alert, View, ScrollView, ActivityIndicator, Image, TouchableOpacity, FlatList } from "react-native";
-import { Container, Button, Text, Thumbnail } from "native-base";
-import { TextMask } from "react-native-masked-text";
+import { Alert, View, ScrollView, FlatList } from "react-native";
+import { Text, } from "native-base";
+
+import Permissions from "react-native-permissions";
+import RNGooglePlaces from "react-native-google-places";
 
 import { connect } from "react-redux";
 
 import { createOrder } from "../../actions/orders";
-import { getApresentations, clearError } from "../../actions/apresentations";
 import { addItemToCart, removeItemToCart, cleanCart } from "../../actions/carts";
+import { getLocation, getGeocodeAddress, updateLocation } from "../../actions/locations";
 
 import { Header } from "../../layout/Header";
-import { ShoppingBagIcon } from "../../layout/ShoppingBagIcon";
 import { BottomBar } from "../../layout/Bar";
 import { ActionSheet } from "../../layout/ActionSheet";
 
 import { MenuItem } from '../../components/MenuItem';
 import { ButtonCustom } from "../../components/ButtonCustom";
+import { GooglePlaces } from "../../components/GooglePlaces";
 import { ProductDescription } from "../../components/Product";
+import { LocationListItem } from "../../components/LocationListItem";
 
 import { Components, CartUtils } from "../../helpers";
 
@@ -27,13 +30,25 @@ class CartScreen extends Component {
     super(props);
     this.state = {
       cartItems: [],
-      showDeliveryDialog: false
+      places: [],
+      show_places: false,
+      show_delivery_dialog: false,
+      location_permission: '',
     };
   }
 
   static navigationOptions = ({ navigation }) => {
     return { header: null };
   };
+
+  componentWillMount() {
+    Permissions.check("location").then(response => {
+      this.setState({ location_permission: response });
+      if (response === "authorized") {
+        this.props.dispatch(getLocation());
+      }
+    });
+  }
 
   componentDidMount() {
     if (this.props.cartItems.length > 0) {
@@ -54,6 +69,31 @@ class CartScreen extends Component {
   onBack = () => {
     this.props.navigation.goBack(null);
   }
+
+  setPlace(place) {
+    if (place.place_id) {
+      RNGooglePlaces.lookUpPlaceByID(place.place_id).then(result => {
+        let latitude = result.location.latitude;
+        let longitude = result.location.longitude;
+
+        this.props.dispatch(getGeocodeAddress({ latitude, longitude }));
+        this.props.dispatch(updateLocation(this.props.uf, latitude, longitude));
+        this._createOrder({ latitude, longitude });
+        this.setState({ show_places: false });
+
+      }).catch(error => {
+        console.log(error.message);
+        Alert.alert("TheFarma", "Não foi possível obter as coordenadas. Verifique sua conexão.",
+          [{ text: "OK", onPress: () => { } }],
+          { cancelable: false }
+        );
+      });
+    }
+  }
+
+  _renderPlaceItem = ({ item }) => (
+    <LocationListItem address={item} onPress={() => { this.setPlace(item); }} />
+  );
 
   onClearCart = () => {
     Alert.alert(
@@ -91,13 +131,13 @@ class CartScreen extends Component {
   }
 
   _showDeliveryDialog() {
-    this.setState({ showDeliveryDialog: true });
+    this.setState({ show_delivery_dialog: true });
   }
 
   _renderDeliveryDialog() {
     return (
       <ActionSheet
-        callback={buttonIndex => { this.setState({ showDeliveryDialog: false }); }}
+        callback={buttonIndex => { this.setState({ show_delivery_dialog: false }); }}
         content={
           <View style={styles.containerDelivery}>
             <Text style={styles.titleDialog}>Como deseja obter os seus medicamentos?</Text>
@@ -123,31 +163,53 @@ class CartScreen extends Component {
     )
   }
 
-  _showListProposals() {
-    if (this.props.client) {
-      let order = this.props.order;
-      let itens = []
-      this.props.cartItems.map((item) => { itens.push({ apresentacao: item.id, quantidade: item.quantidade }) })
-      order.itens = itens
-      order.latitude = this.props.latitude;
-      order.longitude = this.props.longitude;
+  _createOrder(coords = {}) {
+    let itens = [];
+    let order = this.props.order;
+    let client = this.props.client;
+    let cItems = this.props.cartItems;
+
+    let latitude = coords.latitude || this.props.latitude;
+    let longitude = coords.longitude || this.props.longitude;
+
+    if (client) {
+      cItems.map(i => { itens.push({ apresentacao: i.id, quantidade: i.quantidade }); });
+      order.itens = itens;
+      order.latitude = latitude;
+      order.longitude = longitude;
       order.delivery = false;
-      let params = { client: this.props.client, order: order }
+      let params = { client, order };
       this.props.dispatch(createOrder(params));
-      this.props.navigation.navigate({ key: 'list_proposals1', routeName: 'ListProposals', params: {} });
+      this.props.navigation.navigate({ key: "list_proposals1", routeName: "ListProposals", params: {} });
     } else {
-      this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: { actionBack: 'Cart' } });
+      this.props.navigation.navigate({ key: "profile1", routeName: "Profile", params: { actionBack: "MedicineApresentations" } });
     }
-    this.setState({ showDeliveryDialog: false });
+  }
+
+  _showListProposals() {
+    let location_permission = this.state.location_permission;
+    if (location_permission === 'authorized') {
+      this.props.dispatch(getLocation());
+      this._createOrder();
+    } else {
+      this.setState({ show_places: true })
+    }
+    this.setState({ show_delivery_dialog: false });
   }
 
   _showListAddress() {
+    let key = "profile1";
+    let routeName = "Profile";
+    let params = { actionBack: "MedicineApresentations" }
+
     if (this.props.client) {
-      this.props.navigation.navigate({ key: 'list_address1', routeName: 'ListAddress', params: { showBottomBar: true } });
-    } else {
-      this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: { actionBack: 'Cart' } });
+      key = "list_address1";
+      routeName = "ListAddress";
+      params = { showBottomBar: true };
     }
-    this.setState({ showDeliveryDialog: false });
+
+    this.props.navigation.navigate({ key, routeName, params });
+    this.setState({ show_delivery_dialog: false });
   }
 
   _renderItem = ({ item }) => (
@@ -160,59 +222,67 @@ class CartScreen extends Component {
   );
 
   render() {
+    let cItems = this.props.cartItems;
     return (
-      <Container style={{ backgroundColor: "#FFFFFF" }}>
+      <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+        {Components.renderIfElse(this.state.show_places,
+          <GooglePlaces
+            renderPlaceItem={this._renderPlaceItem}
+            onBackPress={() => { this.setState({ show_places: false }) }}
+          />,
+          <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
 
-        <Header
-          title={"Cestinha"}
-          menuLeft={
-            <MenuItem
-              icon="md-arrow-back"
-              onPress={() => { this.onBack() }}
-              style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+            <Header
+              title={"Cestinha"}
+              menuLeft={
+                <MenuItem
+                  icon="md-arrow-back"
+                  onPress={() => { this.onBack() }}
+                  style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+                />
+              }
+              menuRight={
+                <MenuItem
+                  icon="trash"
+                  onPress={() => { this.onClearCart() }}
+                  style={{ paddingRight: 24, paddingVertical: 12 }}
+                />
+              }
             />
-          }
-          menuRight={
-            <MenuItem
-              icon="trash"
-              onPress={() => { this.onClearCart() }}
-              style={{ paddingRight: 24, paddingVertical: 12 }}
-            />
-          }
-        />
 
-        {Components.renderIfElse(this.state.cartItems.length > 0,
-          <ScrollView style={{ paddingHorizontal: 24 }}>
-            <FlatList
-              style={{ paddingBottom: 90 }}
-              data={this.state.cartItems}
-              keyExtractor={item => item.id.toString()}
-              renderItem={this._renderItem} />
-          </ScrollView>,
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginBottom: 90 }}>
-            <Text style={{ fontFamily: 'Roboto-Regular', fontSize: 14, color: 'rgba(0,0,0,0.48)', textAlign: 'center' }}>{"Cestinha vazia"}</Text>
+            {Components.renderIfElse(this.state.cartItems.length > 0,
+              <ScrollView style={{ paddingHorizontal: 24 }}>
+                <FlatList
+                  style={{ paddingBottom: 90 }}
+                  data={this.state.cartItems}
+                  keyExtractor={item => item.id.toString()}
+                  renderItem={this._renderItem} />
+              </ScrollView>,
+              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginBottom: 90 }}>
+                <Text style={{ fontFamily: 'Roboto-Regular', fontSize: 14, color: 'rgba(0,0,0,0.48)', textAlign: 'center' }}>{"Cestinha vazia"}</Text>
+              </View>
+            )}
+
+            {Components.renderIfElse(cItems.length > 0,
+              <BottomBar
+                buttonTitle="Ver propostas"
+                price={CartUtils.getValueTotal(cItems)}
+                onButtonPress={() => { this._showDeliveryDialog() }}
+              />,
+              <BottomBar
+                buttonTitle="Adicionar"
+                price={0}
+                onButtonPress={() => { this._showSearchMedicine() }}
+              />
+            )}
+
+            {Components.renderIf(this.state.show_delivery_dialog,
+              this._renderDeliveryDialog()
+            )}
+
           </View>
         )}
-
-        {Components.renderIfElse(
-          this.props.cartItems.length > 0,
-          <BottomBar
-            buttonTitle="Ver propostas"
-            price={CartUtils.getValueTotal(this.props.cartItems)}
-            onButtonPress={() => { this._showDeliveryDialog() }}
-          />,
-          <BottomBar
-            buttonTitle="Adicionar"
-            price={0}
-            onButtonPress={() => { this._showSearchMedicine() }}
-          />
-        )}
-
-        {Components.renderIf(this.state.showDeliveryDialog,
-          this._renderDeliveryDialog()
-        )}
-
-      </Container>
+      </View>
     );
   }
 }

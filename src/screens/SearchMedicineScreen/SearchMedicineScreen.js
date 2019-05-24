@@ -1,38 +1,23 @@
 import React, { Component } from "react";
-import {
-  View,
-  ScrollView,
-  ActivityIndicator,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  FlatList,
-  KeyboardAvoidingView,
-  Platform
-} from "react-native";
+import { View, ScrollView, ActivityIndicator, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform } from "react-native";
+
 import { Text, Button } from "native-base";
 
 import Snackbar from "react-native-snackbar";
+import Permissions from "react-native-permissions";
 import AsyncStorage from "@react-native-community/async-storage";
 
 import { connect } from "react-redux";
 import { setFcmToken } from "../../actions/clients";
 import { getLocation } from "../../actions/locations";
-
-import {
-  searchProducts,
-  selectProduct,
-  getHistory,
-  searchProductsByBarcode,
-  clearError
-} from "../../actions/products";
 import { clearApresentations } from "../../actions/apresentations";
+import { searchProducts, selectProduct, getHistory, searchProductsByBarcode, clearError } from "../../actions/products";
 
 import { Icon } from "../../components/Icon";
 import { MenuItem } from "../../components/MenuItem";
 import { BarcodeScanner } from "../../components/BarcodeScanner";
 
 import { SearchHeader } from "../../layout/Header";
-import { Container } from "../../layout/Container";
 
 import { Components } from "../../helpers";
 import styles from "./styles";
@@ -41,6 +26,7 @@ class SearchMedicineScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      query: "",
       showCamera: false
     };
   }
@@ -94,10 +80,11 @@ class SearchMedicineScreen extends Component {
   };
 
   componentWillMount() {
-    this.props.dispatch(getLocation());
-    const {
-      state: { params }
-    } = this.props.navigation;
+    Permissions.check("location").then(response => {
+      if (response === "authorized") this.props.dispatch(getLocation());
+    });
+
+    const { state: { params } } = this.props.navigation;
     if (params) {
       if (params.showCamera) this.setState({ showCamera: params.showCamera });
     }
@@ -144,6 +131,18 @@ class SearchMedicineScreen extends Component {
     });
   };
 
+  /** Private functions */
+  onQueryChange = query => {
+    this.setState({ query });
+    //if (query.length > 2) {}
+    this.props.dispatch(searchProducts(this.props.uf, query));
+  }
+
+  onClearSearch = () => {
+    this.setState({ query: "" });
+    this.props.dispatch(getHistory());
+  }
+
   onSuccess(e) {
     try {
       console.log(e);
@@ -181,141 +180,126 @@ class SearchMedicineScreen extends Component {
 
   render() {
     return (
-        <KeyboardAvoidingView
-          enabled
-          style={{ flex: 1, backgroundColor: "#FFFFFF" }}
-          behavior={Platform.OS === "ios" ? "padding" : null}
-          keyboardVerticalOffset={-500}
-        >
-          <SearchHeader
-            menuLeft={
-              <MenuItem
-                icon="md-arrow-back"
-                onPress={() => {
-                  this.onBack();
-                }}
-                style={{
-                  paddingLeft: 24,
-                  paddingVertical: 12,
-                  paddingRight: 12
-                }}
-              />
-            }
-            menuRight={
-              <MenuItem
-                icon="barcode"
-                onPress={() => {
-                  this.setState({ showCamera: true });
-                }}
-                style={{ paddingRight: 24, paddingVertical: 12 }}
-              />
-            }
-          />
-
-          <ScrollView style={{ paddingHorizontal: 24 }} keyboardShouldPersistTaps="always">
-            {Components.renderIf(
-              !this.props.isHistory,
-              <Text uppercase style={styles.subheader}>
-                {" "}
-                Resultado da busca{" "}
-              </Text>
-            )}
-            {Components.renderIf(
-              this.props.isLoading,
-              <ActivityIndicator size="small" style={{ marginTop: 16 }} />
-            )}
-            {Components.renderIf(
-              this.props.products.length > 0,
-              <FlatList
-                data={this.props.products}
-                style={{ paddingBottom: 90 }}
-                renderItem={this._renderItem}
-                keyboardShouldPersistTaps={"handled"}
-                keyExtractor={(item, index) => item.nome.toString()}
-              />
-            )}
-          </ScrollView>
-
-          {Components.renderIf(
-            this.props.products.length <= 0,
-            <View
-              style={{
-                flex: 1,
-                position: "absolute",
-                top: 0,
-                bottom: 0,
-                right: 0,
-                left: 0,
-                alignItems: "center",
-                justifyContent: "center"
+      <KeyboardAvoidingView
+        enabled
+        style={{ flex: 1, backgroundColor: "#FFFFFF" }}
+        behavior={Platform.OS === "ios" ? "padding" : null}
+        keyboardVerticalOffset={-500}
+      >
+        <SearchHeader
+          query={this.state.query}
+          onQueryChange={this.onQueryChange}
+          onClearSearch={this.onClearSearch}
+          menuLeft={
+            <MenuItem
+              icon="md-arrow-back"
+              onPress={() => {
+                this.onBack();
               }}
-            >
-              <Text style={styles.notfound}>
-                {"Nenhum produto encontrado."}
-              </Text>
-            </View>
+              style={{
+                paddingLeft: 24,
+                paddingVertical: 12,
+                paddingRight: 12
+              }}
+            />
+          }
+          menuRight={
+            <MenuItem
+              icon="barcode"
+              onPress={() => {
+                this.setState({ showCamera: true });
+              }}
+              style={{ paddingRight: 24, paddingVertical: 12 }}
+            />
+          }
+        />
+
+        <ScrollView style={{ paddingHorizontal: 24 }} keyboardShouldPersistTaps="always">
+
+          {Components.renderIf(!this.props.isHistory,
+            <Text uppercase style={styles.subheader}>{"Resultado da busca"}</Text>
+          )}
+
+          {Components.renderIf(this.props.isLoading,
+            <ActivityIndicator size="small" style={{ marginTop: 16 }} />
           )}
 
           {Components.renderIf(
-            this.state.showCamera === true,
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: "#FFF",
-                position: "absolute",
-                top: 0,
-                bottom: 0,
-                right: 0,
-                left: 0
+            this.props.products.length > 0,
+            <FlatList
+              data={this.props.products}
+              style={{ paddingBottom: 90 }}
+              renderItem={this._renderItem}
+              keyboardShouldPersistTaps={"handled"}
+              keyExtractor={(item, index) => item.nome.toString()}
+            />
+          )}
+        </ScrollView>
+
+        {Components.renderIf(this.props.products.length <= 0,
+          <View style={styles.ctnNotFoundMsg}>
+            <Text style={styles.notfound}>{"Nenhum produto encontrado."}</Text>
+          </View>
+        )}
+
+        {Components.renderIf(
+          this.state.showCamera === true,
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: "#FFF",
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              right: 0,
+              left: 0
+            }}
+          >
+            <BarcodeScanner
+              style={{ flex: 1 }}
+              reactivateTimout={3000}
+              showMarker={true}
+              onRead={this.onSuccess.bind(this)}
+              ref={node => {
+                this.scanner = node;
               }}
-            >
-              <BarcodeScanner
-                style={{ flex: 1 }}
-                reactivateTimout={3000}
-                showMarker={true}
-                onRead={this.onSuccess.bind(this)}
-                ref={node => {
-                  this.scanner = node;
-                }}
-                topContent={
-                  <View style={{ padding: 24 }}>
-                    <Text
-                      style={{
-                        fontFamily: "Roboto-Light",
-                        fontSize: 24,
-                        color: "rgba(0,0,0,0.80)",
-                        textAlign: "center",
-                        marginTop: 24
-                      }}
-                    >
-                      Aponte a câmera para o{" "}
-                      <Text style={{ fontFamily: "Roboto-Bold", fontSize: 24 }}>
-                        {" código de barras"}
-                      </Text>
-                      .
+              topContent={
+                <View style={{ padding: 24 }}>
+                  <Text
+                    style={{
+                      fontFamily: "Roboto-Light",
+                      fontSize: 24,
+                      color: "rgba(0,0,0,0.80)",
+                      textAlign: "center",
+                      marginTop: 24
+                    }}
+                  >
+                    Aponte a câmera para o{" "}
+                    <Text style={{ fontFamily: "Roboto-Bold", fontSize: 24 }}>
+                      {" código de barras"}</Text>.
                     </Text>
-                  </View>
-                }
-                bottomContent={
-                  <View style={{ padding: 24, width: "100%" }}>
-                    <Button
-                      style={[styles.button]}
-                      bordered
-                      dark
-                      onPress={() => {
-                        this.setState({ showCamera: false });
-                      }}
-                    >
-                      <Text style={[styles.buttonText]} uppercase={false}>
-                        {"Cancelar"}
-                      </Text>
-                    </Button>
-                  </View>
-                }
-              />
-            </View>
-          )}
-        </KeyboardAvoidingView>
+                </View>
+              }
+              bottomContent={
+                <View style={{ padding: 24, width: "100%" }}>
+                  <Button
+                    style={[styles.button]}
+                    bordered
+                    dark
+                    onPress={() => {
+                      this.setState({ showCamera: false });
+                    }}
+                  >
+                    <Text style={[styles.buttonText]} uppercase={false}>
+                      {"Cancelar"}
+                    </Text>
+                  </Button>
+                </View>
+              }
+            />
+          </View>
+        )}
+      </KeyboardAvoidingView>
     );
   }
 }

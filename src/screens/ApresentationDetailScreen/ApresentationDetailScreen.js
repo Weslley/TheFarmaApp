@@ -1,23 +1,27 @@
 import React, { Component } from "react";
-import { PixelRatio, StatusBar, View, ScrollView, Image, TouchableOpacity, FlatList, ActivityIndicator } from "react-native";
+import { StatusBar, View, ScrollView, FlatList, ActivityIndicator } from "react-native";
 import { Text } from "native-base";
+
+import Permissions from "react-native-permissions";
+import RNGooglePlaces from "react-native-google-places";
 
 import { connect } from "react-redux";
 import { createOrder } from "../../actions/orders";
 import { rankingView } from "../../actions/apresentations";
-import { getGenerics, clearError, clearGenerics } from "../../actions/generics";
 import { addItemToCart, removeItemToCart } from "../../actions/carts";
+import { getGenerics, clearError, clearGenerics } from "../../actions/generics";
+import { getLocation, getGeocodeAddress, updateLocation } from "../../actions/locations";
 
 import { Header } from "../../layout/Header";
 import { BottomBar } from "../../layout/Bar";
 import { ActionSheet } from "../../layout/ActionSheet";
 import { ShoppingBagIcon } from "../../layout/ShoppingBagIcon";
 
-import { Icon } from "../../components/Icon";
-import { Loading } from "../../components/Loading"
 import { MenuItem } from '../../components/MenuItem';
 import { ButtonCustom } from "../../components/ButtonCustom";
+import { GooglePlaces } from "../../components/GooglePlaces";
 import { ProductDescription } from "../../components/Product";
+import { LocationListItem } from "../../components/LocationListItem";
 import { ApresentationDetailDescription } from "../../components/Product";
 
 import { Components, CartUtils } from "../../helpers";
@@ -33,7 +37,11 @@ class ApresentationDetailScreen extends Component {
     this.state = {
       apresentation: null,
       generics: [],
-      showDeliveryDialog: false
+      show_delivery_dialog: false,
+      places: [],
+      show_places: false,
+      show_delivery_dialog: false,
+      location_permission: '',
     };
   }
 
@@ -52,8 +60,14 @@ class ApresentationDetailScreen extends Component {
 
   componentWillMount() {
     let apresentation = this.props.navigation.state.params.apresentation
-    //apresentation.quantidade_rec = apresentation.quantidade
     this.setState({ apresentation });
+
+    Permissions.check("location").then(response => {
+      this.setState({ location_permission: response });
+      if (response === "authorized") {
+        this.props.dispatch(getLocation());
+      }
+    });
   }
 
   componentDidMount() {
@@ -74,6 +88,31 @@ class ApresentationDetailScreen extends Component {
   showCart() {
     this.props.navigation.navigate({ key: 'cart1', routeName: 'Cart', params: {} });
   }
+
+  setPlace(place) {
+    if (place.place_id) {
+      RNGooglePlaces.lookUpPlaceByID(place.place_id).then(result => {
+        let latitude = result.location.latitude;
+        let longitude = result.location.longitude;
+
+        this.props.dispatch(getGeocodeAddress({ latitude, longitude }));
+        this.props.dispatch(updateLocation(this.props.uf, latitude, longitude));
+        this._createOrder({ latitude, longitude });
+        this.setState({ show_places: false });
+
+      }).catch(error => {
+        console.log(error.message);
+        Alert.alert("TheFarma", "Não foi possível obter as coordenadas. Verifique sua conexão.",
+          [{ text: "OK", onPress: () => { } }],
+          { cancelable: false }
+        );
+      });
+    }
+  }
+
+  _renderPlaceItem = ({ item }) => (
+    <LocationListItem address={item} onPress={() => { this.setPlace(item); }} />
+  );
 
   _rankingView() {
     setTimeout(() => {
@@ -113,39 +152,12 @@ class ApresentationDetailScreen extends Component {
     this.props.navigation.navigate({ key: `ApresentationDetail${generic.id}`, routeName: 'ApresentationDetail', params: { apresentation: generic } });
   }
 
-  _showDeliveryDialog() { this.setState({ showDeliveryDialog: true }); }
-
-  _showListProposals() {
-    if (this.props.client) {
-      let order = this.props.order;
-      let itens = []
-      this.props.cartItems.map((item) => { itens.push({ apresentacao: item.id, quantidade: item.quantidade }) })
-      order.itens = itens
-      order.latitude = this.props.latitude;
-      order.longitude = this.props.longitude;
-      order.delivery = false;
-      let params = { client: this.props.client, order: order }
-      this.props.dispatch(createOrder(params));
-      this.props.navigation.navigate({ key: 'list_proposals1', routeName: 'ListProposals', params: {} });
-    } else {
-      this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: { actionBack: 'ApresentationDetail' } });
-    }
-    this.setState({ showDeliveryDialog: false });
-  }
-
-  _showListAddress() {
-    if (this.props.client) {
-      this.props.navigation.navigate({ key: 'list_address1', routeName: 'ListAddress', params: { showBottomBar: true } });
-    } else {
-      this.props.navigation.navigate({ key: 'profile1', routeName: 'Profile', params: { actionBack: 'ApresentationDetail' } });
-    }
-    this.setState({ showDeliveryDialog: false });
-  }
+  _showDeliveryDialog() { this.setState({ show_delivery_dialog: true }); }
 
   _renderDeliveryDialog() {
     return (
       <ActionSheet
-        callback={buttonIndex => { this.setState({ showDeliveryDialog: false }); }}
+        callback={buttonIndex => { this.setState({ show_delivery_dialog: false }); }}
         content={
           <View style={styles.containerDelivery}>
             <Text style={styles.titleDialog}>Como deseja obter os seus medicamentos?</Text>
@@ -169,6 +181,55 @@ class ApresentationDetailScreen extends Component {
     )
   }
 
+  _createOrder(coords = {}) {
+    let itens = [];
+    let order = this.props.order;
+    let client = this.props.client;
+    let cItems = this.props.cartItems;
+
+    let latitude = coords.latitude || this.props.latitude;
+    let longitude = coords.longitude || this.props.longitude;
+
+    if (client) {
+      cItems.map(i => { itens.push({ apresentacao: i.id, quantidade: i.quantidade }); });
+      order.itens = itens;
+      order.latitude = latitude;
+      order.longitude = longitude;
+      order.delivery = false;
+      let params = { client, order };
+      this.props.dispatch(createOrder(params));
+      this.props.navigation.navigate({ key: "list_proposals1", routeName: "ListProposals", params: {} });
+    } else {
+      this.props.navigation.navigate({ key: "profile1", routeName: "Profile", params: { actionBack: "MedicineApresentations" } });
+    }
+  }
+
+  _showListProposals() {
+    let location_permission = this.state.location_permission;
+    if (location_permission === 'authorized') {
+      this.props.dispatch(getLocation());
+      this._createOrder();
+    } else {
+      this.setState({ show_places: true })
+    }
+    this.setState({ show_delivery_dialog: false });
+  }
+
+  _showListAddress() {
+    let key = "profile1";
+    let routeName = "Profile";
+    let params = { actionBack: "MedicineApresentations" }
+
+    if (this.props.client) {
+      key = "list_address1";
+      routeName = "ListAddress";
+      params = { showBottomBar: true };
+    }
+
+    this.props.navigation.navigate({ key, routeName, params });
+    this.setState({ show_delivery_dialog: false });
+  }
+
   renderFooter = () => {
     if (!this.props.isLoading) return null;
     return (
@@ -190,95 +251,103 @@ class ApresentationDetailScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
-        <ScrollView>
-          <Header
-            title={this.state.apresentation.produto.nome}
-            image={this.getPhoto()}
-            menuLeft={
-              <MenuItem
-                icon="md-arrow-back"
-                onPress={() => { this.onBack() }}
-                style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+        {Components.renderIfElse(this.state.show_places,
+          <GooglePlaces
+            renderPlaceItem={this._renderPlaceItem}
+            onBackPress={() => { this.setState({ show_places: false }) }}
+          />,
+          <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+            <ScrollView>
+              <Header
+                title={this.state.apresentation.produto.nome}
+                image={this.getPhoto()}
+                menuLeft={
+                  <MenuItem
+                    icon="md-arrow-back"
+                    onPress={() => { this.onBack() }}
+                    style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+                  />
+                }
+                menuRight={
+                  <View style={{ paddingRight: 12 }}>
+                    <ShoppingBagIcon value={this.props.cartItems.length} onPress={() => { this.showCart() }} />
+                  </View>
+                }
               />
-            }
-            menuRight={
-              <View style={{ paddingRight: 12 }}>
-                <ShoppingBagIcon value={this.props.cartItems.length} onPress={() => { this.showCart() }} />
+
+              {Components.renderIf(this.state.apresentation,
+                <View style={{ paddingHorizontal: 24, marginTop: 8 }}>
+                  <ApresentationDetailDescription
+                    apresentation={this.state.apresentation}
+                    showActions={true}
+                    onPressMinus={() => this._removeItemToCart(this.state.apresentation)}
+                    onPressPlus={() => this._addItemToCart(this.state.apresentation)}
+                  />
+                </View>
+              )}
+
+              {Components.renderIf(this.props.generics.length > 0,
+                <View style={{ marginBottom: 16 }}>
+                  <View style={styles.containerLabel}>
+                    <Text style={styles.label}>{"Genéricos e Similares"}</Text>
+                  </View>
+
+                  <FlatList
+                    style={styles.list}
+                    horizontal={true}
+                    data={this.props.generics}
+                    keyExtractor={(item, index) => item.id.toString()}
+                    renderItem={this._renderItem}
+                    ListFooterComponent={this.renderFooter()}
+                  />
+                </View>
+              )}
+
+              <View style={[styles.containerLabel, { marginTop: 16 }]}>
+                <Text style={styles.label}>{"Sobre este medicamento"}</Text>
               </View>
-            }
-          />
 
-          {Components.renderIf(this.state.apresentation,
-            <View style={{ paddingHorizontal: 24, marginTop: 8 }}>
-              <ApresentationDetailDescription
-                apresentation={this.state.apresentation}
-                showActions={true}
-                onPressMinus={() => this._removeItemToCart(this.state.apresentation)}
-                onPressPlus={() => this._addItemToCart(this.state.apresentation)}
-              />
-            </View>
-          )}
-
-          {Components.renderIf(this.props.generics.length > 0,
-            <View style={{ marginBottom: 16 }}>
-              <View style={styles.containerLabel}>
-                <Text style={styles.label}>{"Genéricos e Similares"}</Text>
+              <View style={styles.table}>
+                <Text style={styles.tableLabel} uppercase>
+                  {"Princípio Ativo"}
+                </Text>
+                <Text style={styles.tableValue}>{this.state.apresentation.produto.principio_ativo.nome}</Text>
               </View>
 
-              <FlatList
-                style={styles.list}
-                horizontal={true}
-                data={this.props.generics}
-                keyExtractor={(item, index) => item.id.toString()}
-                renderItem={this._renderItem}
-                ListFooterComponent={this.renderFooter()}
+              <View style={[styles.table, { backgroundColor: "#FAFAFA" }]}>
+                <Text style={styles.tableLabel} uppercase>
+                  {"TIPO"}
+                </Text>
+                <Text style={styles.tableValue}>{TipoMedicamento[this.state.apresentation.produto.tipo][1]}</Text>
+              </View>
+
+              <View style={[styles.table]}>
+                <Text style={styles.tableLabel} uppercase>
+                  {"Forma Farmacêutica"}
+                </Text>
+                <Text style={styles.tableValue}>{this.state.apresentation.forma_farmaceutica}</Text>
+              </View>
+
+              <View style={[styles.table, { backgroundColor: "#FAFAFA", marginBottom: 90 }]}>
+                <Text style={styles.tableLabel} uppercase>
+                  {"Quantidade"}
+                </Text>
+                <Text style={styles.tableValue}>{this.state.apresentation.quantidade_rec}</Text>
+              </View>
+            </ScrollView>
+
+            {Components.renderIf(this.props.cartItems.length > 0,
+              <BottomBar
+                buttonTitle="Ver propostas"
+                price={CartUtils.getValueTotal(this.props.cartItems)}
+                onButtonPress={() => { this._showDeliveryDialog(); }}
               />
-            </View>
-          )}
+            )}
 
-          <View style={[styles.containerLabel, { marginTop: 16 }]}>
-            <Text style={styles.label}>{"Sobre este medicamento"}</Text>
+            {Components.renderIf(this.state.show_delivery_dialog,
+              this._renderDeliveryDialog()
+            )}
           </View>
-
-          <View style={styles.table}>
-            <Text style={styles.tableLabel} uppercase>
-              {"Princípio Ativo"}
-            </Text>
-            <Text style={styles.tableValue}>{this.state.apresentation.produto.principio_ativo.nome}</Text>
-          </View>
-
-          <View style={[styles.table, { backgroundColor: "#FAFAFA" }]}>
-            <Text style={styles.tableLabel} uppercase>
-              {"TIPO"}
-            </Text>
-            <Text style={styles.tableValue}>{TipoMedicamento[this.state.apresentation.produto.tipo][1]}</Text>
-          </View>
-
-          <View style={[styles.table]}>
-            <Text style={styles.tableLabel} uppercase>
-              {"Forma Farmacêutica"}
-            </Text>
-            <Text style={styles.tableValue}>{this.state.apresentation.forma_farmaceutica}</Text>
-          </View>
-
-          <View style={[styles.table, { backgroundColor: "#FAFAFA", marginBottom: 90 }]}>
-            <Text style={styles.tableLabel} uppercase>
-              {"Quantidade"}
-            </Text>
-            <Text style={styles.tableValue}>{this.state.apresentation.quantidade_rec}</Text>
-          </View>
-        </ScrollView>
-
-        {Components.renderIf(this.props.cartItems.length > 0,
-          <BottomBar
-            buttonTitle="Ver propostas"
-            price={CartUtils.getValueTotal(this.props.cartItems)}
-            onButtonPress={() => { this._showDeliveryDialog(); }}
-          />
-        )}
-
-        {Components.renderIf(this.state.showDeliveryDialog,
-          this._renderDeliveryDialog()
         )}
       </View>
     );

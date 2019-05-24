@@ -1,6 +1,4 @@
-import { StyleSheet, PixelRatio } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-
 export default EStyleSheet.create({
     container: {
         justifyContent: "center",
@@ -60,5 +58,11 @@ export default EStyleSheet.create({
         width: '100%',
         height: 1,
         backgroundColor: '$separator'
+    },
+    input: { 
+        fontFamily: "Roboto-Bold", 
+        fontSize: 24, 
+        paddingLeft: 0, 
+        marginLeft: 0 
     }
 })

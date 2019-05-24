@@ -1,3 +1,4 @@
+
 import React, { Component } from "react";
 import {
   StatusBar,
@@ -83,6 +84,7 @@ class WelcomeScreen extends Component {
   };
 
   componentWillMount() {
+
     Permissions.checkMultiple(["camera", "photo", "location"]).then(
       response => {
         this.setState({
@@ -122,12 +124,14 @@ class WelcomeScreen extends Component {
     }
 
     this.props.dispatch(getCurrentClient());
+
     setTimeout(() => {
       if (this.props.client) {
         let params = { client: this.props.client, filters: {} };
         this.props.dispatch(getNotifications(params));
       }
     }, 1000);
+
   }
 
   componentDidMount() {
@@ -325,68 +329,24 @@ class WelcomeScreen extends Component {
   }
 
   getLocation() {
-    Geolocation.getCurrentPosition(
-      position => {
-        this.props.dispatch(getGeocodeAddress(position.coords));
-        this.props.dispatch(
-          updateLocation(
-            this.props.uf,
-            position.coords.latitude,
-            position.coords.longitude
-          )
+    Permissions.check('location').then(response => {
+      // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+      if (response === 'authorized') {
+        Geolocation.getCurrentPosition(
+          position => {
+            this.props.dispatch(getGeocodeAddress(position.coords));
+            this.props.dispatch(updateLocation(this.props.uf, position.coords.latitude, position.coords.longitude));
+          },
+          error => this.setState({ error: error.message }),
+          { enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter: 10 }
         );
-      },
-      error => this.setState({ error: error.message }),
-      {
-        enableHighAccuracy: false,
-        timeout: 10000,
-        maximumAge: 1000,
-        distanceFilter: 10
       }
-    );
-  }
-
-  alertLocation() {
-    Alert.alert(
-      "",
-      "Para lhe oferecer as melhores propostas o TheFarma requer acesso a sua localização?",
-      [
-        {
-          text: "NÃO",
-          onPress: () => {
-            console.log("cancelou.");
-          }
-        },
-        {
-          text: "SIM",
-          onPress: () => {
-            this.requestLocationPermission();
-          }
-        }
-      ],
-      { cancelable: false }
-    );
-  }
-
-  requestLocationPermission() {
-    Permissions.request("location").then(response => {
-      if (response === "authorized") this.getLocation();
-      this.setState({ locationPermission: response });
     });
   }
 
   onSearch = showCamera => {
-    if (this.state.locationPermission === "authorized") {
-      this.props.navigation.navigate("SearchMedicine", { showCamera });
-    } else {
-      Permissions.request("location").then(response => {
-        if (response === "authorized") {
-          this.getLocation();
-        } else {
-          this.alertLocation();
-        }
-      });
-    }
+    this.props.navigation.navigate("SearchMedicine", { showCamera });
+    this.getLocation();
   };
 
   showCart() {
@@ -490,8 +450,8 @@ class WelcomeScreen extends Component {
               onPress={() => { this.onSearch(false); }}
             >
               <View style={{ flexDirection: "row" }}>
-                <Icon name="search" size={24} color={"rgba(0,0,0,0.32)"} style={[{ marginRight: 12 }]}/>
-                <Text style={[ styles.searchBarText, Platform.OS === "ios" ? {} : {} ]} >
+                <Icon name="search" size={24} color={"rgba(0,0,0,0.32)"} style={[{ marginRight: 12 }]} />
+                <Text style={[styles.searchBarText, Platform.OS === "ios" ? {} : {}]} >
                   {"Nome do medicamento"}
                 </Text>
               </View>
@@ -506,6 +466,9 @@ class WelcomeScreen extends Component {
             </TouchableOpacity>
           </View>
         </LinearGradient>
+
+        {/*<GooglePlaces />*/}
+
       </KeyboardAvoidingView>
     );
   }
