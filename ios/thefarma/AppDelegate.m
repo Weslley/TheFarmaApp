@@ -12,6 +12,9 @@
 #import "RNFirebaseNotifications.h"
 #import "RNFirebaseMessaging.h"
 
+#import <GooglePlaces/GooglePlaces.h>
+//#import <GoogleMaps/GoogleMaps.h>
+
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
@@ -40,6 +43,9 @@
   [FIRApp configure];
   [[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];
   [RNFirebaseNotifications configure];
+  
+  [GMSPlacesClient provideAPIKey:@"AIzaSyCeo33tVeoC5g42krOnpLzatn5po94THcg"];
+  //[GMSServices provideAPIKey:@"AIzaSyCeo33tVeoC5g42krOnpLzatn5po94THcg"];
 
   return YES;
 }

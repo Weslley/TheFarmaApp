@@ -200,7 +200,7 @@ class ApresentationDetailScreen extends Component {
       this.props.dispatch(createOrder(params));
       this.props.navigation.navigate({ key: "list_proposals1", routeName: "ListProposals", params: {} });
     } else {
-      this.props.navigation.navigate({ key: "profile1", routeName: "Profile", params: { actionBack: "MedicineApresentations" } });
+      this.props.navigation.navigate({ key: "login1", routeName: "Login", params: { actionBack: "MedicineApresentations" } });
     }
   }
 
@@ -216,8 +216,8 @@ class ApresentationDetailScreen extends Component {
   }
 
   _showListAddress() {
-    let key = "profile1";
-    let routeName = "Profile";
+    let key = "login1";
+    let routeName = "Login";
     let params = { actionBack: "MedicineApresentations" }
 
     if (this.props.client) {

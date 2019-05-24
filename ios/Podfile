@@ -6,8 +6,10 @@ target 'thefarma' do
   # use_frameworks!
 
   # Pods for ReactPushNotifications - Add these lines
-  pod 'Firebase/Core'
-  pod 'Firebase/Messaging'
+  pod 'Firebase/Core', '4.2.0'
+  pod 'Firebase/Messaging', '4.2.0'
+  pod 'GooglePlaces'
+  pod 'GoogleMaps'
 
 
 end

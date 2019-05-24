@@ -62,11 +62,18 @@ class PhoneScreen extends Component {
 
       if(nextProps.client){
         if(nextProps.client.phone && nextProps.client.phone === '86900000000'){
+          let actionBack = this.state.actionBack
+          console.log("actionBack", actionBack);
+          if(actionBack){
+            this.props.navigation.navigate(actionBack);
+          }else{
             const resetAction = StackActions.reset({
-                index: 0,
-                actions: [NavigationActions.navigate({ routeName: 'Tabs', params: { actionBack: this.state.actionBack } })],
+              index: 0,
+              actions: [NavigationActions.navigate({ routeName: 'Tabs' , params: { actionBack: this.state.actionBack } })],
             });
             this.props.navigation.dispatch(resetAction);
+          }
+          //console.log("routeName", routeName);
         }
       }
 
@@ -106,9 +113,7 @@ class PhoneScreen extends Component {
   };
 
   componentWillMount() {
-    const {
-      state: { params }
-    } = this.props.navigation;
+    const { state: { params } } = this.props.navigation;
 
     if (params) {
       if (params.nome) this.setState({ nome: params.nome });
@@ -124,6 +129,7 @@ class PhoneScreen extends Component {
 
       if (params.sexo) this.setState({ sexo: params.sexo });
       if (params.actionBack) this.setState({ actionBack: params.actionBack });
+      console.log("Params->", params);
     }
 
     this.setState({
