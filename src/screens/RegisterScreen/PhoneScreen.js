@@ -62,8 +62,8 @@ class PhoneScreen extends Component {
 
       if(nextProps.client){
         if(nextProps.client.celular && nextProps.client.celular === '86900000000'){
-          let actionBack = this.state.actionBack
-          console.log("actionBack", actionBack);
+          let actionBack = this.state.actionBack;
+          console.log(`actionBack->${actionBack}`);
           if(actionBack){
             this.props.navigation.navigate(actionBack);
           }else{
