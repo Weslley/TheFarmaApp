@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { NavigationEvents } from 'react-navigation';
 import { View, ScrollView, FlatList, ActivityIndicator } from "react-native";
 import { Badge, Text } from "native-base";
 
@@ -48,15 +49,6 @@ class NotificationsScreen extends Component {
 
   componentWillReceiveProps = nextProps => {
     try {
-      if (
-        nextProps.notifications &&
-        nextProps.notifications !== this.props.notifications
-      ) {
-        this.props.navigation.setParams({
-          badgeCount: nextProps.notifications.length
-        });
-      }
-
       if (nextProps.order && nextProps.order != this.props.order) {
         this._showOrder(nextProps.order);
       }
@@ -75,7 +67,7 @@ class NotificationsScreen extends Component {
     }, 1000);
   }
 
-  componentDidMount() {}
+  componentDidMount() { }
 
   onEndReached = ({ distanceFromEnd }) => {
     if (this.props.nextPage) {
@@ -85,14 +77,18 @@ class NotificationsScreen extends Component {
   };
 
   _showOrder(order) {
-    this.props.navigation.navigate({
-      key: "order1",
-      routeName: "Order",
-      params: { order }
-    });
+    this.props.navigation.navigate({ key: "order1", routeName: "Order", params: { order } });
   }
 
-  _viewNotification(notificacao) {
+  viewAllNotifications() {
+    let nao_visualizadas = this.props.notifications.filter((x) => x.visualizada !== true)
+    nao_visualizadas.forEach((n) => {
+      this._viewNotification(n);
+    })
+    this.props.navigation.setParams({ badgeCount: 0 });
+  }
+
+  _openNotification(notificacao) {
     let params = {};
     params.client = this.props.client;
     params.notificacao = notificacao;
@@ -105,11 +101,18 @@ class NotificationsScreen extends Component {
     }
   }
 
+  _viewNotification(notificacao) {
+    let params = {};
+    params.client = this.props.client;
+    params.notificacao = notificacao;
+    this.props.dispatch(viewNotification(params));
+  }
+
   _renderItem = ({ item }) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          this._viewNotification(item);
+          this._openNotification(item);
         }}
       >
         <NotificationItem notificacao={item} />
@@ -129,6 +132,7 @@ class NotificationsScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
+        <NavigationEvents onWillFocus={payload => this.viewAllNotifications()} />
         <Header
           style={{
             paddingHorizontal: 24,
@@ -140,8 +144,8 @@ class NotificationsScreen extends Component {
 
         {Components.renderIfElse(
           this.props.notifications &&
-            this.props.notifications.length === 0 &&
-            this.props.loading === true,
+          this.props.notifications.length === 0 &&
+          this.props.loading === true,
           <Loading />,
           <ScrollView
             style={{ paddingHorizontal: 24 }}

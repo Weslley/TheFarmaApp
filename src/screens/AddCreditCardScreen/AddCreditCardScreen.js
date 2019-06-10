@@ -294,8 +294,7 @@ class AddCreditCardScreen extends Component {
             }
           />
 
-          <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-
+          <KeyboardAvoidingView enabled style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : null}>
             <ScrollView>
               <View style={{ alignItems: "center", paddingVertical: 32 }}>
                 {this.getImageCard()}

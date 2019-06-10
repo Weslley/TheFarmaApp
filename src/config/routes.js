@@ -1,11 +1,7 @@
 import React from "react";
 import { Animated, Easing, View } from "react-native";
 
-import {
-  createStackNavigator,
-  createBottomTabNavigator,
-  createAppContainer
-} from "react-navigation";
+import { createStackNavigator, createBottomTabNavigator, createAppContainer } from "react-navigation";
 
 import { WelcomeScreen } from "../screens/WelcomeScreen";
 import { ProfileScreen } from "../screens/ProfileScreen";

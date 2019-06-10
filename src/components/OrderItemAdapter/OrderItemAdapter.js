@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { View, Image } from "react-native";
-import { Text, Thumbnail } from "native-base";
+import { View, Image, Text } from "react-native";
+import { Thumbnail } from "native-base";
 import { TextMask } from "react-native-masked-text";
 
 import { Icon } from "../Icon";
@@ -43,7 +43,7 @@ class OrderAdapter extends Component {
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             {this.getPhoto()}
 
-            <View style={{ marginLeft: 16 }}>
+            <View style={{ marginLeft: 16, flex: 1 }}>
               <Text style={[styles.text, { marginBottom: 4 }]}>{this.props.item.apresentacao.produto.nome}</Text>
               <Text style={styles.apresentation}>{this.props.item.apresentacao.nome}</Text>
             </View>

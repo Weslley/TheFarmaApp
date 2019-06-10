@@ -56,13 +56,16 @@ export default (state = INITIAL_STATE, action) => {
         notifications: list
       };
 
+    /*
     case VIEW_NOTIFICATION_SUCCESS:
+      return { ...state };
       try {
         list = state.notifications.filter((x) => x.id !== action.data.notificacao.id);
         return { ...state, notifications: list };
       } catch (error) {
         return { ...state };
       }
+    */
 
     case GET_NOTIFICATIONS_ERROR:
     case GET_NOTIFICATIONS_NEXT_PAGE_ERROR:

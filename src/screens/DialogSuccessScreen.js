@@ -71,14 +71,14 @@ class DialogSuccessScreen extends Component {
         <View>
           <Icon name="ios-checkmark-circle-outline" style={{ color: "#00C7BD", marginBottom: 64, marginTop: 64, fontSize: 100 }} />
           <Text style={styles.title}>{"Parabéns! Sua compra foi efetuada com sucesso."}</Text>
-          <Text style={styles.description}>{"Para acompanhar seu pedido acesse Minhas Compras."}</Text>
+          <Text style={styles.description}>{"Para acompanhar seu pedido acesse Pedidos."}</Text>
         </View>
 
         <View style={[styles.footer]}>
           <TouchableOpacity style={{ marginBottom: 16 }} onPress={this.props.onPressButton}>
             <LinearGradient colors={["#00C7BD", "#009999"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.buttonMyOrders}>
               <Text style={styles.buttonMyOrdersText}>
-                {"Minhas Compras"}
+                {"Meus Pedidos"}
               </Text>
             </LinearGradient>
           </TouchableOpacity>

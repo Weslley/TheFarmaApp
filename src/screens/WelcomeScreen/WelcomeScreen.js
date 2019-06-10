@@ -1,17 +1,6 @@
-
 import React, { Component } from "react";
-import {
-  StatusBar,
-  KeyboardAvoidingView,
-  View,
-  TouchableOpacity,
-  Text,
-  Image,
-  Alert,
-  ActivityIndicator,
-  Platform
-} from "react-native";
 import { NavigationEvents } from "react-navigation";
+import { StatusBar, KeyboardAvoidingView, View, TouchableOpacity, Text, Image, Alert, ActivityIndicator, Platform } from "react-native";
 
 import firebase from "react-native-firebase";
 import type { Notification, NotificationOpen } from "react-native-firebase";
@@ -405,26 +394,26 @@ class WelcomeScreen extends Component {
     }
   }
 
+  _onWillFocus() {
+    this.setState({ bg: this.getBackgroundScreen() });
+    StatusBar.setBarStyle("light-content");
+  }
+
+  _onWillBlur() {
+    StatusBar.setBarStyle("dark-content");
+  }
+
   render() {
     let state = this.state;
     console.log("Render -> Home", state);
     return (
       <KeyboardAvoidingView style={{ flex: 1 }}>
         <NavigationEvents
-          onWillFocus={payload => {
-            this.setState({ bg: this.getBackgroundScreen() });
-            StatusBar.setBarStyle("light-content");
-          }}
-          onWillBlur={payload => {
-            StatusBar.setBarStyle("dark-content");
-          }}
+          onWillFocus={payload => { this._onWillFocus() }}
+          onWillBlur={payload => { this._onWillBlur() }}
         />
 
-        <Image
-          resizeMode={"cover"}
-          style={styles.background}
-          source={state.bg}
-        />
+        <Image resizeMode={"cover"} style={styles.background} source={state.bg} />
 
         <LinearGradient
           colors={["rgba(255,255,255,0.00)", "rgba(0,0,0,0.48)"]}

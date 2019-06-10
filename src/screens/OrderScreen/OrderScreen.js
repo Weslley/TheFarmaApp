@@ -393,12 +393,12 @@ class OrderScreen extends Component {
             )}
 
             <View style={[styles.row, { marginTop: 16 }]}>
-              <Text style={[styles.subtitle, { textAlign: "right", fontSize: 14 }]}> {"Subtotal"}</Text>
+              <Text style={[styles.subtitle, { textAlign: "left", fontSize: 14, marginLeft: -3 }]}> {"Subtotal"}</Text>
               <TextMask type={"money"} value={this.getSubTotal()} style={styles.subtitle}/>
             </View>
 
             <View style={[styles.row, { marginTop: 8 }]}>
-              <Text style={[ styles.subtitle, { textAlign: "right", fontSize: 14 }]}>{"Frete"}</Text>
+              <Text style={[ styles.subtitle, { textAlign: "left", fontSize: 14 }]}>{"Frete"}</Text>
               {this.getFrete()}
             </View>
 
