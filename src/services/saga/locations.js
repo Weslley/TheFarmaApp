@@ -93,9 +93,9 @@ export const handleAddress = (address) => {
   } catch (error) {
     console.log(error);
   }
-  uf = ""
+  uf = "PI"
   try {
-    uf = address.address_components.find((i) => siglas.includes(i.short_name)).short_name
+    uf = address.address_components.find((i) => siglas.includes("administrative_area_level_1")).short_name
   } catch (error) {
     console.log(error);
   }

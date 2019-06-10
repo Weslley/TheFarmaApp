@@ -94,7 +94,6 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     compileOptions {
@@ -110,7 +109,7 @@ android {
         versionName "4.1.3"
         multiDexEnabled true
         ndk {
-            abiFilters "armeabi-v7a", "x86"
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
         }
         missingDimensionStrategy 'react-native-camera', 'general'
     }
