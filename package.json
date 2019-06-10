@@ -24,6 +24,7 @@
     "react": "16.8.3",
     "react-native": "^0.59.0",
     "react-native-awesome-card-io": "^0.8.2",
+    "react-native-background-timer": "^2.1.1",
     "react-native-camera": "^1.13.1",
     "react-native-communications": "^2.2.1",
     "react-native-device-info": "^1.1.0",

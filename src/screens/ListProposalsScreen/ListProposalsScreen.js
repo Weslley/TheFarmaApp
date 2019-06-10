@@ -3,6 +3,7 @@ import { Alert, View, ScrollView, TouchableOpacity, FlatList, BackHandler } from
 import { Text } from "native-base";
 
 import Snackbar from "react-native-snackbar";
+import BackgroundTimer from 'react-native-background-timer';
 
 import { connect } from "react-redux";
 import { getOrder, cancelOrder, clearError, updateOrder, selectProposal } from "../../actions/orders";
@@ -82,13 +83,20 @@ class ListProposalsScreen extends Component {
 
     setTimeout(() => {
       this.setState({ start_timer: true });
-      this.counterDown = setInterval(() => this.setTimer(), 1000);
+
+      this.counterDown = BackgroundTimer.setInterval(() => {
+        this.setTimer()
+      }, 1000);
+
+      //this.counterDown = setInterval(() => this.setTimer(), 1000);
+
     }, 2000);
   }
 
   componentWillUnmount = () => {
     clearInterval(this.loadPropostas);
-    clearInterval(this.counterDown);
+    BackgroundTimer.clearInterval(this.counterDown);
+    //clearInterval(this.counterDown);
     BackHandler.removeEventListener('hardwareBackPress', this.nothing);
   }
 
@@ -97,7 +105,8 @@ class ListProposalsScreen extends Component {
     if (timer > 0) {
       this.setState({ timer: timer - 1 })
     } else {
-      clearInterval(this.counterDown);
+      BackgroundTimer.clearInterval(this.counterDown);
+      //clearInterval(this.counterDown);
       this.setState({ status: 2 });
     }
   }

@@ -12,4 +12,6 @@ target 'thefarma' do
   pod 'GoogleMaps'
 
 
+  pod 'react-native-background-timer', :path => '../node_modules/react-native-background-timer'
+
 end
