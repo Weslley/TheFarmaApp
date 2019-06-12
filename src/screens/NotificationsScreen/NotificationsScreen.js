@@ -82,9 +82,8 @@ class NotificationsScreen extends Component {
 
   viewAllNotifications() {
     let nao_visualizadas = this.props.notifications.filter((x) => x.visualizada !== true)
-    nao_visualizadas.forEach((n) => {
-      this._viewNotification(n);
-    })
+    nao_visualizadas.forEach((n) => { this._viewNotification(n); });
+    
     this.props.navigation.setParams({ badgeCount: 0 });
   }
 

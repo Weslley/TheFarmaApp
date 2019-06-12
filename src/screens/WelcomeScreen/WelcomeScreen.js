@@ -375,7 +375,7 @@ class WelcomeScreen extends Component {
     if (!this.props.isLoading) return null;
     return (
       <View style={{ alignItems: "center", paddingVertical: 16 }}>
-        <ActivityIndicator color={"#00C7BD"} size={"large"} />
+        <ActivityIndicator color={'#00C7BD'} size={'large'}></ActivityIndicator>
       </View>
     );
   };
@@ -408,6 +408,7 @@ class WelcomeScreen extends Component {
     console.log("Render -> Home", state);
     return (
       <KeyboardAvoidingView style={{ flex: 1 }}>
+
         <NavigationEvents
           onWillFocus={payload => { this._onWillFocus() }}
           onWillBlur={payload => { this._onWillBlur() }}
@@ -455,9 +456,6 @@ class WelcomeScreen extends Component {
             </TouchableOpacity>
           </View>
         </LinearGradient>
-
-        {/*<GooglePlaces />*/}
-
       </KeyboardAvoidingView>
     );
   }

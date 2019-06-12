@@ -17,10 +17,10 @@ class IconWithBadge extends Component {
     try {
       let notifications = nextProps.notifications;
       if (notifications && notifications !== this.props.notifications) {
-
-        let nao_visualizadas = notifications.filter((x) => x.visualizada !== true)
+        let nao_visualizadas = notifications.filter((x) => x.visualizada !== true);
         this.setState({ badgeCount: nao_visualizadas.length });
-
+      }else{
+        this.setState({ badgeCount: 0 });
       }
     } catch (error) {
       console.log(error);
@@ -28,7 +28,6 @@ class IconWithBadge extends Component {
   }
 
   componentDidMount() {
-    //this.props.dispatch(getCurrentClient());
     setTimeout(() => {
       if (this.props.client) {
         let params = { client: this.props.client, filters: {} };

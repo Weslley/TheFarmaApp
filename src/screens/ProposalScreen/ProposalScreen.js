@@ -1,17 +1,14 @@
 import React, { Component } from "react";
 import {
   View,
-  ScrollView,
-  KeyboardAvoidingView,
-  Image,
-  TouchableOpacity,
   FlatList,
-  TextInput,
   Platform,
-  BackHandler
+  ScrollView,
+  TouchableOpacity,
+  KeyboardAvoidingView
 } from "react-native";
-import { Container, Text, Button, Item, Input } from "native-base";
-import { TextInputMask, MaskService } from "react-native-masked-text";
+import { Text, Button } from "native-base";
+import { TextInputMask } from "react-native-masked-text";
 import Snackbar from "react-native-snackbar";
 import LinearGradient from "react-native-linear-gradient";
 import Communications from "react-native-communications";
@@ -28,7 +25,7 @@ import { MenuItem } from "../../components/MenuItem";
 import { ButtonCustom } from "../../components/ButtonCustom";
 import { ProposalApresentation } from "../../components/Product/";
 
-import { Components, CartUtils, CurrencyUtils } from "../../helpers";
+import { Components } from "../../helpers";
 import styles from "./styles";
 
 class ProposalScreen extends Component {
@@ -77,32 +74,9 @@ class ProposalScreen extends Component {
     }
   };
 
-  componentWillMount() {
-    console.log("Montando! -> Proposal");
-  }
-
-  componentDidMount() {
-    console.log("Montou! -> Proposal");
-    BackHandler.addEventListener("hardwareBackPress", this.nothing);
-  }
-
-  componentWillUnmount = () => {
-    console.log("Desmontou! -> Proposal");
-    BackHandler.removeEventListener("hardwareBackPress", this.nothing);
-  };
-
   /** Private functions */
   onBack() {
-    this.props.navigation.navigate({
-      key: "list_proposals1",
-      routeName: "ListProposals",
-      params: { startQuery: true }
-    });
-    BackHandler.addEventListener("hardwareBackPress", this.nothing);
-  }
-
-  nothing() {
-    return true;
+    this.props.navigation.navigate({key: "list_proposals1", routeName: "ListProposals", params: { startQuery: true } });
   }
 
   onChangeTroco = value => {
@@ -173,7 +147,7 @@ class ProposalScreen extends Component {
   _callMap() {
     Communications.web(
       `https://www.google.com/maps/search/?api=1&query=${
-        this.props.proposal.farmacia.latitude
+      this.props.proposal.farmacia.latitude
       },${this.props.proposal.farmacia.longitude}`
     );
   }
@@ -357,6 +331,9 @@ class ProposalScreen extends Component {
   }
 
   _renderHeaderFooter() {
+    let order = this.props.order;
+    let delivery = order.delivery;
+
     if (!this.state.onScrollList) {
       return (
         <View style={{ marginTop: 16 }}>
@@ -373,33 +350,25 @@ class ProposalScreen extends Component {
             </Text>
           </View>
 
-          <View style={styles.infoContainer}>
-            <Icon
-              name="clock-o"
-              size={18}
-              color={"#000"}
-              style={{ marginRight: 8 }}
-            />
-            <Text style={styles.infoTextBold}>
-              {this.props.proposal.farmacia.tempo_entrega}
-              <Text style={[styles.infoText, { marginBottom: 0 }]}>
-                {" em média para entregar"}
+          {Components.renderIf(delivery,
+            <View style={styles.infoContainer}>
+              <Icon
+                name="clock-o"
+                size={18}
+                color={"#000"}
+                style={{ marginRight: 8 }}
+              />
+              <Text style={styles.infoTextBold}>
+                {this.props.proposal.farmacia.tempo_entrega}
+                <Text style={[styles.infoText, { marginBottom: 0 }]}>
+                  {" em média para entregar"}
+                </Text>
               </Text>
-            </Text>
-          </View>
+            </View>
+          )}
 
-          <TouchableOpacity
-            style={styles.infoContainer}
-            onPress={() => {
-              this._showDrugstore();
-            }}
-          >
-            <Icon
-              name="info"
-              size={18}
-              color={"#000"}
-              style={{ marginRight: 8 }}
-            />
+          <TouchableOpacity style={styles.infoContainer} onPress={() => { this._showDrugstore(); }}>
+            <Icon name="info" size={18} color={"#000"} style={{ marginRight: 8 }} />
             <Text style={styles.infoTextBold}>{"Sobre nós"}</Text>
           </TouchableOpacity>
         </View>
@@ -425,6 +394,16 @@ class ProposalScreen extends Component {
     }
   };
 
+  getLabelValorTotal() {
+    let order = this.props.order;
+    let delivery = order.delivery;
+
+    if (delivery === false)
+      return "Total com frete"
+
+    return "Total"
+  }
+
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
@@ -438,7 +417,7 @@ class ProposalScreen extends Component {
               title={this.props.proposal.farmacia.nome_fantasia}
               subtitle={`Fazemos entrega até ${
                 this.props.proposal.farmacia.horario_funcionamento
-              }`}
+                }`}
               menuLeft={
                 <MenuItem
                   icon="md-arrow-back"
@@ -475,7 +454,7 @@ class ProposalScreen extends Component {
 
             {Components.renderIf(
               !this.props.proposal.possui_todos_itens &&
-                !this.state.onScrollList,
+              !this.state.onScrollList,
               <View
                 style={{
                   backgroundColor: "#FF1967",
@@ -508,7 +487,7 @@ class ProposalScreen extends Component {
           </ScrollView>
 
           <BottomBar
-            label={"Total com frete"}
+            label={this.getLabelValorTotal()}
             proposal={true}
             buttonTitle="Comprar"
             price={this.props.proposal.valor_total_com_frete}

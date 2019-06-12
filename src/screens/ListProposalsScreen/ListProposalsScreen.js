@@ -18,16 +18,24 @@ import { ProposalNotFoundScreen } from "../ProposalNotFoundScreen";
 import { Components } from "../../helpers";
 import styles from "./styles";
 class ListProposalsScreen extends Component {
+  _didFocusSubscription;
+  _willBlurSubscription;
+
   constructor(props) {
     super(props);
+
+    this._didFocusSubscription = props.navigation.addListener('didFocus', payload => {
+      BackHandler.addEventListener('hardwareBackPress', this.onBackButtonPressAndroid);
+      this.loadPropostas = BackgroundTimer.setInterval(() => this.getProposals(), 10000);
+    });
+
     this.state = {
-      back_screen: 'Cart',
       status: 0,
       timer: 60,
-      start_timer: false,
+      start_timer: false
     }
-    loadPropostas = 0;
-    counterDown = 0;
+    this.loadPropostas = 0;
+    this.counterDown = 0;
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -39,17 +47,17 @@ class ListProposalsScreen extends Component {
       if (nextProps.order !== this.props.order) {
 
         if (nextProps.order.status === 8) {
-          clearInterval(this.counterDown);
+          BackgroundTimer.clearInterval(this.counterDown);
           this.setState({ status: 1 })
         }
 
         if (nextProps.order.status === 9) {
-          clearInterval(this.counterDown);
+          BackgroundTimer.clearInterval(this.counterDown);
           this.setState({ status: 2 })
         }
 
         if (nextProps.order && nextProps.order.propostas && nextProps.order.propostas.length > 0) {
-          clearInterval(this.counterDown);
+          BackgroundTimer.clearInterval(this.counterDown);
           this.setState({ status: 3 })
         }
       }
@@ -72,32 +80,31 @@ class ListProposalsScreen extends Component {
   }
 
   componentWillMount = () => {
-    BackHandler.addEventListener('hardwareBackPress', this.nothing);
     if (this.props.order && this.props.order.timer) {
       this.setState({ timer: this.props.order.timer })
     }
   }
 
   componentDidMount() {
-    this.loadPropostas = setInterval(() => this.getProposals(), 10000);
+    this._willBlurSubscription = this.props.navigation.addListener('willBlur', payload => {
+      BackHandler.removeEventListener('hardwareBackPress', this.onBackButtonPressAndroid);
+      BackgroundTimer.clearInterval(this.loadPropostas);
+    });
+
+    this.loadPropostas = BackgroundTimer.setInterval(() => this.getProposals(), 10000);
 
     setTimeout(() => {
       this.setState({ start_timer: true });
-
-      this.counterDown = BackgroundTimer.setInterval(() => {
-        this.setTimer()
-      }, 1000);
-
-      //this.counterDown = setInterval(() => this.setTimer(), 1000);
-
+      this.counterDown = BackgroundTimer.setInterval(() => { this.setTimer() }, 1000);
     }, 2000);
   }
 
   componentWillUnmount = () => {
-    clearInterval(this.loadPropostas);
     BackgroundTimer.clearInterval(this.counterDown);
-    //clearInterval(this.counterDown);
-    BackHandler.removeEventListener('hardwareBackPress', this.nothing);
+    BackgroundTimer.clearInterval(this.loadPropostas);
+
+    this._didFocusSubscription && this._didFocusSubscription.remove();
+    this._willBlurSubscription && this._willBlurSubscription.remove();
   }
 
   setTimer() {
@@ -106,13 +113,22 @@ class ListProposalsScreen extends Component {
       this.setState({ timer: timer - 1 })
     } else {
       BackgroundTimer.clearInterval(this.counterDown);
-      //clearInterval(this.counterDown);
       this.setState({ status: 2 });
     }
   }
 
   /** Private functions */
-  nothing = () => { return true; }
+
+  onBackButtonPressAndroid = () => {
+    let isFocused = this.props.navigation.isFocused()
+    if (isFocused === true) {
+      this.alertCancel();
+      return true;
+    } else {
+      this.onBack();
+      return false;
+    }
+  };
 
   onBack() {
     this.props.navigation.goBack(null);
@@ -131,7 +147,8 @@ class ListProposalsScreen extends Component {
   }
 
   _cancelOrder() {
-    clearInterval(this.loadPropostas);
+    BackgroundTimer.clearInterval(this.loadPropostas);
+
     let params = { client: this.props.client, order: this.props.order }
     this.props.dispatch(cancelOrder(params));
 
@@ -147,8 +164,7 @@ class ListProposalsScreen extends Component {
   }
 
   _showProposal(proposal) {
-    BackHandler.removeEventListener('hardwareBackPress', this.nothing);
-    clearInterval(this.loadPropostas);
+    BackgroundTimer.clearInterval(this.loadPropostas);
 
     if (this.props.order.id) {
       let order = this.props.order;
@@ -166,7 +182,7 @@ class ListProposalsScreen extends Component {
   _renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => { this._showProposal(item) }}>
       <View style={{ borderBottomColor: 'rgba(0,0,0,0.08)', borderBottomWidth: 1 }}>
-        <ProposalDescription proposal={item} delivery={this.props.order.delivery}/>
+        <ProposalDescription proposal={item} delivery={this.props.order.delivery} />
       </View>
     </TouchableOpacity>
   );

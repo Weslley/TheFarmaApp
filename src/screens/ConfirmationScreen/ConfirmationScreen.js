@@ -132,6 +132,7 @@ class ConfirmationScreen extends Component {
 
   closeDialog() {
     this.setState({ showCheckoutError: false });
+    this.props.navigation.navigate({ key: 'proposal1', routeName: 'Proposal', params: {} });
   }
 
   getPrice() {
@@ -313,10 +314,7 @@ class ConfirmationScreen extends Component {
 
         {Components.renderIf(this.state.showCheckoutError === true,
           <View style={{ flex: 1, backgroundColor: "rgba(255,255,255,0.8)", position: 'absolute', top: 0, bottom: 0, right: 0, left: 0 }}>
-            <DialogErrorScreen
-              onPressButton={() => { this.showCreditCards() }}
-              onPressClose={() => { this.closeDialog() }}
-            />
+            <DialogErrorScreen onPressClose={() => { this.closeDialog() }} />
           </View>
         )}
 

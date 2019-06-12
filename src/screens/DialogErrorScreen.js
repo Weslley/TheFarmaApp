@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import { View, ScrollView, Image, TouchableOpacity } from "react-native";
-import { Container, Footer, Icon, Text } from "native-base";
+import { View, TouchableOpacity } from "react-native";
+import { Container, Icon, Text } from "native-base";
 
-import { connect } from "react-redux";
 import EStyleSheet from "react-native-extended-stylesheet";
 import LinearGradient from "react-native-linear-gradient";
 
-import { Header } from "../layout/Header";
+import { Components } from "../helpers";
 
 const styles = EStyleSheet.create({
   title: {
@@ -75,17 +74,21 @@ class DialogErrorScreen extends Component {
         </View>
 
         <View style={[styles.footer, {}]}>
-          <TouchableOpacity style={{ marginBottom: 16 }} onPress={this.props.onPressButton}>
-            <LinearGradient colors={["#00C7BD", "#009999"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.buttonMyOrders}>
-              <Text style={styles.buttonMyOrdersText}>
-                {"Meus Cartões"}
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity>
+          {Components.renderIf(this.props.onPressButton,
+            <TouchableOpacity style={{ marginBottom: 16 }} onPress={this.props.onPressButton}>
+              <LinearGradient colors={["#00C7BD", "#009999"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.buttonMyOrders}>
+                <Text style={styles.buttonMyOrdersText}>
+                  {"Meus Cartões"}
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          )}
 
-          <TouchableOpacity style={styles.buttonHome} onPress={this.props.onPressClose}>
-            <Text style={styles.buttonHomeText}>{"Fechar"}</Text>
-          </TouchableOpacity>
+          {Components.renderIf(this.props.onPressClose,
+            <TouchableOpacity style={styles.buttonHome} onPress={this.props.onPressClose}>
+              <Text style={styles.buttonHomeText}>{"Fechar"}</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </Container>
     );
