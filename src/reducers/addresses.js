@@ -34,17 +34,22 @@ export default (state = INITIAL_STATE, action) => {
 
     case LIST_ADDRESS_SUCCESS:
     case LIST_ADDRESS_NEXT_PAGE_SUCCESS:
-      if (action.data && action.data.length === 1) address = action.data[0]
-      return {
-        ...state,
-        isLoading: false,
-        addresses: action.data,
-        address: address
-      };
+      list = action.data.filter((x) => x.principal === true)
+      if(list && list.length > 0){
+        address = list[0]
+      }else{
+        if (action.data && action.data.length === 1){
+          address = action.data[0]
+        }
+      }
+      return { ...state, isLoading: false, addresses: action.data, address: address };
 
     case SAVE_ADDRESS_SUCCESS:
     case UPDATE_ADDRESS_SUCCESS:
-      return { ...state, address: action.data, success: true };
+      if(action.data.principal===true){
+        return { ...state, address: action.data, success: true };  
+      }
+      return { ...state, success: true };
 
     case REMOVE_ADDRESS_SUCCESS:
       list = [...state.addresses];

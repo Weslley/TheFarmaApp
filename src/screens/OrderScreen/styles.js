@@ -17,7 +17,7 @@ export default EStyleSheet.create({
     fontSize: 16,
     color: "rgba(0,0,0,0.80)"
   },
-  subtitle:{
+  subtitle: {
     fontFamily: "Roboto-Light",
     fontSize: 16,
     color: "rgba(0,0,0,0.80)"
@@ -95,10 +95,20 @@ export default EStyleSheet.create({
   tagWarningText: {
     color: '#F57223',
   },
-  bgWarning:{
+  bgWarning: {
     backgroundColor: '#FF8D00'
   },
-  bgDanger:{
+  bgDanger: {
     backgroundColor: '#FF0000'
+  },
+  alert: {
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    alignItems: "center"
+  },
+  alertText: {
+    fontFamily: 'Roboto-Regular',
+    fontSize: 14,
+    color: '#F57223'
   }
 });

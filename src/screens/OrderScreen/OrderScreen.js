@@ -92,7 +92,7 @@ class OrderScreen extends Component {
   _callMap() {
     Communications.web(
       `https://www.google.com/maps/search/?api=1&query=${
-        this.state.order.farmacia.latitude
+      this.state.order.farmacia.latitude
       },${this.state.order.farmacia.longitude}`
     );
   }
@@ -262,7 +262,7 @@ class OrderScreen extends Component {
       if (this.state.order.cartao) {
         return (
           <View style={styles.container}>
-            <Text style={[styles.title, {marginBottom: 16}]}>{"Forma de Pagamento"}</Text>
+            <Text style={[styles.title, { marginBottom: 16 }]}>{"Forma de Pagamento"}</Text>
 
             <View>
               <CreditCardAdapter creditCard={this.state.order.cartao} />
@@ -277,10 +277,10 @@ class OrderScreen extends Component {
     } else {
       return (
         <View style={styles.container}>
-          <Text style={[styles.title, {marginBottom: 16}]}>{"Forma de Pagamento"}</Text>
+          <Text style={[styles.title, { marginBottom: 16 }]}>{"Forma de Pagamento"}</Text>
           <View>
             <Text style={[{ fontFamily: "Roboto-Light" }]}>
-              {`Dinheiro (Troco para ${MaskService.toMask("money", this.state.order.troco )})`}
+              {`Dinheiro (Troco para ${MaskService.toMask("money", this.state.order.troco)})`}
             </Text>
           </View>
         </View>
@@ -314,7 +314,7 @@ class OrderScreen extends Component {
     } else {
       if (this.state.order.farmacia) {
         return (
-          <View style={[styles.container, {paddingBottom: 16}]}>
+          <View style={[styles.container, { paddingBottom: 16 }]}>
             <View style={[styles.row, { marginBottom: 0 }]}>
               <Text style={[styles.title, { marginBottom: 0 }]}>{"Endereço da farmácia"}</Text>
               {/*
@@ -373,62 +373,94 @@ class OrderScreen extends Component {
     }
   }
 
+  _renderAlert() {
+    let order = this.state.order;
+    if (order.status === 10) {
+      return (
+        <View style={[styles.alert, { width: '100%', backgroundColor: 'rgba(255,0,0,0.16)' }]}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Icon name="alert-circled" size={24} color={'#FF0000'} style={{ marginRight: 16 }} />
+            <Text style={[styles.alertText, { flex: 1, color: '#FF0000' }]}>
+              {'Houve um problema na entrega, entre em contato com a fármacia.'}
+            </Text>
+          </View>
+        </View>
+      );
+    } else {
+      if (order.status !== 5 && order.delivery === false && order.forma_pagamento === 1) {
+        return (
+          <View style={[styles.alert, styles.tagWarning, { width: '100%' }]}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Icon name="alert-circled" size={24} color={'#F57223'} style={{ marginRight: 16 }} />
+              <Text style={[styles.alertText, { flex: 1 }]}>
+                {'Compras em dinheiro e com a retirada na farmácia tem reserva garantida de 4 horas.'}
+              </Text>
+            </View>
+          </View>
+        );
+      }
+    }
+    return null;
+  }
+
   render() {
     let order = this.state.order;
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
         {this._renderHeader()}
-
         <ScrollView>
-          <View style={styles.container}>
+          <View>
+            {this._renderAlert()}
 
-            <Text style={[styles.title, {marginBottom: 16}]}>{DateUtils.toDate(order.log.data_criacao)}</Text>
+            <View style={styles.container}>
+              <Text style={[styles.title, { marginBottom: 16 }]}>{DateUtils.toDate(order.log.data_criacao)}</Text>
 
-            {Components.renderIf(order && order.itens,
-              <FlatList
-                data={order.itens}
-                keyExtractor={item => item.apresentacao.id.toString()}
-                renderItem={this._renderItem}
-              />
-            )}
+              {Components.renderIf(order && order.itens,
+                <FlatList
+                  data={order.itens}
+                  keyExtractor={item => item.apresentacao.id.toString()}
+                  renderItem={this._renderItem}
+                />
+              )}
 
-            <View style={[styles.row, { marginTop: 16 }]}>
-              <Text style={[styles.subtitle, { textAlign: "left", fontSize: 14, marginLeft: -3 }]}> {"Subtotal"}</Text>
-              <TextMask type={"money"} value={this.getSubTotal()} style={styles.subtitle}/>
+              <View style={[styles.row, { marginTop: 16 }]}>
+                <Text style={[styles.subtitle, { textAlign: "left", fontSize: 14, marginLeft: -3 }]}> {"Subtotal"}</Text>
+                <TextMask type={"money"} value={this.getSubTotal()} style={styles.subtitle} />
+              </View>
+
+              <View style={[styles.row, { marginTop: 8 }]}>
+                <Text style={[styles.subtitle, { textAlign: "left", fontSize: 14 }]}>{"Frete"}</Text>
+                {this.getFrete()}
+              </View>
+
+              <View style={[styles.row, { marginTop: 8 }]}>
+                <Text style={[styles.footerOrderText]}>{"Total"}</Text>
+                <TextMask style={styles.footerOrderText} type={"money"} value={order.valor_bruto} />
+              </View>
             </View>
 
-            <View style={[styles.row, { marginTop: 8 }]}>
-              <Text style={[ styles.subtitle, { textAlign: "left", fontSize: 14 }]}>{"Frete"}</Text>
-              {this.getFrete()}
+            {this._renderEndereco()}
+
+            {this._renderPagamento()}
+
+            <View style={[styles.container, { marginBottom: 90 }]}>
+              <Text style={[styles.title, { marginBottom: 16 }]}>{"Alguma dúvida ou problema?"}</Text>
+              <TouchableOpacity onPress={() => { this.openSupport(); }} >
+                <LinearGradient
+                  colors={["#00C7BD", "#009999"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={{
+                    width: "100%",
+                    borderRadius: 8,
+                    paddingHorizontal: 28,
+                    paddingVertical: 14
+                  }}
+                >
+                  <Text style={styles.buttonText}>{"Entrar em contato"}</Text>
+                </LinearGradient>
+              </TouchableOpacity>
             </View>
-
-            <View style={[styles.row, { marginTop: 8 }]}>
-              <Text style={[styles.footerOrderText ]}>{"Total"}</Text>
-              <TextMask style={styles.footerOrderText} type={"money"} value={order.valor_bruto} />
-            </View>
-          </View>
-
-          {this._renderEndereco()}
-
-          {this._renderPagamento()}
-
-          <View style={[styles.container, { marginBottom: 90 }]}>
-            <Text style={[styles.title, {marginBottom: 16 }]}>{"Alguma dúvida ou problema?"}</Text>
-            <TouchableOpacity onPress={() => { this.openSupport(); }} >
-              <LinearGradient
-                colors={["#00C7BD", "#009999"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={{
-                  width: "100%",
-                  borderRadius: 8,
-                  paddingHorizontal: 28,
-                  paddingVertical: 14
-                }}
-              >
-                <Text style={styles.buttonText}>{"Entrar em contato"}</Text>
-              </LinearGradient>
-            </TouchableOpacity>
           </View>
         </ScrollView>
       </View>

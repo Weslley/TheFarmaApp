@@ -36,6 +36,7 @@ class AddAddressScreen extends Component {
       complemento: '',
       cidade: '',
       bairro: '',
+      principal: false,
 
       nomeError: null,
       cepError: null,
@@ -142,21 +143,23 @@ class AddAddressScreen extends Component {
 
   completeAddress(addr) {
     if (addr) {
-      if (addr.id) this.setState({ id: addr.id, useLocation: false })
-      if (addr.nome_endereco) this.setState({ nome_endereco: addr.nome_endereco })
-      if (addr.cep) this.setState({ cep: addr.cep })
-      if (addr.logradouro) this.setState({ logradouro: addr.logradouro })
+      if (addr.id) this.setState({ id: addr.id, useLocation: false });
+      if (addr.nome_endereco) this.setState({ nome_endereco: addr.nome_endereco });
+      if (addr.cep) this.setState({ cep: addr.cep });
+      if (addr.logradouro) this.setState({ logradouro: addr.logradouro });
 
       this.setState({ numero: (addr.numero) ? addr.numero.toString() : '' })
       this.setState({ complemento: (addr.complemento) ? addr.complemento : '' });
       this.setState({ bairro: (addr.bairro) ? addr.bairro : '' })
 
       if (addr.cidade && addr.cidade.ibge) {
-        this.setState({ cidade: +addr.cidade.ibge })
+        this.setState({ cidade: +addr.cidade.ibge });
       } else {
         let c = this.props.cities.find((i) => i.nome === addr.cidade)
-        if (c) this.setState({ cidade: c.ibge })
+        if (c) this.setState({ cidade: c.ibge });
       }
+
+      if (addr.principal) this.setState({ principal: addr.principal });
     }
   }
 
@@ -175,8 +178,7 @@ class AddAddressScreen extends Component {
   }
 
   onChangeCity = (cidade, index) => {
-    this.setState({ cidade, bairro: '' })
-    //if (cidade !== 0) this._loadBairros(cidade);
+    this.setState({ cidade, bairro: '' });
   }
 
   _loadBairros(cidade) {
@@ -202,6 +204,10 @@ class AddAddressScreen extends Component {
       this.getLocation();
       this.props.dispatch(getGeocodeAddress({ latitude: this.props.latitude, longitude: this.props.longitude }));
     }
+  }
+
+  onChangePrincipal = value => {
+    this.setState({ principal: value });
   }
 
   validForm() {
@@ -252,6 +258,7 @@ class AddAddressScreen extends Component {
       address["complemento"] = this.state.complemento;
       address["cidade"] = this.state.cidade;
       address["bairro"] = this.state.bairro;
+      address["principal"] = this.state.principal;
 
       let params = { client: this.props.client, address }
 
@@ -405,7 +412,7 @@ class AddAddressScreen extends Component {
               {Components.renderIf(this.state.numeroError, <Text style={styles.inputError} uppercase={false}>{this.state.numeroError}</Text>)}
             </View>
 
-            <View floatingLabel style={[styles.formitem, { marginBottom: 64 }]}>
+            <View floatingLabel style={styles.formitem}>
               <Text style={[styles.label, Platform.OS === 'ios' ? { marginBottom: 16 } : {}]}>Complemento</Text>
               <TextInput
                 multiline={false}
@@ -417,6 +424,13 @@ class AddAddressScreen extends Component {
               />
               <View style={{ borderBottomColor: "#000", borderWidth: 0.5, marginTop: 4, marginBottom: 8 }} />
               {Components.renderIf(this.state.complementoError, <Text style={styles.inputError} uppercase={false}>{this.state.complementoError}</Text>)}
+            </View>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 8, marginBottom: 64 }}>
+              <Text style={styles.text}>{'Meu endereço principal'}</Text>
+              <Switch
+                onValueChange={this.onChangePrincipal.bind(this)}
+                value={this.state.principal} />
             </View>
 
           </ScrollView>
