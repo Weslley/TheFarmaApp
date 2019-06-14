@@ -221,7 +221,11 @@ class PerfilEditScreen extends Component {
 
   render() {
     return (
-      <KeyboardAvoidingView style={[styles.container]} behavior={"padding"}>
+      <KeyboardAvoidingView
+        enabled
+        style={[styles.container]}
+        behavior={Platform.OS === "ios" ? "padding" : null}
+        >
         <View style={{ flex: 1, justifyContent: "space-between" }}>
 
           <TouchableOpacity style={{ width: width, height: width * 0.67, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.16)' }} onPress={() => { this.showCamera() }}>
