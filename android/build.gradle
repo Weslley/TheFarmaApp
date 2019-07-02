@@ -44,6 +44,7 @@ allprojects {
 
     configurations.all {
         resolutionStrategy.force "com.android.support:support-v4:28+"
+        resolutionStrategy.force "com.google.android.gms:play-services-base:16.1.0"
         resolutionStrategy.force 'com.google.firebase:firebase-iid:17.1.2'
         resolutionStrategy.eachDependency { DependencyResolveDetails details ->
             def requested = details.requested

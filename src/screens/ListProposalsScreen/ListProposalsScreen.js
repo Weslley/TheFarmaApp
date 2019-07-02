@@ -24,11 +24,6 @@ class ListProposalsScreen extends Component {
   constructor(props) {
     super(props);
 
-    this._didFocusSubscription = props.navigation.addListener('didFocus', payload => {
-      BackHandler.addEventListener('hardwareBackPress', this.onBackButtonPressAndroid);
-      this.loadPropostas = BackgroundTimer.setInterval(() => this.getProposals(), 10000);
-    });
-
     this.state = {
       status: 0,
       timer: 60,
@@ -36,6 +31,13 @@ class ListProposalsScreen extends Component {
     }
     this.loadPropostas = 0;
     this.counterDown = 0;
+    this.lastBackButtonPress = null;
+
+    this._didFocusSubscription = props.navigation.addListener('didFocus', payload => {
+      BackHandler.addEventListener('hardwareBackPress', this.onBackButtonPressAndroid);
+      BackgroundTimer.clearInterval(this.loadPropostas);
+      this.loadPropostas = BackgroundTimer.setInterval(() => this.getProposals(), 10000);
+    });
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -87,7 +89,7 @@ class ListProposalsScreen extends Component {
 
   componentDidMount() {
     this._willBlurSubscription = this.props.navigation.addListener('willBlur', payload => {
-      BackHandler.removeEventListener('hardwareBackPress', this.onBackButtonPressAndroid);
+      //BackHandler.removeEventListener('hardwareBackPress', this.onBackButtonPressAndroid);
       BackgroundTimer.clearInterval(this.loadPropostas);
     });
 
@@ -105,6 +107,8 @@ class ListProposalsScreen extends Component {
 
     this._didFocusSubscription && this._didFocusSubscription.remove();
     this._willBlurSubscription && this._willBlurSubscription.remove();
+    
+    BackHandler.removeEventListener('hardwareBackPress', this.onBackButtonPressAndroid);
   }
 
   setTimer() {
@@ -125,7 +129,12 @@ class ListProposalsScreen extends Component {
       this.alertCancel();
       return true;
     } else {
-      this.onBack();
+      let condition = this.lastBackButtonPress + 2000 >= new Date().getTime()
+      if (condition===true) {
+        this.alertCancel();
+        return true;
+      }
+      this.lastBackButtonPress = new Date().getTime();
       return false;
     }
   };

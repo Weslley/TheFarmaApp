@@ -167,7 +167,9 @@ dependencies {
 
     implementation project(':realm')
     implementation project(':react-native-snackbar')
-    implementation project(':react-native-device-info')
+    implementation (project(':react-native-device-info')) {
+        exclude group: 'com.google.android.gms'
+    }
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-linear-gradient')
     implementation project(':react-native-gesture-handler')

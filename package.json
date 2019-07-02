@@ -14,15 +14,15 @@
     "release": "cd android && ./gradlew clean &&./gradlew assembleRelease &"
   },
   "dependencies": {
-    "@react-native-community/async-storage": "^1.2.1",
+    "@react-native-community/async-storage": "^1.5.0",
     "@redux-saga/is": "^1.0.2",
     "axios": "^0.18.0",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "native-base": "^2.12.1",
     "prop-types": "^15.7.2",
-    "react": "16.8.3",
-    "react-native": "^0.59.0",
+    "react": "16.8.4",
+    "react-native": "^0.58.6",
     "react-native-awesome-card-io": "^0.8.2",
     "react-native-background-timer": "^2.1.1",
     "react-native-camera": "^1.13.1",

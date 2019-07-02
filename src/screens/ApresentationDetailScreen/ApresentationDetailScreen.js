@@ -334,6 +334,14 @@ class ApresentationDetailScreen extends Component {
                 </Text>
                 <Text style={styles.tableValue}>{this.state.apresentation.quantidade_rec}</Text>
               </View>
+
+              <View style={[styles.table]}>
+                <Text style={styles.tableLabel} uppercase>
+                  {"Código de barras"}
+                </Text>
+                <Text style={styles.tableValue}>{this.state.apresentation.codigo_barras}</Text>
+              </View>
+
             </ScrollView>
 
             {Components.renderIf(this.props.cartItems.length > 0,
