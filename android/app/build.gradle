@@ -103,13 +103,13 @@ android {
 
     defaultConfig {
         applicationId "br.com.infog2.thefarma"
-        minSdkVersion rootProject.ext.minSdkVersion
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 48
         versionName "4.1.5"
         multiDexEnabled true
         ndk {
-            abiFilters 'armeabi-v7a', 'x86'//, 'arm64-v8a', 'x86_64'
+            abiFilters 'armeabi-v7a', 'x86'
         }
         missingDimensionStrategy 'react-native-camera', 'general'
     }
@@ -158,23 +158,35 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-background-timer')
+    
+    implementation project(':realm')
+    implementation project(':react-native-snackbar')
+    implementation project(':react-native-vector-icons')
+    implementation project(':react-native-linear-gradient')
+    implementation project(':react-native-awesome-card-io')
+
+    implementation(project(':@react-native-community_async-storage')){
+        exclude group: "com.android.support"
+    }
+
+    implementation(project(":react-native-device-info"),  {
+        exclude group: "com.android.support"
+        exclude group: "com.google.android.gms"
+    })
+
+    implementation (project(':react-native-gesture-handler')){
+        exclude group: "com.android.support"
+    }
+
+    implementation(project(':react-native-background-timer')){
+        exclude group: "com.android.support"
+    }
+    
     implementation(project(':react-native-google-places')){
         exclude group: 'com.google.android.gms', module: 'play-services-base'
         exclude group: 'com.google.android.gms', module: 'play-services-places'
         exclude group: 'com.google.android.gms', module: 'play-services-location'
     }
-
-    implementation project(':realm')
-    implementation project(':react-native-snackbar')
-    implementation (project(':react-native-device-info')) {
-        exclude group: 'com.google.android.gms'
-    }
-    implementation project(':react-native-vector-icons')
-    implementation project(':react-native-linear-gradient')
-    implementation project(':react-native-gesture-handler')
-    implementation project(':react-native-awesome-card-io')
-    implementation project(':@react-native-community_async-storage')
 
     implementation(project(':react-native-firebase')) {
         transitive = false
@@ -187,24 +199,25 @@ dependencies {
     implementation (project(':react-native-camera')) {
         exclude group: "com.android.support"
         exclude group: "com.google.android.gms"
-        compile 'com.android.support:exifinterface:27.+'
-        compile ('com.google.android.gms:play-services-vision:17.3.1') {
+        //implementation 'com.android.support:exifinterface:27+'
+        implementation ('com.google.android.gms:play-services-vision:16.2.0') {
             force = true
         }
     }
 
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
-    implementation 'com.android.support:multidex:1.0.1'
-
-    implementation "com.google.android.gms:play-services-base:16.1.0"
-    implementation 'com.google.android.gms:play-services-places:17.3.1'
-    implementation 'com.google.android.gms:play-services-location:17.3.1'
-    //implementation "com.google.android.gms:play-services-maps:17.3.1"
-    
+    implementation("com.google.android.gms:play-services-base:16.1.0"){
+        force = true
+    }
+    implementation 'com.google.android.gms:play-services-places:16.1.0'
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
 
     implementation "com.google.firebase:firebase-core:16.0.8"
     implementation "com.google.firebase:firebase-messaging:17.6.0"
+
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "com.android.support:appcompat-v7:28.0.0"
+    implementation 'com.facebook.react:react-native:+'
+    implementation 'com.android.support:multidex:1.0.3'
 }
 
 // Run this once to be able to run the application with BUCK
@@ -215,3 +228,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.google.android.gms.strict-version-matcher-plugin'

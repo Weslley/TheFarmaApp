@@ -72,3 +72,6 @@
 # Card.io
 
 -dontwarn io.card.**
+
+-keep class io.invertase.firebase.** { *; }
+-dontwarn io.invertase.firebase.**
