@@ -10,6 +10,7 @@ export const StatusPedido = [
   [8, "Sem propostas"],
   [9, "Tempo esgotado"],
   [10, "Não entregue"]
+  [11, "Estornado"]
 ]
 
 export const TipoMedicamento = [

@@ -29,6 +29,7 @@ import { TipoMedicamento } from "../../models/enums"
 
 import styles from "./styles";
 
+const ic_walking = require("../../assets/images/ic_walking.png");
 const imgDefault = require("../../assets/images/ic_default_medicine.png");
 
 class ApresentationDetailScreen extends Component {
@@ -328,14 +329,14 @@ class ApresentationDetailScreen extends Component {
                 <Text style={styles.tableValue}>{this.state.apresentation.forma_farmaceutica}</Text>
               </View>
 
-              <View style={[styles.table, { backgroundColor: "#FAFAFA", marginBottom: 90 }]}>
+              <View style={[styles.table, { backgroundColor: "#FAFAFA"}]}>
                 <Text style={styles.tableLabel} uppercase>
                   {"Quantidade"}
                 </Text>
                 <Text style={styles.tableValue}>{this.state.apresentation.quantidade_rec}</Text>
               </View>
 
-              <View style={[styles.table]}>
+              <View style={[styles.table, { marginBottom: 120 }]}>
                 <Text style={styles.tableLabel} uppercase>
                   {"Código de barras"}
                 </Text>

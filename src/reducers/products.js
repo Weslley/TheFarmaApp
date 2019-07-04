@@ -24,7 +24,7 @@ export default (state = INITIAL_STATE, action) => {
         case GET_HISTORY:
         case SEARCH_PRODUCTS:
         case SEARCH_PRODUCTS_BARCODE:
-            return { ...state, isLoading: true, success: false }
+            return { ...state, isLoading: true, success: false, apresentation: null }
 
         case HISTORY_SUCCESS:
             return { ...state, isHistory: true, isLoading: false, loaded: action.data }
@@ -48,7 +48,7 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, isLoading: false, error: action.error, success: false };
 
         case CLEAR_ERROR:
-            return { ...state, error: null, success: false, isLoading: false };
+            return { ...state, error: null, success: false, isLoading: false, apresentation: null };
 
         default:
             return state;

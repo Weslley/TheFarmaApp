@@ -398,8 +398,9 @@ class ProposalScreen extends Component {
     let order = this.props.order;
     let delivery = order.delivery;
 
-    if (delivery === false)
+    if (delivery === true){
       return "Total com frete"
+    }
 
     return "Total"
   }

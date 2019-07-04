@@ -43,6 +43,7 @@ class OrderAdapter extends Component {
       case 7:
       case 8:
       case 10:
+      case 11:
         return (
           <View style={[styles.tag, styles.tagDanger]}>
             <Text style={[styles.tagText, styles.tagDangerText]}>{status}</Text>

@@ -105,8 +105,8 @@ android {
         applicationId "br.com.infog2.thefarma"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 48
-        versionName "4.1.5"
+        versionCode 50
+        versionName "4.1.7"
         multiDexEnabled true
         ndk {
             abiFilters 'armeabi-v7a', 'x86'

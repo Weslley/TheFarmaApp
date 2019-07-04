@@ -37,34 +37,25 @@ class SearchMedicineScreen extends Component {
 
   componentWillReceiveProps = nextProps => {
     try {
+
       if (nextProps && nextProps.error) {
-        if (
-          nextProps.error.response &&
-          (nextProps.error.response.status >= 400 &&
-            nextProps.error.response.status <= 403)
-        ) {
-          Snackbar.show({
-            title: nextProps.error.message,
-            duration: Snackbar.LENGTH_SHORT
-          });
+        let error = nextProps.error;
+
+        if ( error.response && (error.response.status >= 400 && error.response.status <= 403)) {
+          Snackbar.show({ title: error.message, duration: Snackbar.LENGTH_SHORT });
         }
 
-        if (
-          nextProps.error.message &&
-          nextProps.error.message === "Network Error"
-        ) {
-          Snackbar.show({
-            title: "Sem conexão com a internet",
-            duration: Snackbar.LENGTH_SHORT
-          });
+        if (error.message){
+          if (error.message === "Network Error") {
+            Snackbar.show({ title: "Sem conexão com o servidor.", duration: Snackbar.LENGTH_SHORT});
+          }else{
+            Snackbar.show({ title: error.message, duration: Snackbar.LENGTH_SHORT});
+          }
         }
+        
       }
 
-      if (
-        nextProps &&
-        nextProps.success === true &&
-        nextProps.apresentation !== null
-      ) {
+      if ( nextProps && nextProps.success === true && nextProps.apresentation !== null) {
         this._showProductDetail(nextProps.apresentation);
         let product = {
           nome: nextProps.apresentation.produto.nome,

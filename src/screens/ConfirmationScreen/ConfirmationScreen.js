@@ -166,7 +166,7 @@ class ConfirmationScreen extends Component {
     let parcelas = []
     let max = this.props.proposal.quantidade_maxima_parcelas;
     for (i = 1; i <= max; i++) {
-      let valor = (this.props.proposal.valor_total / i).toFixed(2);
+      let valor = (this.props.proposal.valor_total_com_frete / i).toFixed(2);
       let sValor = MaskService.toMask('money', valor);
       if (i === 1) {
         parcelas.push({ id: i, label: `${sValor} Avista` })
@@ -192,6 +192,8 @@ class ConfirmationScreen extends Component {
   };
 
   render() {
+    let order = this.props.order;
+    let proposal = this.props.proposal;
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
 
@@ -207,9 +209,9 @@ class ConfirmationScreen extends Component {
         <ScrollView>
           <View style={styles.container}>
             <Text style={[styles.title, { fontFamily: 'Roboto-Bold' }]}>{"Meu pedido"}</Text>
-            {Components.renderIf(this.props.order && this.props.proposal && this.props.proposal.itens,
+            {Components.renderIf(order && proposal && proposal.itens,
               <FlatList
-                data={this.props.proposal.itens}
+                data={proposal.itens}
                 keyExtractor={item => item.apresentacao.toString()}
                 renderItem={this._renderItem}
               />
@@ -223,26 +225,28 @@ class ConfirmationScreen extends Component {
               </View>
             </View>
 
-            <View style={[styles.row, { marginTop: 8 }]}>
-              <View />
-              <View style={[styles.row, { width: '60%' }]}>
-                <Text style={[styles.footerOrderTitle, { textAlign: 'right' }]}>{"Frete"}</Text>
-                {this.getFrete()}
+            {Components.renderIf(order.delivery === true,
+              <View style={[styles.row, { marginTop: 8 }]}>
+                <View />
+                <View style={[styles.row, { width: '60%' }]}>
+                  <Text style={[styles.footerOrderTitle, { textAlign: 'right' }]}>{"Frete"}</Text>
+                  {this.getFrete()}
+                </View>
               </View>
-            </View>
+            )}
 
             <View style={[styles.row, { marginTop: 8 }]}>
               <View />
               <View style={[styles.row, { width: '60%' }]}>
                 <Text style={[styles.footerOrderTitle, { color: "rgba(0,0,0,0.80)", textAlign: 'right', fontFamily: 'Roboto-Medium' }]}>{"Total"}</Text>
-                <TextMask style={styles.footerOrderText} type={"money"} value={this.props.proposal.valor_total_com_frete} />
+                <TextMask style={styles.footerOrderText} type={"money"} value={proposal.valor_total_com_frete} />
               </View>
             </View>
           </View>
 
           <View style={styles.container}>
             <Text style={styles.title}>{"Forma de pagamento"}</Text>
-            {Components.renderIfElse(this.props.order.forma_pagamento === 0,
+            {Components.renderIfElse(order.forma_pagamento === 0,
               <View>
                 {Components.renderIf(this.props.creditCard, <CreditCardAdapter creditCard={this.props.creditCard} />)}
 
