@@ -104,6 +104,7 @@ class OrderScreen extends Component {
       case 2:
       case 3:
       case 9:
+      case 4:
         return (
           <View style={[styles.tag, styles.tagWarning]}>
             <Text style={[styles.tagText, styles.tagWarningText]}>
@@ -111,7 +112,6 @@ class OrderScreen extends Component {
             </Text>
           </View>
         );
-      case 4:
       case 5:
         return (
           <View style={[styles.tag]}>
@@ -429,7 +429,7 @@ class OrderScreen extends Component {
                 <TextMask type={"money"} value={this.getSubTotal()} style={styles.subtitle} />
               </View>
 
-              {Components.renderIf(order.delivery===true,
+              {Components.renderIf(order.delivery === true,
                 <View style={[styles.row, { marginTop: 8 }]}>
                   <Text style={[styles.subtitle, { textAlign: "left", fontSize: 14 }]}>{"Frete"}</Text>
                   {this.getFrete()}

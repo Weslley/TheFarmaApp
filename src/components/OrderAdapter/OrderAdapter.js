@@ -27,12 +27,12 @@ class OrderAdapter extends Component {
       case 2:
       case 3:
       case 9:
+      case 4:
         return (
           <View style={[styles.tag, styles.tagWarning]}>
             <Text style={[styles.tagText, styles.tagWarningText]}>{status}</Text>
           </View>
         )
-      case 4:
       case 5:
         return (
           <View style={[styles.tag]}>

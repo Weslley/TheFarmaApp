@@ -3,7 +3,7 @@ export const StatusPedido = [
   [1, "Aceito"],
   [2, "Aguardando envio"],
   [3, "Aguardando retirada"],
-  [4, "Enviado"],
+  [4, "Saiu para entrega"],
   [5, "Entregue"],
   [6, "Cancelado pela fármacia"],
   [7, "Cancelado"],
