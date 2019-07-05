@@ -88,17 +88,21 @@ class ListProposalsScreen extends Component {
   }
 
   componentDidMount() {
+
     this._willBlurSubscription = this.props.navigation.addListener('willBlur', payload => {
-      //BackHandler.removeEventListener('hardwareBackPress', this.onBackButtonPressAndroid);
+      BackHandler.removeEventListener('hardwareBackPress', this.onBackButtonPressAndroid);
       BackgroundTimer.clearInterval(this.loadPropostas);
     });
 
+    //Primeira requisição com 5s
+    BackgroundTimer.setTimeout(() => this.getProposals(), 5000);
     this.loadPropostas = BackgroundTimer.setInterval(() => this.getProposals(), 10000);
 
-    setTimeout(() => {
+    BackgroundTimer.setTimeout(() => {
       this.setState({ start_timer: true });
       this.counterDown = BackgroundTimer.setInterval(() => { this.setTimer() }, 1000);
     }, 2000);
+
   }
 
   componentWillUnmount = () => {

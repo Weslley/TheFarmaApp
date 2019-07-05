@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, FlatList, Platform, BackHandler } from "react-native";
+import { View, ScrollView, FlatList, Platform } from "react-native";
 import { Text, Picker as NBPicker } from "native-base";
 import { TextMask, MaskService } from "react-native-masked-text";
 import Snackbar from 'react-native-snackbar';
@@ -68,10 +68,16 @@ class ConfirmationScreen extends Component {
       }
 
       if (nextProps && nextProps.success === true) {
-        //this.props.dispatch(cleanCart());
-        //this.props.dispatch(clearOrder());
         this.setState({ showCheckoutSuccess: true });
-        BackHandler.addEventListener('hardwareBackPress', this.nothing);
+        this.props.navigation.navigate({ key: 'DialogSuccess1', routeName: 'DialogSuccess', params: {} });
+        return;
+        /*
+        const resetAction = StackActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: 'Tabs', params: {} })],
+        });
+        this.props.navigation.dispatch(resetAction);
+         */
       }
 
     } catch (e) {
@@ -80,7 +86,6 @@ class ConfirmationScreen extends Component {
   }
 
   componentWillMount = () => {
-    BackHandler.addEventListener('hardwareBackPress', this.nothing);
     this.setState({ numero_parcelas: 1 })
   }
 
@@ -90,7 +95,6 @@ class ConfirmationScreen extends Component {
 
   componentWillUnmount = () => {
     if (this.props.success === true) {
-      BackHandler.removeEventListener('hardwareBackPress', this.nothing);
       this.props.dispatch(clearOrder());
       this.props.dispatch(clearCreditCard());
       this.props.dispatch(clearAddress());
@@ -99,8 +103,6 @@ class ConfirmationScreen extends Component {
   }
 
   /** Private functions */
-  nothing() { }
-
   onBack() {
     this.props.dispatch(clearError());
     if (this.props.success === true) {

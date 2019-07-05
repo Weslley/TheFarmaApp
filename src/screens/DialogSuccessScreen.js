@@ -1,5 +1,6 @@
+import { NavigationActions, StackActions } from 'react-navigation';;
 import React, { Component } from "react";
-import { View, ScrollView, Image, TouchableOpacity } from "react-native";
+import { View, ScrollView, Image, TouchableOpacity, BackHandler } from "react-native";
 import { Container, Footer, Icon, Text } from "native-base";
 
 import { connect } from "react-redux";
@@ -57,6 +58,9 @@ const styles = EStyleSheet.create({
 });
 
 class DialogSuccessScreen extends Component {
+  _didFocusSubscription;
+  _willBlurSubscription;
+
   constructor(props) {
     super(props);
   }
@@ -64,6 +68,30 @@ class DialogSuccessScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return { header: null };
   };
+
+  componentWillMount = () => {
+    BackHandler.addEventListener('hardwareBackPress', this.onBackButtonPressAndroid);
+  }
+
+  componentDidMount() {
+  }
+
+  componentWillUnmount = () => {
+    BackHandler.removeEventListener('hardwareBackPress', this.onBackButtonPressAndroid);
+  }
+
+  onBackButtonPressAndroid = () => {
+    try {
+      const resetAction = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Tabs', params: {} })],
+      });
+      this.props.navigation.dispatch(resetAction);
+    } catch (error) {
+      console.log(error);
+    }
+    return true;
+  }
 
   render() {
     return (
