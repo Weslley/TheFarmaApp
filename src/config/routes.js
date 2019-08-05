@@ -38,6 +38,7 @@ import { VersionScreen } from "../screens/VersionScreen";
 import { PerfilEditScreen } from "../screens/PerfilEditScreen";
 
 import { ProposalNotFoundScreen } from "../screens/ProposalNotFoundScreen";
+import { SelectApresentationsScreen } from "../screens/SelectApresentationsScreen";
 
 import { Icon } from "../components/Icon";
 import { IconWithBadge } from "../components/IconWithBadge";
@@ -161,6 +162,8 @@ export const MainNavigator = createStackNavigator(
     Camera: { screen: CameraScreen },
     Version: { screen: VersionScreen },
     PerfilEdit: { screen: PerfilEditScreen }
+
+    SelectApresentations: { screen: SelectApresentationsScreen }
   },
   {
     mode: "modal",

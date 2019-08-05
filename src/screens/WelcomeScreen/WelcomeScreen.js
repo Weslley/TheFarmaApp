@@ -18,6 +18,7 @@ import { updateLocation, getGeocodeAddress } from "../../actions/locations";
 
 import { Icon } from "../../components/Icon";
 import { NotificationItem } from "../../components/NotificationItem";
+import { ViewCartBar } from "../../layout/ViewCartBar";
 
 import styles from "./styles";
 
@@ -455,6 +456,8 @@ class WelcomeScreen extends Component {
               </TouchableOpacity>
             </TouchableOpacity>
           </View>
+
+          <ViewCartBar value={10}/>
         </LinearGradient>
       </KeyboardAvoidingView>
     );

@@ -45,17 +45,7 @@ allprojects {
             force "com.google.android.gms:play-services-basement:16.2.0"
             force "com.google.firebase:firebase-iid:17.1.2"
             force "com.google.firebase:firebase-auth:17.0.0"
-
-            //force "com.google.android.gms:play-services-gcm:16.0.0"
-
-            /*
-            eachDependency { DependencyResolveDetails details ->
-                def requested = details.requested
-                if (requested.group == 'com.google.android.gms') {
-                    details.useVersion '16.0.0'
-                }
-            }
-            */
+            force "com.google.android.gms:play-services-vision:16.2.0"
         }
     }
 }

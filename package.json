@@ -15,6 +15,7 @@
     "dependencies": "cd android && ./gradlew app:dependencies &"
   },
   "dependencies": {
+    "jsc-android": "241213.x.x",
     "@react-native-community/async-storage": "^1.5.0",
     "@redux-saga/is": "^1.0.2",
     "axios": "^0.18.0",
