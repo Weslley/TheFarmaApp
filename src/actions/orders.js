@@ -19,6 +19,10 @@ export const CREATE_ORDER = "CREATE_ORDER";
 export const CREATE_ORDER_ERROR = "CREATE_ORDER_ERROR";
 export const CREATE_ORDER_SUCCESS = "CREATE_ORDER_SUCCESS";
 
+export const CREATE_ORDER_V2 = "CREATE_ORDER_V2";
+export const CREATE_ORDER_V2_ERROR = "CREATE_ORDER_V2_ERROR";
+export const CREATE_ORDER_V2_SUCCESS = "CREATE_ORDER_V2_SUCCESS";
+
 export const UPDATE_ORDER = "UPDATE_ORDER";
 export const UPDATE_ORDER_ERROR = "UPDATE_ORDER_ERROR";
 export const UPDATE_ORDER_SUCCESS = "UPDATE_ORDER_SUCCESS";
@@ -67,6 +71,10 @@ export const checkout = params => ({
 
 export const createOrder = params => ({
     type: CREATE_ORDER, params
+});
+
+export const createOrderV2 = params => ({
+    type: CREATE_ORDER_V2, params
 });
 
 export const updateOrder = params => ({

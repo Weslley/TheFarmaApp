@@ -27,7 +27,8 @@ EStyleSheet.build({
         width: "100%",
         flexDirection: "row",
         justifyContent: "space-between"
-    }
+    },
+    //$outline: 1
 });
 
 export default () => (

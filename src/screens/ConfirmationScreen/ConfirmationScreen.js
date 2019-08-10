@@ -186,7 +186,6 @@ class ConfirmationScreen extends Component {
   _renderItem = ({ item }) => {
     let apresentation = this.props.order.itens.find(i => i.apresentacao.id === item.apresentacao)
     if (apresentation && apresentation.apresentacao && item.possui === true) {
-      //item.apresentacao = apresentation.apresentacao
       return (<OrderItemAdapter apresentation={apresentation.apresentacao} item={item} />)
     } else {
       return null;

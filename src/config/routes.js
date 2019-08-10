@@ -123,8 +123,6 @@ export const TabsNavigator = createBottomTabNavigator(
 
 export const MainNavigator = createStackNavigator(
   {
-    //Phone: { screen: PhoneScreen },
-
     Tabs: {
       screen: TabsNavigator,
       navigationOptions: { header: null }
@@ -161,7 +159,7 @@ export const MainNavigator = createStackNavigator(
 
     Camera: { screen: CameraScreen },
     Version: { screen: VersionScreen },
-    PerfilEdit: { screen: PerfilEditScreen }
+    PerfilEdit: { screen: PerfilEditScreen },
 
     SelectApresentations: { screen: SelectApresentationsScreen }
   },

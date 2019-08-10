@@ -30,6 +30,10 @@ class ProposalApresentation extends Component {
   }
 
   render() {
+    let apresentation = this.props.apresentation;
+    let produto = apresentation.produto;
+
+    let item = this.props.proposalItem;
     return (
       <View style={styles.container}>
 
@@ -39,19 +43,17 @@ class ProposalApresentation extends Component {
 
         <View style={styles.container1}>
 
-          <Text style={[styles.ProductName, { width: "100%" }]}>{this.props.apresentation.produto.nome}</Text>
-          <Text style={styles.ApresentationName}>{this.props.apresentation.nome}</Text>
-          <Text style={styles.Maker} uppercase>{this.props.apresentation.produto.fabricante}</Text>
+          <Text style={[styles.ProductName, { width: "100%" }]}>{ produto.nome }</Text>
+          <Text style={styles.ApresentationName}>{ apresentation.nome}</Text>
+          <Text style={styles.Maker} uppercase>{ produto.fabricante }</Text>
 
           <View style={styles.Footer}>
             <View>
-              <TextMask style={styles.Price} value={this.props.proposalItem.valor_unitario} type={"money"} />
+              <TextMask style={styles.Price} value={ item.valor_unitario } type={"money"} />
             </View>
 
-            {Components.renderIfElse(this.props.proposalItem.possui,
-              <Text style={styles.Quantity}>
-                {this.props.proposalItem.quantidade || 0}
-              </Text>,
+            {Components.renderIfElse(item.possui,
+              <Text style={styles.Quantity}>{ item.quantidade || 0}</Text>,
               <View style={styles.TagContainerImcomplete}>
                 <Text style={styles.TagTextImcomplete}>{"sem estoque"}</Text>
               </View>

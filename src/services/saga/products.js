@@ -1,3 +1,5 @@
+import {orderBy, groupBy } from 'lodash';
+
 import axios from 'axios';
 import { call, put, all } from 'redux-saga/effects';
 
@@ -11,8 +13,8 @@ import {
     HISTORY_SUCCESS,
     SEARCH_PRODUCTS_ERROR,
     SEARCH_PRODUCTS_SUCCESS,
-    GET_APRESENTATIONS_ERROR,
-    GET_APRESENTATIONS_SUCCESS,
+    GET_DOSAGES_ERROR,
+    GET_DOSAGES_SUCCESS,
     SEARCH_PRODUCTS_BARCODE_ERROR,
     SEARCH_PRODUCTS_BARCODE_SUCCESS
 } from "../../actions/products";
@@ -67,11 +69,11 @@ export const selectProduct = function* (action) {
     yield call(save, { ...action.product, time: new Date() });
 }
 
-export const getApresentations = function* (action) {
+export const getDosages = function* (action) {
     try {
-        const response = yield call(axios.get, `${SERVER_API}/apresentacoes/${action.uf}?nome=${action.productName}`);
-        yield put(responseSuccess(GET_APRESENTATIONS_SUCCESS, response.data.results));
+        const response = yield call(axios.get, `${SERVER_API}/a/v2/produto/dosagens?nome=${action.params.product.nome}`);
+        yield put(responseSuccess(GET_DOSAGES_SUCCESS, response.data));
     } catch (e) {
-        yield put(responseError(GET_APRESENTATIONS_ERROR, e));
+        yield put(responseError(GET_DOSAGES_ERROR, e));
     }
 }

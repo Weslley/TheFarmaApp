@@ -55,7 +55,6 @@ export default EStyleSheet.create({
   Icon: {
     width: 24,
     height: 24,
-    color: "#000000",
     textAlign: "center"
   },
   Quantity: {
@@ -74,5 +73,15 @@ export default EStyleSheet.create({
     paddingHorizontal: 7,
     alignItems: "center"
   },
-  TagTextImcomplete: { fontSize: 11, color: "#E91E63" }
+  TagTextImcomplete: { 
+    fontSize: 11, color: "#E91E63" 
+  },
+  dosage: {
+    fontSize: 10,
+    fontFamily: "Roboto-Regular",
+
+    width: "100%",
+    marginBottom: 4,
+    color: 'rgba(0,0,0,0.40)'
+  }
 });

@@ -15,7 +15,7 @@ export default class ViewCartBar extends Component {
     render() {
         return (
             <View style={[styles.container, styles.bottom]}>
-                <TouchableOpacity style={[styles.row, styles.button, { paddingHorizontal: 16, paddingVertical: 12 }]}>
+                <TouchableOpacity style={[styles.row, styles.button, { paddingHorizontal: 16, paddingVertical: 12 }]} onPress={this.props.onPress} >
                     <Icon name="shopping-bag" color={"#FFF"} size={24} style={styles.icon} />
                     <Text style={styles.text}>{"Ver Cestinha"}</Text>
                     {Components.renderIfElse(this.props.value >= 1,

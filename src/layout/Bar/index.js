@@ -1,4 +1,4 @@
-import styles from "./styles";
 import BottomBar from "./BottomBar";
+import BottomBarV2 from "./BottomBarV2";
 
-export { BottomBar, styles };
+export { BottomBar, BottomBarV2 };

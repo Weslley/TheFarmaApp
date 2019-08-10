@@ -11,13 +11,14 @@ import { connect } from "react-redux";
 import { setFcmToken } from "../../actions/clients";
 import { getLocation } from "../../actions/locations";
 import { clearApresentations } from "../../actions/apresentations";
-import { searchProducts, selectProduct, getHistory, searchProductsByBarcode, clearError } from "../../actions/products";
+import { searchProducts, selectProduct, getHistory, searchProductsByBarcode, clearError, clearDosages } from "../../actions/products";
 
 import { Icon } from "../../components/Icon";
 import { MenuItem } from "../../components/MenuItem";
 import { BarcodeScanner } from "../../components/BarcodeScanner";
 
 import { SearchHeader } from "../../layout/Header";
+import { ViewCartBar } from "../../layout/ViewCartBar";
 
 import { Components } from "../../helpers";
 import styles from "./styles";
@@ -104,6 +105,14 @@ class SearchMedicineScreen extends Component {
     this.props.navigation.goBack(null);
   }
 
+  showCart() {
+    this.props.navigation.navigate({
+      key: "cart1",
+      routeName: "Cart",
+      params: { title: "Cestinha" }
+    });
+  }
+
   _showProductDetail(apresentation) {
     this.props.navigation.navigate({
       key: "apresentation_detail1",
@@ -112,20 +121,24 @@ class SearchMedicineScreen extends Component {
     });
   }
 
+  getCartSize() {
+    let cItems = this.props.cartItems;
+    return (cItems && cItems.length) ? cItems.length : 0;
+  }
+
   onSelect = product => {
     this.props.dispatch(selectProduct(product));
     this.props.dispatch(clearApresentations());
+    this.props.dispatch(clearDosages());
     this.props.navigation.navigate({
-      key: "MedicineApresentations1",
-      routeName: "MedicineApresentations",
-      params: { title: product.nome, selected: product }
+      key: "SelectApresentations1",
+      routeName: "SelectApresentations",
+      params: { title: product.nome, product: product }
     });
   };
 
-  /** Private functions */
   onQueryChange = query => {
     this.setState({ query });
-    //if (query.length > 2) {}
     this.props.dispatch(searchProducts(this.props.uf, query));
   }
 
@@ -211,7 +224,7 @@ class SearchMedicineScreen extends Component {
             <Text uppercase style={styles.subheader}>{"Resultado da busca"}</Text>
           )}
 
-          {Components.renderIf(this.props.isLoading,
+          {Components.renderIf(this.props.loading,
             <ActivityIndicator size="small" style={{ marginTop: 16 }} />
           )}
 
@@ -226,6 +239,10 @@ class SearchMedicineScreen extends Component {
             />
           )}
         </ScrollView>
+
+        {Components.renderIf(this.getCartSize() > 0,
+          <ViewCartBar  value={this.getCartSize()} onPress={() => {this.showCart()}} />
+        )}
 
         {Components.renderIf(this.props.products.length <= 0,
           <View style={styles.ctnNotFoundMsg}>
@@ -298,10 +315,11 @@ class SearchMedicineScreen extends Component {
 function mapStateToProps(state) {
   return {
     client: state.clients.client,
+    cartItems: state.carts.cartItems,
 
     uf: state.locations.uf,
     isHistory: state.products.isHistory,
-    isLoading: state.products.isLoading,
+    loading: state.products.loading,
     products: state.products.loaded,
     apresentation: state.products.apresentation,
     success: state.products.success,

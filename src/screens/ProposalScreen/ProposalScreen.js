@@ -379,17 +379,16 @@ class ProposalScreen extends Component {
   }
 
   _renderItem = ({ item }) => {
-    let apresentation = this.props.cartItems.find(
-      i => i.id === item.apresentacao
-    );
-    if (apresentation) {
-      return (
-        <ProposalApresentation
-          apresentation={apresentation}
-          proposalItem={item}
-        />
-      );
-    } else {
+    try {
+      let apresentation = this.props.order.itens.find(i => i.apresentacao.id === item.apresentacao);
+      if (apresentation.apresentacao) {
+        return (
+          <ProposalApresentation apresentation={apresentation.apresentacao} proposalItem={item} />
+        );
+      } else {
+        return null;
+      }
+    } catch (error) {
       return null;
     }
   };

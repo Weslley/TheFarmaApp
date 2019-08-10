@@ -4,8 +4,8 @@ import { takeEvery, takeLatest } from 'redux-saga/effects';
 import { getGeocode, getLocation, getAddressByCep } from '../services/saga/locations';
 import { REQUEST_GEOCODE, GET_LOCATION, GET_ADDRESS_BY_CEP } from '../actions/locations';
 //PRODUCTS
-import { getByName, selectProduct, getHistory, getByBarcode } from '../services/saga/products';
-import { SEARCH_PRODUCTS, SELECT_PRODUCT, GET_HISTORY, SEARCH_PRODUCTS_BARCODE } from '../actions/products';
+import { getByName, selectProduct, getHistory, getByBarcode, getDosages } from '../services/saga/products';
+import { SEARCH_PRODUCTS, SELECT_PRODUCT, GET_HISTORY, SEARCH_PRODUCTS_BARCODE, GET_DOSAGES } from '../actions/products';
 //APRESENTATIONS
 import { getApresentations, getApresentationsNextPage, ranking } from '../services/saga/apresentations';
 import { GET_APRESENTATIONS, GET_APRESENTATIONS_NEXT_PAGE, RANKING_VIEW } from '../actions/apresentations';
@@ -31,8 +31,8 @@ import { LIST_ADDRESS, SAVE_ADDRESS, UPDATE_ADDRESS, REMOVE_ADDRESS } from '../a
 import { getCreditCards, createCreditCard, removeCreditCard } from '../services/saga/creditCards';
 import { LIST_CREDIT_CARD, REMOVE_CREDIT_CARD, SAVE_CREDIT_CARD } from '../actions/creditCards';
 //ORDERS
-import { getOrder, getOrders, createOrder, checkoutOrder, cancelOrder, getOrdersNextPage } from '../services/saga/orders';
-import { GET_ORDER, LIST_ORDER, CREATE_ORDER, CHECKOUT, CANCEL_ORDER, LIST_ORDER_NEXT_PAGE } from '../actions/orders';
+import { getOrder, getOrders, createOrder, checkoutOrder, cancelOrder, getOrdersNextPage, createOrderV2 } from '../services/saga/orders';
+import { GET_ORDER, LIST_ORDER, CREATE_ORDER, CHECKOUT, CANCEL_ORDER, LIST_ORDER_NEXT_PAGE, CREATE_ORDER_V2 } from '../actions/orders';
 
 const rootSaga = function* () {
   yield takeLatest(GET_LOCATION, getLocation);
@@ -42,10 +42,13 @@ const rootSaga = function* () {
   yield takeEvery(GET_CITIES, getCities);
   yield takeEvery(GET_DISTRICTS, getDistricts);
 
-  yield takeLatest(SEARCH_PRODUCTS, getByName);
-  yield takeLatest(SEARCH_PRODUCTS_BARCODE, getByBarcode);
   yield takeEvery(GET_HISTORY, getHistory);
   yield takeEvery(SELECT_PRODUCT, selectProduct);
+  yield takeLatest(SEARCH_PRODUCTS, getByName);
+  yield takeLatest(SEARCH_PRODUCTS_BARCODE, getByBarcode);
+  yield takeLatest(GET_DOSAGES, getDosages);
+  
+
   yield takeEvery(GET_APRESENTATIONS, getApresentations);
   yield takeLatest(GET_APRESENTATIONS_NEXT_PAGE, getApresentationsNextPage);
   yield takeEvery(RANKING_VIEW, ranking);
@@ -79,6 +82,7 @@ const rootSaga = function* () {
   yield takeEvery(LIST_ORDER, getOrders);
   yield takeEvery(LIST_ORDER_NEXT_PAGE, getOrdersNextPage);
   yield takeLatest(CREATE_ORDER, createOrder);
+  yield takeLatest(CREATE_ORDER_V2, createOrderV2);
   yield takeLatest(CHECKOUT, checkoutOrder);
   yield takeLatest(CANCEL_ORDER, cancelOrder);
 }

@@ -14,9 +14,30 @@ import {
     CANCEL_ORDER_ERROR, CANCEL_ORDER_SUCCESS,
     CHECKOUT_ERROR, CHECKOUT_SUCCESS,
     GET_ORDER_ERROR, GET_ORDER_SUCCESS,
-    LIST_ORDER_NEXT_PAGE_ERROR, LIST_ORDER_NEXT_PAGE_SUCCESS
+    LIST_ORDER_NEXT_PAGE_ERROR, LIST_ORDER_NEXT_PAGE_SUCCESS,
+    CREATE_ORDER_V2_ERROR, CREATE_ORDER_V2_SUCCESS,
 } from "../../actions/orders";
 
+export const getOrder = function* (action) {
+    try {
+        let config = { headers: { 'Authorization': 'Token ' + action.params.client.token } }
+        const response = yield call(axios.get, `${SERVER_API}/a/v2/pedido/${action.params.order.id}/`, config);
+
+        let order = response.data
+        if (order.propostas)
+            order.propostas = orderBy(order.propostas, ['possui_todos_itens', 'valor_total'], ['desc', 'asc'])
+
+        if(action.params.history){
+            order.history = true;
+        }
+
+        yield put(responseSuccess(GET_ORDER_SUCCESS, order));
+    } catch (e) {
+        yield put(responseError(GET_ORDER_ERROR, e));
+    }
+}
+
+/*
 export const getOrder = function* (action) {
     try {
         let config = { headers: { 'Authorization': 'Token ' + action.params.client.token } }
@@ -35,6 +56,7 @@ export const getOrder = function* (action) {
         yield put(responseError(GET_ORDER_ERROR, e));
     }
 }
+*/
 
 export const getOrders = function* (action) {
     try {
@@ -83,6 +105,16 @@ export const createOrder = function* (action) {
         yield put(responseSuccess(CREATE_ORDER_SUCCESS, response.data));
     } catch (e) {
         yield put(responseError(CREATE_ORDER_ERROR, e));
+    }
+}
+
+export const createOrderV2 = function* (action) {
+    try {
+        let config = { headers: { 'Authorization': 'Token ' + action.params.client.token } }
+        const response = yield call(axios.post, `${SERVER_API}a/v2/pedido/`, action.params.order, config);
+        yield put(responseSuccess(CREATE_ORDER_V2_SUCCESS, response.data));
+    } catch (e) {
+        yield put(responseError(CREATE_ORDER_V2_ERROR, e));
     }
 }
 

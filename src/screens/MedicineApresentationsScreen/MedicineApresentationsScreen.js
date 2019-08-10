@@ -52,25 +52,6 @@ class MedicineApresentationScreen extends Component {
 
         if (error.response && (error.response.status >= 400 && error.response.status <= 403)) {
           if (error.response.data.detail) {
-            <Header
-              title={this.props.selected.nome}
-              style={{ backgroundColor: "#FFF" }}
-              menuLeft={
-                <MenuItem
-                  icon="md-arrow-back"
-                  onPress={() => { this.onBack(); }}
-                  style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
-                />
-              }
-              menuRight={
-                <View style={{ paddingRight: 12 }}>
-                  <ShoppingBagIcon
-                    value={this.getCartSize()}
-                    onPress={() => { this.showCart(); }}
-                  />
-                </View>
-              }
-            />
             Snackbar.show({ title: error.response.data.detail, duration: Snackbar.LENGTH_SHORT, });
             return;
           }

@@ -1,42 +1,62 @@
+import {orderBy, groupBy } from 'lodash';
+
 import {
     SELECT_PRODUCT, CLEAR_ERROR,
     GET_HISTORY, HISTORY_SUCCESS, HISTORY_ERROR,
     SEARCH_PRODUCTS, SEARCH_PRODUCTS_SUCCESS, SEARCH_PRODUCTS_ERROR,
-    SEARCH_PRODUCTS_BARCODE, SEARCH_PRODUCTS_BARCODE_SUCCESS, SEARCH_PRODUCTS_BARCODE_ERROR
+    SEARCH_PRODUCTS_BARCODE, SEARCH_PRODUCTS_BARCODE_SUCCESS, SEARCH_PRODUCTS_BARCODE_ERROR,
+    CLEAR_DOSAGES, GET_DOSAGES, GET_DOSAGES_ERROR, GET_DOSAGES_SUCCESS
 } from '../actions/products';
 
 const INITIAL_STATE = {
     isHistory: true,
-    isLoading: false,
+    loading: false,
     loaded: [],
-    apresentations: [],
-    selected: null,
     error: null,
-    apresentation: null,
     success: false,
+
+    apresentation: null,
+    
+    selected: null,
+    dosages: [],
+    generic: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
+    let list = []
+
     switch (action.type) {
         case SELECT_PRODUCT:
             return { ...state, selected: action.product };
 
         case GET_HISTORY:
         case SEARCH_PRODUCTS:
+        case GET_DOSAGES:
         case SEARCH_PRODUCTS_BARCODE:
-            return { ...state, isLoading: true, success: false, apresentation: null }
+            return { ...state, loading: true, success: false, apresentation: null }
 
         case HISTORY_SUCCESS:
-            return { ...state, isHistory: true, isLoading: false, loaded: action.data }
+            return { ...state, isHistory: true, loading: false, loaded: action.data }
 
         case SEARCH_PRODUCTS_SUCCESS:
-            return { ...state, isHistory: false, isLoading: false, loaded: action.data };
+            return { ...state, isHistory: false, loading: false, loaded: action.data };
+
+        case GET_DOSAGES_SUCCESS:
+            list = groupBy(orderBy(action.data.results, ['dosagem_formatada'],['desc']), 'dosagem_formatada');
+            return {
+                ...state, 
+                dosages: list,
+                generic: action.data.generico,
+                isHistory: false,
+                loading: false,
+                error: null
+            }
 
         case SEARCH_PRODUCTS_BARCODE_SUCCESS:
             return { 
                 ...state, 
                 isHistory: false, 
-                isLoading: false, 
+                loading: false, 
                 selected: action.data.produto, 
                 apresentation: action.data,
                 success: true 
@@ -44,11 +64,15 @@ export default (state = INITIAL_STATE, action) => {
 
         case HISTORY_ERROR:
         case SEARCH_PRODUCTS_ERROR:
+        case GET_DOSAGES_ERROR:
         case SEARCH_PRODUCTS_BARCODE_ERROR:
-            return { ...state, isLoading: false, error: action.error, success: false };
+            return { ...state, loading: false, error: action.error, success: false };
+        
+        case CLEAR_DOSAGES:
+            return { ...state, error: null, dosages: [] };
 
         case CLEAR_ERROR:
-            return { ...state, error: null, success: false, isLoading: false, apresentation: null };
+            return { ...state, error: null, success: false, loading: false, apresentation: null };
 
         default:
             return state;

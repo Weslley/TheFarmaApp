@@ -7,7 +7,7 @@ import RNGooglePlaces from "react-native-google-places";
 
 import { connect } from "react-redux";
 
-import { createOrder } from "../../actions/orders";
+import { createOrder, createOrderV2 } from "../../actions/orders";
 import { addItemToCart, removeItemToCart, cleanCart } from "../../actions/carts";
 import { getLocation, getGeocodeAddress, updateLocation } from "../../actions/locations";
 
@@ -18,7 +18,7 @@ import { ActionSheet } from "../../layout/ActionSheet";
 import { MenuItem } from '../../components/MenuItem';
 import { ButtonCustom } from "../../components/ButtonCustom";
 import { GooglePlaces } from "../../components/GooglePlaces";
-import { ProductDescription } from "../../components/Product";
+import { ProductDescriptionV2 } from "../../components/Product";
 import { LocationListItem } from "../../components/LocationListItem";
 
 import { Components, CartUtils } from "../../helpers";
@@ -118,12 +118,13 @@ class CartScreen extends Component {
     }
   }
 
-  _addItemToCart(apresentation) {
-    this.props.dispatch(addItemToCart(apresentation));
+  _addItemToCart(item) {
+    item.quantity = 1;
+    this.props.dispatch(addItemToCart(item));
   }
 
-  _removeItemToCart(apresentation) {
-    this.props.dispatch(removeItemToCart(apresentation));
+  _removeItemToCart(item) {
+    this.props.dispatch(removeItemToCart(item));
   }
 
   _showSearchMedicine() {
@@ -173,13 +174,13 @@ class CartScreen extends Component {
     let longitude = coords.longitude || this.props.longitude;
 
     if (client) {
-      cItems.map(i => { itens.push({ apresentacao: i.id, quantidade: i.quantidade }); });
+      cItems.map(i => { itens.push({ apresentacao: i.apresentations[0].id, quantidade: i.quantity, generico: i.generic }); });
       order.itens = itens;
       order.latitude = latitude;
       order.longitude = longitude;
       order.delivery = false;
       let params = { client, order };
-      this.props.dispatch(createOrder(params));
+      this.props.dispatch(createOrderV2(params));
       this.props.navigation.navigate({ key: "list_proposals1", routeName: "ListProposals", params: {} });
     } else {
       this.props.navigation.navigate({ key: "login1", routeName: "Login", params: { actionBack: "MedicineApresentations" } });
@@ -212,14 +213,17 @@ class CartScreen extends Component {
     this.setState({ show_delivery_dialog: false });
   }
 
-  _renderItem = ({ item }) => (
-    <ProductDescription
-      apresentation={item}
-      showActions={true}
-      onPressMinus={() => this._removeItemToCart(item)}
-      onPressPlus={() => this._addItemToCart(item)}
-    />
-  );
+  _renderItem = ({ item }) => {
+    return( 
+      <ProductDescriptionV2
+        item={item}
+        showActions={true}
+        onPressMinus={() => this._removeItemToCart(item)}
+        onPressPlus={() => this._addItemToCart(item)}
+      />
+    )
+  }
+  
 
   render() {
     let cItems = this.props.cartItems;
@@ -255,7 +259,7 @@ class CartScreen extends Component {
                 <FlatList
                   style={{ paddingBottom: 90 }}
                   data={this.state.cartItems}
-                  keyExtractor={item => item.id.toString()}
+                  keyExtractor={(item, index) => index.toString()}
                   renderItem={this._renderItem} />
               </ScrollView>,
               <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginBottom: 90 }}>
@@ -265,13 +269,13 @@ class CartScreen extends Component {
 
             {Components.renderIfElse(cItems.length > 0,
               <BottomBar
-                buttonTitle="Ver propostas"
-                price={CartUtils.getValueTotal(cItems)}
+                buttonTitle="Consultar os Preços"
+                buttonStyle={{ width: '100%' }}
                 onButtonPress={() => { this._showDeliveryDialog() }}
               />,
               <BottomBar
-                buttonTitle="Adicionar"
-                price={0}
+                buttonTitle="Adicionar Itens"
+                buttonStyle={{ width: '100%' }}
                 onButtonPress={() => { this._showSearchMedicine() }}
               />
             )}
@@ -292,10 +296,9 @@ function mapStateToProps(state) {
     uf: state.locations.uf,
     latitude: state.locations.latitude,
     longitude: state.locations.longitude,
-    selected: state.products.selected,
-    isLoading: state.products.isLoading,
-    apresentations: state.apresentations.apresentations,
+    
     cartItems: state.carts.cartItems,
+
     error: state.apresentations.error,
     client: state.clients.client,
     order: state.orders.order,

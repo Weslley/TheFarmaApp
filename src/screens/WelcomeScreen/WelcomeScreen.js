@@ -20,6 +20,7 @@ import { Icon } from "../../components/Icon";
 import { NotificationItem } from "../../components/NotificationItem";
 import { ViewCartBar } from "../../layout/ViewCartBar";
 
+import { Components } from "../../helpers";
 import styles from "./styles";
 
 class WelcomeScreen extends Component {
@@ -363,12 +364,10 @@ class WelcomeScreen extends Component {
     return null;
   }
 
-  onEndReached = ({ distanceFromEnd }) => {
-    if (this.props.nextPage) {
-      let params = { client: this.props.client, url: this.props.nextPage };
-      this.props.dispatch(getApresentationsNextPage(params));
-    }
-  };
+  getCartSize() {
+    let cItems = this.props.cartItems;
+    return (cItems && cItems.length) ? cItems.length : 0;
+  }
 
   _renderItem = ({ item }) => <NotificationItem notificacao={item} />;
 
@@ -456,8 +455,11 @@ class WelcomeScreen extends Component {
               </TouchableOpacity>
             </TouchableOpacity>
           </View>
+          
+          {Components.renderIf(this.getCartSize() > 0,
+            <ViewCartBar  value={this.getCartSize()} onPress={() => {this.showCart()}} />
+          )}
 
-          <ViewCartBar value={10}/>
         </LinearGradient>
       </KeyboardAvoidingView>
     );

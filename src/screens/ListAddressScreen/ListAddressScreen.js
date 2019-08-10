@@ -1,25 +1,22 @@
 import React, { Component } from "react";
 import { View, ScrollView, Image, TouchableOpacity, TouchableHighlight } from "react-native";
-import { Text } from "native-base";
 import Snackbar from 'react-native-snackbar';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
 import { connect } from "react-redux";
 import { logout } from "../../actions/clients";
 import { getCities } from "../../actions/cities";
-import { createOrder } from "../../actions/orders";
+import { createOrderV2 } from "../../actions/orders";
 import { updateLocation, getGeocodeAddress } from "../../actions/locations"
-import { selectAddress, getAddresses, clearError, clearAddresses, removeAddress } from "../../actions/addresses"
+import { selectAddress, getAddresses, clearError, removeAddress } from "../../actions/addresses"
 
 import { Header } from "../../layout/Header";
 import { BottomBar } from "../../layout/Bar";
-import { Container } from '../../layout/Container';
 
 import { Icon } from "../../components/Icon";
 import { Loading } from "../../components/Loading";
 import { MenuItem } from "../../components/MenuItem";
 import { AddressAdapter } from "../../components/Address/";
-import { ButtonCustom } from "../../components/ButtonCustom";
 
 import { Components } from "../../helpers";
 import styles from "./styles";
@@ -169,14 +166,14 @@ class ListAddressScreen extends Component {
       if (this.props.address) {
         let order = this.props.order;
         let itens = []
-        this.props.cartItems.map((item) => { itens.push({ apresentacao: item.id, quantidade: item.quantidade }) })
+        this.props.cartItems.map(i => { itens.push({ apresentacao: i.apresentations[0].id, quantidade: i.quantity, generico: i.generic }) });
         order.itens = itens
         order.latitude = this.props.latitude;
         order.longitude = this.props.longitude;
         order.endereco = this.props.address.id;
         order.delivery = true;
         let params = { client: this.props.client, order: order }
-        this.props.dispatch(createOrder(params));
+        this.props.dispatch(createOrderV2(params));
         this.props.navigation.navigate({ key: 'list_proposals1', routeName: 'ListProposals', params: {} });
       } else {
         Snackbar.show({ title: "Selecione um endereço", duration: Snackbar.LENGTH_SHORT });

@@ -11,6 +11,7 @@ import {
     GET_PROPOSALS, GET_PROPOSALS_ERROR, GET_PROPOSALS_SUCCESS,
     CHECKOUT, CHECKOUT_ERROR, CHECKOUT_SUCCESS,
     LIST_ORDER_NEXT_PAGE, LIST_ORDER_NEXT_PAGE_ERROR, LIST_ORDER_NEXT_PAGE_SUCCESS,
+    CREATE_ORDER_V2, CREATE_ORDER_V2_ERROR, CREATE_ORDER_V2_SUCCESS,
 } from '../actions/orders';
 
 const INITIAL_ORDER = { forma_pagamento: 0, latitude: 0, longitude: 0, delivery: false, troco: "0.00", itens: [] }
@@ -42,6 +43,7 @@ export default (state = INITIAL_STATE, action) => {
 
         case LIST_ORDER_NEXT_PAGE:
         case CREATE_ORDER:
+        case CREATE_ORDER_V2:
         case CANCEL_ORDER:
         case CHECKOUT:
             return { ...state, isLoading: true, error: null, success: false };
@@ -75,13 +77,12 @@ export default (state = INITIAL_STATE, action) => {
             }
             return { ...state, order: action.data, error: null, isLoading: false, success: true };
 
-
         case CREATE_ORDER_SUCCESS:
+        case CREATE_ORDER_V2_SUCCESS:
         case UPDATE_ORDER_SUCCESS:
             return { ...state, order: action.data, error: null, isLoading: false };
 
         case CHECKOUT_SUCCESS:
-            //newOrder = Object.assign(state.order, action.data)
             newOrder = state.order
             newOrder.cartao = action.data.cartao
             newOrder.farmacia = action.data.farmacia
@@ -94,6 +95,7 @@ export default (state = INITIAL_STATE, action) => {
         case GET_ORDER_ERROR:
         case LIST_ORDER_ERROR:
         case CREATE_ORDER_ERROR:
+        case CREATE_ORDER_V2_ERROR:
         case UPDATE_ORDER_ERROR:
         case CANCEL_ORDER_ERROR:
         case GET_PROPOSALS_ERROR:

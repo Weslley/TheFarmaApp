@@ -30,7 +30,7 @@ class Header extends Component {
           <Image style={[styles.image]} resizeMode="contain" source={this.props.image} />
         )}
 
-        <TouchableOpacity style={[styles.profileContainer, { alignItems: 'center', paddingTop: 8, }]} onPress={this.props.onPressProfile}>
+        <TouchableOpacity style={[styles.profileContainer, { alignItems: 'center' }]} onPress={this.props.onPressProfile}>
           <View>
             {Components.renderIf(this.props.title,
               <Text style={[styles.title, this.props.titleStyle]}>{this.props.title}</Text>

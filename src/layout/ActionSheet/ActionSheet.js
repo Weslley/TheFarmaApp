@@ -80,7 +80,7 @@ class ActionSheet extends Component {
     StatusBar.setHidden(true);
     return (
       <Modal
-        animationType={"fade"}
+        animationType={"slide"}
         transparent={true}
         visible={this.state.modalVisible}
         onRequestClose={() => {

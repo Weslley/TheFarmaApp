@@ -1,12 +1,13 @@
+import OrderItemAdapter from "./OrderItemAdapter";
+import ProposalApresentation from "./ProposalApresentation";
 import ApresentationDescription from "./ApresentationDescription";
 import ApresentationDetailDescription from "./ApresentationDetailDescription";
+
 import ProductDescription from "./ProductDescription";
-import ProposalApresentation from "./ProposalApresentation";
-import OrderItemAdapter from "./OrderItemAdapter";
-import styles from "./styles";
+import ProductDescriptionV2 from "./ProductDescriptionV2";
 
 export {
   ApresentationDescription, ApresentationDetailDescription, 
   ProductDescription, ProposalApresentation, OrderItemAdapter, 
-  styles
+  ProductDescriptionV2
 };
