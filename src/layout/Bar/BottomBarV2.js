@@ -31,7 +31,7 @@ class BottomBarV2 extends Component {
                 <Icon name="minus" size={24} color={"#000"} style={styles.icon} />
               </TouchableOpacity>
 
-              <Text style={styles.quantity}>
+              <Text style={[styles.quantity, {color: "#000000"}]}>
                 {this.props.quantity}
               </Text>
 

@@ -54,13 +54,12 @@ class ProductDescription extends Component {
         <View style={styles.container1}>
           <TouchableOpacity onPress={this.props.onPress}>
             <Text style={[styles.ProductName, { width: "100%" }]}>{this.props.apresentation.produto.nome}</Text>
-            <Text style={styles.ApresentationName}>{this.props.apresentation.nome}</Text>
-            <Text style={styles.Maker} uppercase>{this.props.apresentation.produto.fabricante}</Text>
+            <Text uppercase style={styles.dosage}>{this.props.apresentation.nome}</Text>
+            <Text uppercase style={styles.dosage}>{this.props.apresentation.produto.fabricante}</Text>
           </TouchableOpacity>
 
           <View style={styles.Footer}>
-
-            <TouchableOpacity onPress={this.props.onPress}>{this.getPrice()}</TouchableOpacity>
+            <View/>
 
             {Components.renderIfElse(
               this.props.showActions,
@@ -69,10 +68,10 @@ class ProductDescription extends Component {
                   <Icon name="minus" size={24} color={"#000"} style={styles.Icon} />
                 </TouchableOpacity>
 
-                <Text style={styles.Quantity}>{this.props.apresentation.quantidade || 0}</Text>
+                <Text style={styles.Quantity}>{this.props.apresentation.quantity || 0}</Text>
 
                 <TouchableOpacity style={styles.Button} onPress={this.props.onPressPlus}>
-                  <Icon name="plus" size={24} color={"#000"} style={styles.Icon} />
+                  <Icon name="plus" size={24} color={"#00C7BD"} style={styles.Icon} />
                 </TouchableOpacity>
               </View>,
               null

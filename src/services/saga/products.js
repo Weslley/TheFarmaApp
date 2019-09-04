@@ -1,4 +1,4 @@
-import {orderBy, groupBy } from 'lodash';
+import {orderBy, groupBy, assign } from 'lodash';
 
 import axios from 'axios';
 import { call, put, all } from 'redux-saga/effects';
@@ -59,7 +59,7 @@ export const getByBarcode = function* (action) {
 export const getHistory = function* (action) {
     try {
         const history = yield list('', { sort: ['time', true], limit: 10 });
-        yield put(responseSuccess(HISTORY_SUCCESS, history));
+        yield put(responseSuccess(HISTORY_SUCCESS, assign(history)));
     } catch (e) {
         yield put(responseError(HISTORY_ERROR, e));
     }

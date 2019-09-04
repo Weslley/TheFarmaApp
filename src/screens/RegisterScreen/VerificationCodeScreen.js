@@ -94,10 +94,7 @@ class VerificationCodeScreen extends Component {
           }
 
           if (nextProps.error.response.data.non_field_errors) {
-            Snackbar.show({
-              title: nextProps.error.response.data.non_field_errors[0],
-              duration: Snackbar.LENGTH_SHORT
-            });
+            Snackbar.show({ title: nextProps.error.response.data.non_field_errors[0], duration: Snackbar.LENGTH_SHORT });
           }
 
           if (nextProps.error.response.data.detail) {

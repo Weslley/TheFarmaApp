@@ -228,6 +228,7 @@ class ListAddressScreen extends Component {
 
         {Components.renderIf(this.state.showBottomBar,
           <BottomBar
+            buttonStyle={{width: '100%'}}
             buttonTitle="Continuar"
             onButtonPress={() => { this._showListProposals() }}
           />

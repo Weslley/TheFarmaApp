@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {
   View,
+  ScrollView,
   Text,
   FlatList,
   Image,
@@ -22,8 +23,8 @@ import { Components, CartUtils } from "../../helpers";
 import styles from "./styles";
 
 import { connect } from "react-redux";
-import { addItemToCart, removeItemToCart } from "../../actions/carts";
-import { clearError, getDosages } from "../../actions/products";
+import { addItemToCartV2, removeItemToCartV2 } from "../../actions/carts";
+import { getDosages, clearDosages, clearProduct, clearError } from "../../actions/products";
 
 import { orderBy, groupBy, keys } from 'lodash';
 
@@ -56,6 +57,15 @@ class SelectApresentationsScreen extends Component {
     const { state: { params } } = this.props.navigation;
     if (params) {
       if (params.product) this.setState({ product: params.product });
+      if (params.item){
+        let item = params.item;
+        let product = item.product;
+        let dosage = item.dosage;
+        let packing = item.packing;
+        let generic = item.generic;
+        let quantity = item.quantity;
+        this.setState({ product, dosage, packing, generic, quantity  });
+      }
     }
   }
 
@@ -97,16 +107,8 @@ class SelectApresentationsScreen extends Component {
     this.props.navigation.goBack(null);
   }
 
-  getApresentationQuantity(nextProps, apresentation) {
-    try {
-      const cItem = nextProps.cartItems.find(item => item.id === apresentation.id);
-      return cItem ? cItem.quantidade : 1;
-    } catch (error) {
-      return 1;
-    }
-  }
-
   _addItemToCart() {
+    this.props.dispatch(clearError());
     let params = {}
     let packing = this.state.packing;
     let apresentations = this.state.packings[packing];
@@ -125,7 +127,7 @@ class SelectApresentationsScreen extends Component {
       params.apresentations = [this.state.apresentation];
     }
 
-    this.props.dispatch(addItemToCart(params));
+    this.props.dispatch(addItemToCartV2(params));
     this.onBack();
   }
 
@@ -411,7 +413,7 @@ class SelectApresentationsScreen extends Component {
         {Components.renderIfElse(
           this.props.loading === true,
           <Loading />,
-          <View  style={{}} keyboardShouldPersistTaps={'always'}>
+          <ScrollView  style={{}} keyboardShouldPersistTaps={'always'}>
             <View style={{ width: "100%", marginBottom: 24, paddingHorizontal: 24, marginTop: 16 }}>
               <Text style={styles.label}>{"Dosagem"}</Text>
               <TouchableOpacity style={styles.checkbox} onPress={() => {this.onPressSelectDosage()}} >
@@ -430,7 +432,7 @@ class SelectApresentationsScreen extends Component {
 
             {Components.renderIf(show_dosage, this.renderDosageDialog() )}
             {Components.renderIf(show_packing, this.renderPackingDialog() )}
-          </View>
+          </ScrollView>
         )}
 
         {Components.renderIf(dosage && packing,

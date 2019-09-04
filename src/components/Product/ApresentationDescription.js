@@ -70,7 +70,7 @@ class ApresentationDescription extends Component {
                   <Icon name="minus" size={24} color={"#000"} style={styles.Icon} />
                 </TouchableOpacity>
                 <Text style={styles.Quantity}>
-                  {apresentation.quantidade || 0}
+                  {apresentation.quantity || 0}
                 </Text>
                 <TouchableOpacity style={styles.Button} onPress={this.props.onPressPlus} >
                   <Icon name="plus" size={24} color={"#000"} style={styles.Icon} />

@@ -3,6 +3,7 @@ export const SELECT_PRODUCT = 'SELECT_PRODUCT';
 export const SEARCH_PRODUCTS = 'SEARCH_PRODUCTS';
 export const SEARCH_PRODUCTS_BARCODE = 'SEARCH_PRODUCTS_BARCODE';
 
+export const CLEAR_PRODUCT = "CLEAR_PRODUCT";
 export const CLEAR_ERROR = 'CLEAR_ERROR';
 export const HISTORY_ERROR = 'HISTORY_ERROR';
 export const HISTORY_SUCCESS = 'HISTORY_SUCCESS';
@@ -40,6 +41,10 @@ export const getDosages = (params) => ({
 
 export const clearDosages = () => ({
     type: CLEAR_DOSAGES
+});
+
+export const clearProduct = () => ({
+    type: CLEAR_PRODUCT
 });
 
 export const clearError = () => ({

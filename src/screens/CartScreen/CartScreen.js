@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { NavigationEvents } from 'react-navigation';
 import { Alert, View, ScrollView, FlatList } from "react-native";
 import { Text, } from "native-base";
 
@@ -6,9 +7,10 @@ import Permissions from "react-native-permissions";
 import RNGooglePlaces from "react-native-google-places";
 
 import { connect } from "react-redux";
-
-import { createOrder, createOrderV2 } from "../../actions/orders";
-import { addItemToCart, removeItemToCart, cleanCart } from "../../actions/carts";
+import { clearApresentations } from "../../actions/apresentations";
+import { selectProduct, clearDosages, clearProduct, clearError } from "../../actions/products";
+import { createOrderV2 } from "../../actions/orders";
+import { addItemToCart, removeItemToCart, addItemToCartV2, removeItemToCartV2, cleanCart } from "../../actions/carts";
 import { getLocation, getGeocodeAddress, updateLocation } from "../../actions/locations";
 
 import { Header } from "../../layout/Header";
@@ -18,10 +20,10 @@ import { ActionSheet } from "../../layout/ActionSheet";
 import { MenuItem } from '../../components/MenuItem';
 import { ButtonCustom } from "../../components/ButtonCustom";
 import { GooglePlaces } from "../../components/GooglePlaces";
-import { ProductDescriptionV2 } from "../../components/Product";
+import { ProductDescriptionV2, ProductDescription } from "../../components/Product";
 import { LocationListItem } from "../../components/LocationListItem";
 
-import { Components, CartUtils } from "../../helpers";
+import { Components } from "../../helpers";
 
 import styles from "./styles";
 
@@ -109,22 +111,28 @@ class CartScreen extends Component {
 
   getApresentationQuantity(nextProps, apresentation) {
     try {
-      const cItem = nextProps.cartItems.find(
-        item => item.id === apresentation.id
-      );
-      return cItem ? cItem.quantidade : 0;
+      const cItem = nextProps.cartItems.find(item => item.id === apresentation.id);
+      return cItem ? cItem.quantity : 0;
     } catch (error) {
       return 0;
     }
   }
 
   _addItemToCart(item) {
-    item.quantity = 1;
-    this.props.dispatch(addItemToCart(item));
+    if(item.dosage){
+      item.quantity = 1;
+      this.props.dispatch(addItemToCartV2(item));
+    }else{
+      this.props.dispatch(addItemToCart({apresentation: item}));
+    }
   }
 
   _removeItemToCart(item) {
-    this.props.dispatch(removeItemToCart(item));
+    if(item.dosage){
+      this.props.dispatch(removeItemToCartV2(item));
+    }else{
+      this.props.dispatch(removeItemToCart({apresentation: item}));
+    }
   }
 
   _showSearchMedicine() {
@@ -174,7 +182,13 @@ class CartScreen extends Component {
     let longitude = coords.longitude || this.props.longitude;
 
     if (client) {
-      cItems.map(i => { itens.push({ apresentacao: i.apresentations[0].id, quantidade: i.quantity, generico: i.generic }); });
+      cItems.map(i => { 
+        if(i.dosage){
+          itens.push({ apresentacao: i.apresentations[0].id, quantidade: i.quantity, generico: i.generic }); 
+        }else{
+          itens.push({ apresentacao: i.id, quantidade: i.quantity, generico: false });
+        }
+      });
       order.itens = itens;
       order.latitude = latitude;
       order.longitude = longitude;
@@ -213,22 +227,50 @@ class CartScreen extends Component {
     this.setState({ show_delivery_dialog: false });
   }
 
+  onSelect = item => {
+    this.props.dispatch(clearDosages());
+    this.props.dispatch(clearApresentations());
+    this.props.dispatch(selectProduct(item.product));
+    this.props.navigation.navigate({
+      key: "SelectApresentations1",
+      routeName: "SelectApresentations",
+      params: { title: item.product.nome, product: item.product, item }
+    });
+  };
+
+  _showProductDetail = item => {
+    this.props.navigation.navigate({ key: "apresentation_detail1", routeName: "ApresentationDetail", params: { apresentation: item } });
+  }
+
   _renderItem = ({ item }) => {
-    return( 
-      <ProductDescriptionV2
-        item={item}
-        showActions={true}
-        onPressMinus={() => this._removeItemToCart(item)}
-        onPressPlus={() => this._addItemToCart(item)}
-      />
-    )
+    if(item.dosage){
+      return( 
+        <ProductDescriptionV2
+          item={item}
+          showActions={true}
+          onPressMinus={() => this._removeItemToCart(item)}
+          onPressPlus={() => this._addItemToCart(item)}
+          onPress={()=>{ this.onSelect(item) }}
+        />
+      )
+    }else{
+      return(
+        <ProductDescription
+          apresentation={item}
+          showActions={true}
+          onPressMinus={() => this._removeItemToCart(item)}
+          onPressPlus={() => this._addItemToCart(item)}
+          onPress={()=>{ this._showProductDetail(item) }}
+        />
+      )
+    }    
   }
   
-
   render() {
     let cItems = this.props.cartItems;
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+        <NavigationEvents onWillFocus = { payload => this.props.dispatch(clearError()) } />
         {Components.renderIfElse(this.state.show_places,
           <GooglePlaces
             renderPlaceItem={this._renderPlaceItem}

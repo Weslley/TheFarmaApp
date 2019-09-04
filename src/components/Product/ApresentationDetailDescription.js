@@ -49,7 +49,7 @@ class ApresentationDetailDescription extends Component {
             <Icon name="minus" size={24} color={"#000"} style={styles.Icon} />
           </TouchableOpacity>
           <Text style={styles.Quantity}>
-            {this.props.apresentation.quantidade || 0}
+            {this.props.apresentation.quantity || 0}
           </Text>
           <TouchableOpacity style={styles.Button} onPress={this.props.onPressPlus}>
             <Icon name="plus" size={24} color={"#000"} style={styles.Icon} />

@@ -5,7 +5,7 @@ import {
     GET_HISTORY, HISTORY_SUCCESS, HISTORY_ERROR,
     SEARCH_PRODUCTS, SEARCH_PRODUCTS_SUCCESS, SEARCH_PRODUCTS_ERROR,
     SEARCH_PRODUCTS_BARCODE, SEARCH_PRODUCTS_BARCODE_SUCCESS, SEARCH_PRODUCTS_BARCODE_ERROR,
-    CLEAR_DOSAGES, GET_DOSAGES, GET_DOSAGES_ERROR, GET_DOSAGES_SUCCESS
+    CLEAR_DOSAGES, GET_DOSAGES, GET_DOSAGES_ERROR, GET_DOSAGES_SUCCESS, CLEAR_PRODUCT
 } from '../actions/products';
 
 const INITIAL_STATE = {
@@ -20,6 +20,7 @@ const INITIAL_STATE = {
     selected: null,
     dosages: [],
     generic: false,
+    action: null
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -27,7 +28,7 @@ export default (state = INITIAL_STATE, action) => {
 
     switch (action.type) {
         case SELECT_PRODUCT:
-            return { ...state, selected: action.product };
+            return { ...state, selected: action.product, action: SELECT_PRODUCT};
 
         case GET_HISTORY:
         case SEARCH_PRODUCTS:
@@ -49,7 +50,9 @@ export default (state = INITIAL_STATE, action) => {
                 generic: action.data.generico,
                 isHistory: false,
                 loading: false,
-                error: null
+                success: true,
+                error: null,
+                action: GET_DOSAGES_SUCCESS
             }
 
         case SEARCH_PRODUCTS_BARCODE_SUCCESS:
@@ -69,10 +72,13 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, loading: false, error: action.error, success: false };
         
         case CLEAR_DOSAGES:
-            return { ...state, error: null, dosages: [] };
-
+            return { ...state, error: null, dosages: []};
+        
+        case CLEAR_PRODUCT:
+                return { ...state, error: null, dosages: [], action: null, selected: null };
+                
         case CLEAR_ERROR:
-            return { ...state, error: null, success: false, loading: false, apresentation: null };
+            return { ...state, error: null, success: false, loading: false, apresentation: null, action: null };
 
         default:
             return state;

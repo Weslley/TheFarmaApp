@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { NavigationEvents } from 'react-navigation';
 import { View, ScrollView, ActivityIndicator, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform } from "react-native";
 
 import { Text, Button } from "native-base";
@@ -11,7 +12,7 @@ import { connect } from "react-redux";
 import { setFcmToken } from "../../actions/clients";
 import { getLocation } from "../../actions/locations";
 import { clearApresentations } from "../../actions/apresentations";
-import { searchProducts, selectProduct, getHistory, searchProductsByBarcode, clearError, clearDosages } from "../../actions/products";
+import { searchProducts, selectProduct, getHistory, searchProductsByBarcode, clearError, clearDosages, clearProduct, getDosages } from "../../actions/products";
 
 import { Icon } from "../../components/Icon";
 import { MenuItem } from "../../components/MenuItem";
@@ -22,6 +23,8 @@ import { ViewCartBar } from "../../layout/ViewCartBar";
 
 import { Components } from "../../helpers";
 import styles from "./styles";
+
+import { orderBy, groupBy, keys } from 'lodash';
 
 class SearchMedicineScreen extends Component {
   constructor(props) {
@@ -41,7 +44,6 @@ class SearchMedicineScreen extends Component {
 
       if (nextProps && nextProps.error) {
         let error = nextProps.error;
-
         if ( error.response && (error.response.status >= 400 && error.response.status <= 403)) {
           Snackbar.show({ title: error.message, duration: Snackbar.LENGTH_SHORT });
         }
@@ -53,19 +55,34 @@ class SearchMedicineScreen extends Component {
             Snackbar.show({ title: error.message, duration: Snackbar.LENGTH_SHORT});
           }
         }
-        
       }
 
-      if ( nextProps && nextProps.success === true && nextProps.apresentation !== null) {
+      if (nextProps && nextProps.success === true && nextProps.apresentation !== null) {
         this._showProductDetail(nextProps.apresentation);
-        let product = {
-          nome: nextProps.apresentation.produto.nome,
-          ids: [nextProps.apresentation.produto.id]
-        };
+        let product = { nome: nextProps.apresentation.produto.nome, ids: [nextProps.apresentation.produto.id] };
         this.props.dispatch(selectProduct(product));
         this.props.dispatch(searchProducts(this.props.uf, product.nome));
         this.props.dispatch(clearError());
       }
+
+      if (nextProps && nextProps.selected && nextProps.action==='GET_DOSAGES_SUCCESS') {
+        let product = nextProps.selected;
+        if(keys(nextProps.dosages).length > 0){
+          this.props.navigation.navigate({
+            key: "SelectApresentations1",
+            routeName: "SelectApresentations",
+            params: { title: product.nome, product: product }
+          });
+        }else{
+          this.props.navigation.navigate({
+            key: "MedicineApresentations1",
+            routeName: "MedicineApresentations",
+            params: { title: product.nome, selected: product }
+          });
+        }
+
+      }
+
     } catch (e) {
       Snackbar.show({ title: e.message, duration: Snackbar.LENGTH_SHORT });
     }
@@ -127,14 +144,10 @@ class SearchMedicineScreen extends Component {
   }
 
   onSelect = product => {
-    this.props.dispatch(selectProduct(product));
-    this.props.dispatch(clearApresentations());
     this.props.dispatch(clearDosages());
-    this.props.navigation.navigate({
-      key: "SelectApresentations1",
-      routeName: "SelectApresentations",
-      params: { title: product.nome, product: product }
-    });
+    this.props.dispatch(clearApresentations());
+    this.props.dispatch(selectProduct(product));
+    this.props.dispatch(getDosages({ product }));
   };
 
   onQueryChange = query => {
@@ -190,6 +203,7 @@ class SearchMedicineScreen extends Component {
         behavior={Platform.OS === "ios" ? "padding" : null}
         keyboardVerticalOffset={-500}
       >
+        <NavigationEvents onWillFocus = { payload => this.props.dispatch(clearError()) } />
         <SearchHeader
           query={this.state.query}
           onQueryChange={this.onQueryChange}
@@ -323,7 +337,11 @@ function mapStateToProps(state) {
     products: state.products.loaded,
     apresentation: state.products.apresentation,
     success: state.products.success,
-    error: state.products.error
+    error: state.products.error,
+
+    selected: state.products.selected,
+    dosages: state.products.dosages,
+    action: state.products.action,
   };
 }
 

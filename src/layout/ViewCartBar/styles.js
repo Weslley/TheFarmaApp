@@ -19,6 +19,8 @@ export default EStyleSheet.create({
         textAlign: 'center'
     },
     badge: {
+        width: 24,
+        height: 24,
         backgroundColor: "#FFF",
         alignItems: 'center',
         justifyContent: 'center',

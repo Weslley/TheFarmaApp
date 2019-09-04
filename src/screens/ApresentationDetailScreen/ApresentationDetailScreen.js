@@ -14,6 +14,7 @@ import { getLocation, getGeocodeAddress, updateLocation } from "../../actions/lo
 
 import { Header } from "../../layout/Header";
 import { BottomBar } from "../../layout/Bar";
+import { ViewCartBar } from "../../layout/ViewCartBar";
 import { ActionSheet } from "../../layout/ActionSheet";
 import { ShoppingBagIcon } from "../../layout/ShoppingBagIcon";
 
@@ -53,7 +54,7 @@ class ApresentationDetailScreen extends Component {
   componentWillReceiveProps = nextProps => {
     if (this.state.apresentation) {
       let apresentation = this.state.apresentation;
-      apresentation.quantidade = this.getApresentationQuantity(nextProps, apresentation);
+      apresentation.quantity = this.getApresentationQuantity(nextProps, apresentation);
       this.setState({ apresentation })
     }
     this.setState({ generics: nextProps.generics })
@@ -90,6 +91,11 @@ class ApresentationDetailScreen extends Component {
     this.props.navigation.navigate({ key: 'cart1', routeName: 'Cart', params: {} });
   }
 
+  getCartSize() {
+    let cItems = this.props.cartItems;
+    return (cItems && cItems.length) ? cItems.length : 0;
+  }
+
   setPlace(place) {
     if (place.place_id) {
       RNGooglePlaces.lookUpPlaceByID(place.place_id).then(result => {
@@ -124,7 +130,7 @@ class ApresentationDetailScreen extends Component {
   getApresentationQuantity(nextProps, apresentation) {
     try {
       const cItem = nextProps.cartItems.find(item => item.id === apresentation.id);
-      return cItem ? cItem.quantidade : 0;
+      return cItem ? cItem.quantity : 0;
     } catch (error) {
       return 0;
     }
@@ -142,11 +148,11 @@ class ApresentationDetailScreen extends Component {
   }
 
   _addItemToCart(apresentation) {
-    this.props.dispatch(addItemToCart(apresentation));
+    this.props.dispatch(addItemToCart({ apresentation }));
   }
 
   _removeItemToCart(apresentation) {
-    this.props.dispatch(removeItemToCart(apresentation));
+    this.props.dispatch(removeItemToCart({ apresentation }));
   }
 
   _showGenerics(generic) {
@@ -345,12 +351,8 @@ class ApresentationDetailScreen extends Component {
 
             </ScrollView>
 
-            {Components.renderIf(this.props.cartItems.length > 0,
-              <BottomBar
-                buttonTitle="Ver propostas"
-                price={CartUtils.getValueTotal(this.props.cartItems)}
-                onButtonPress={() => { this._showDeliveryDialog(); }}
-              />
+            {Components.renderIf(this.getCartSize() > 0,
+              <ViewCartBar  value={this.getCartSize()} onPress={() => {this.showCart()}} />
             )}
 
             {Components.renderIf(this.state.show_delivery_dialog,
