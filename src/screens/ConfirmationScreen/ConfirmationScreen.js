@@ -69,7 +69,7 @@ class ConfirmationScreen extends Component {
 
       if (nextProps && nextProps.success === true) {
         this.setState({ showCheckoutSuccess: true });
-        this.props.navigation.navigate({ key: 'DialogSuccess1', routeName: 'DialogSuccess', params: {} });
+        //this.props.navigation.navigate({ key: 'DialogSuccess1', routeName: 'DialogSuccess', params: {} });
         return;
         /*
         const resetAction = StackActions.reset({
