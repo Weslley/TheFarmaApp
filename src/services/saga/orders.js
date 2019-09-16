@@ -111,7 +111,7 @@ export const createOrder = function* (action) {
 export const createOrderV2 = function* (action) {
     try {
         let config = { headers: { 'Authorization': 'Token ' + action.params.client.token } }
-        const response = yield call(axios.post, `${SERVER_API}a/v2/pedido/`, action.params.order, config);
+        const response = yield call(axios.post, `${SERVER_API}/a/v2/pedido/`, action.params.order, config);
         yield put(responseSuccess(CREATE_ORDER_V2_SUCCESS, response.data));
     } catch (e) {
         yield put(responseError(CREATE_ORDER_V2_ERROR, e));

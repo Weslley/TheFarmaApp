@@ -152,6 +152,7 @@ class ConfirmationScreen extends Component {
 
   _checkout() {
     let fields = {}
+    fields['permutacao_id'] = this.props.proposal.permutacao_id
     fields['farmacia'] = this.props.proposal.farmacia.id
     fields['forma_pagamento'] = this.props.order.forma_pagamento
     if (this.props.order.forma_pagamento === 0) {
@@ -184,9 +185,8 @@ class ConfirmationScreen extends Component {
   }
 
   _renderItem = ({ item }) => {
-    let apresentation = this.props.order.itens.find(i => i.apresentacao.id === item.apresentacao)
-    if (apresentation && apresentation.apresentacao && item.possui === true) {
-      return (<OrderItemAdapter apresentation={apresentation.apresentacao} item={item} />)
+    if (item && item.apresentacao && item.possui === true) {
+      return (<OrderItemAdapter apresentation={item.apresentacao} item={item} />)
     } else {
       return null;
     }

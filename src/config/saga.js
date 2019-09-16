@@ -21,6 +21,9 @@ import { GET_CITIES } from '../actions/cities';
 //DISTRICTS
 import { getDistricts } from '../services/saga/districts';
 import { GET_DISTRICTS } from '../actions/districts';
+//DRUGSTORES
+import { getDrugstore } from '../services/saga/drugstores';
+import { GET_DRUGSTORE } from '../actions/drugstores';
 //CLIENTS
 import { login, register, updateClient, updateClientV2, getCurrentClient, logout, setFcmToken, setClient } from '../services/saga/clients';
 import { REQUEST_LOGIN, REGISTER_CLIENT, UPDATE_CLIENT, UPDATE_CLIENT_V2, GET_CURRENT_CLIENT, LOGOUT, SET_FCM_TOKEN, SET_CLIENT } from '../actions/clients';
@@ -41,6 +44,7 @@ const rootSaga = function* () {
 
   yield takeEvery(GET_CITIES, getCities);
   yield takeEvery(GET_DISTRICTS, getDistricts);
+  yield takeEvery(GET_DRUGSTORE, getDrugstore);
 
   yield takeEvery(GET_HISTORY, getHistory);
   yield takeEvery(SELECT_PRODUCT, selectProduct);
@@ -48,7 +52,6 @@ const rootSaga = function* () {
   yield takeLatest(SEARCH_PRODUCTS_BARCODE, getByBarcode);
   yield takeLatest(GET_DOSAGES, getDosages);
   
-
   yield takeEvery(GET_APRESENTATIONS, getApresentations);
   yield takeLatest(GET_APRESENTATIONS_NEXT_PAGE, getApresentationsNextPage);
   yield takeEvery(RANKING_VIEW, ranking);

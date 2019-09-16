@@ -138,11 +138,8 @@ class ApresentationDetailScreen extends Component {
 
   getPhoto() {
     let apresentation = this.state.apresentation;
-    if (apresentation.imagem && apresentation.imagem !== null && apresentation.imagem !== {}) {
-      let imagem = apresentation.imagem
-      if (imagem.square_crop) {
-        return { uri: imagem.square_crop }
-      }
+    if (apresentation.imagem && apresentation.imagem !== null) {
+      return { uri: apresentation.imagem }
     }
     return imgDefault;
   }

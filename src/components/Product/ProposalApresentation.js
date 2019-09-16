@@ -17,12 +17,9 @@ class ProposalApresentation extends Component {
   getPhoto() {
     let apresentation = this.props.apresentation;
     if (apresentation.imagem && apresentation.imagem !== null && apresentation.imagem !== {}) {
-      let imagem = apresentation.imagem
-      if (imagem.square_crop) {
-        return (
-          <Image style={[styles.Image, { width: 88, height: 88 }]} source={{ uri: imagem.square_crop }} />
-        )
-      }
+      return (
+        <Image style={[styles.Image, { width: 88, height: 88 }]} source={{ uri: apresentation.imagem }} />
+      )
     }
     return (
       <Image style={[styles.Image, { width: 88, height: 88 }]} source={imgDefault} />

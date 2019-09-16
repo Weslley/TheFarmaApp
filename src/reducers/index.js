@@ -12,9 +12,11 @@ import addresses from './addresses';
 import creditCards from './creditCards';
 import orders from './orders';
 import notifications from './notifications';
+import drugstores from './drugstores';
 
 export default combineReducers({
     locations, carts, cities, districts,
     products, apresentations, generics, 
-    clients, addresses, creditCards, orders, notifications
+    clients, addresses, creditCards, orders, notifications,
+    drugstores
 });

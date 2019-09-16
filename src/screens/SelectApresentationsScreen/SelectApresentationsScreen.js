@@ -289,7 +289,6 @@ class SelectApresentationsScreen extends Component {
 
             {Components.renderIf(has_generic === true,
               <View>
-                {/*
                 <View style={{ width: "100%", marginBottom: 24, paddingHorizontal: 24 }}>
                   <Text style={[ styles.label ]}>{"Aceita genéricos ou similares?"}</Text>
                   <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -307,7 +306,6 @@ class SelectApresentationsScreen extends Component {
                     />
                   </View>
                 </View>
-                */}
 
                 {Components.renderIf(accept_generic === false,
                   <View style={{ width: "100%", marginBottom: 24 }}>
@@ -336,8 +334,6 @@ class SelectApresentationsScreen extends Component {
                 <Icon name="chevron-down" color={"#000"} size={20}/>
               </TouchableOpacity>
             </View>
-
-            {/*
             <View style={{ width: "100%", marginBottom: 24, paddingHorizontal: 24 }}>
               <Text style={[styles.label, styles.labelDisabled]}>{"Aceita genéricos ou similares?"}</Text>
               <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -353,7 +349,6 @@ class SelectApresentationsScreen extends Component {
                 />
               </View>
             </View>
-            */}
           </View>
         )
       }
@@ -367,9 +362,8 @@ class SelectApresentationsScreen extends Component {
             <Icon name="chevron-down" color={"#000"} size={20}/>
           </View>
         </View>
-        {/*
         <View style={{ width: "100%", marginBottom: 24, paddingHorizontal: 24 }}>
-          <Text style={[styles.label, styles.labelDisabled]}>{"Aceita genericos ou similares?"}</Text>
+          <Text style={[styles.label, styles.labelDisabled]}>{"Aceita genéricos ou similares?"}</Text>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <ButtonDefault
               text="Sim"
@@ -383,7 +377,6 @@ class SelectApresentationsScreen extends Component {
             />
           </View>
         </View>
-        */}
       </TouchableOpacity>
     )
   }

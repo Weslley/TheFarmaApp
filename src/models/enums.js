@@ -1,3 +1,9 @@
+export const TipoVenda = [
+  [0, "Sem receita"],
+  [1, "Com receita"],
+  [2, "Não permitida"]
+]
+
 export const StatusPedido = [
   [0, "Aberto"],
   [1, "Aceito"],

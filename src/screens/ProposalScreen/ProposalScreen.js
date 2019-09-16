@@ -15,6 +15,7 @@ import Communications from "react-native-communications";
 
 import { connect } from "react-redux";
 import { updateOrder } from "../../actions/orders";
+import { getDrugstore } from "../../actions/drugstores";
 
 import { Header } from "../../layout/Header";
 import { BottomBar } from "../../layout/Bar";
@@ -101,9 +102,7 @@ class ProposalScreen extends Component {
         this.setState({ showPaymentDialog: false, showTrocoDialog: false });
       }
     } else {
-      this.setState({
-        trocoError: "Deve ser maior ou igual ao valor da proposta."
-      });
+      this.setState({ trocoError: "Deve ser maior ou igual ao valor da proposta."});
     }
   }
 
@@ -116,12 +115,10 @@ class ProposalScreen extends Component {
   }
 
   _showDrugstore() {
-    this.props.navigation.navigate({
-      key: "drugstore1",
-      routeName: "Drugstore",
-      params: { drugstore: this.props.proposal.farmacia }
-    });
+    let proposal = this.props.proposal;
+    this.props.navigation.navigate({ key: "drugstore1", routeName: "Drugstore", params: { drugstore: proposal.farmacia }});
     this.setState({ showPaymentDialog: false, showTrocoDialog: false });
+    this.props.dispatch(getDrugstore({client: this.props.client, id: proposal.farmacia.id }));
   }
 
   _showListCreditCards() {
@@ -380,14 +377,7 @@ class ProposalScreen extends Component {
 
   _renderItem = ({ item }) => {
     try {
-      let apresentation = this.props.order.itens.find(i => i.apresentacao.id === item.apresentacao);
-      if (apresentation.apresentacao) {
-        return (
-          <ProposalApresentation apresentation={apresentation.apresentacao} proposalItem={item} />
-        );
-      } else {
-        return null;
-      }
+      return(<ProposalApresentation apresentation={item.apresentacao} proposalItem={item} />)
     } catch (error) {
       return null;
     }
@@ -480,7 +470,7 @@ class ProposalScreen extends Component {
               <FlatList
                 style={{ paddingHorizontal: 24, paddingBottom: 90 }}
                 data={this.props.proposal.itens}
-                keyExtractor={item => item.apresentacao.toString()}
+                keyExtractor={(item, index) => index.toString()}
                 renderItem={this._renderItem}
               />
             )}

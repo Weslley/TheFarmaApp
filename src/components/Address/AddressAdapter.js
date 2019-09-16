@@ -27,7 +27,7 @@ class AddressAdapter extends Component {
   getBairro() {
     let address = this.props.address;
     if (address.bairro && address.cidade) {
-      return `${address.bairro}, ${address.cidade.nome}`;
+      return `${address.bairro}, ${address.cidade.nome} - ${address.cidade.uf}`;
     }
     return `${address.bairro}`;
   }

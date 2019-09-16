@@ -214,7 +214,7 @@ class ListProposalsScreen extends Component {
           <FlatList
             style={{ paddingHorizontal: 24 }}
             data={this.props.order.propostas}
-            keyExtractor={item => item.farmacia.id.toString()}
+            keyExtractor={(item, index) => index.toString()}
             renderItem={this._renderItem}
           />
         </ScrollView>
