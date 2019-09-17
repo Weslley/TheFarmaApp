@@ -60,7 +60,9 @@ export default (state = INITIAL_STATE, action) => {
 
         if (cartItem) {
           if (action.params.quantity) {
-            cartItem.quantity += action.params.quantity;
+            cartItem.quantity = action.params.quantity;
+            cartItem.packing = action.params.packing;
+            cartItem.apresentations = action.params.apresentations;
           } else {
             cartItem.quantity += 1;
           }

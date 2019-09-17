@@ -18,7 +18,7 @@ const INITIAL_STATE = {
     apresentation: null,
     
     selected: null,
-    dosages: [],
+    dosages: null,
     generic: false,
     action: null
 };
@@ -72,10 +72,10 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, loading: false, error: action.error, success: false };
         
         case CLEAR_DOSAGES:
-            return { ...state, error: null, dosages: []};
+            return { ...state, error: null, dosages: null };
         
         case CLEAR_PRODUCT:
-                return { ...state, error: null, dosages: [], action: null, selected: null };
+                return { ...state, error: null, dosages: null, action: null, selected: null };
                 
         case CLEAR_ERROR:
             return { ...state, error: null, success: false, loading: false, apresentation: null, action: null };

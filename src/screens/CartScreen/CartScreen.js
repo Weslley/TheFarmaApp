@@ -8,7 +8,7 @@ import RNGooglePlaces from "react-native-google-places";
 
 import { connect } from "react-redux";
 import { clearApresentations } from "../../actions/apresentations";
-import { selectProduct, clearDosages, clearProduct, clearError } from "../../actions/products";
+import { selectProduct, clearDosages, clearProduct, clearError, getDosages } from "../../actions/products";
 import { createOrderV2 } from "../../actions/orders";
 import { addItemToCart, removeItemToCart, addItemToCartV2, removeItemToCartV2, cleanCart } from "../../actions/carts";
 import { getLocation, getGeocodeAddress, updateLocation } from "../../actions/locations";
@@ -120,7 +120,7 @@ class CartScreen extends Component {
 
   _addItemToCart(item) {
     if(item.dosage){
-      item.quantity = 1;
+      item.quantity += 1;
       this.props.dispatch(addItemToCartV2(item));
     }else{
       this.props.dispatch(addItemToCart({apresentation: item}));
@@ -231,6 +231,7 @@ class CartScreen extends Component {
     this.props.dispatch(clearDosages());
     this.props.dispatch(clearApresentations());
     this.props.dispatch(selectProduct(item.product));
+    this.props.dispatch(getDosages({ product: item.product }));
     this.props.navigation.navigate({
       key: "SelectApresentations1",
       routeName: "SelectApresentations",

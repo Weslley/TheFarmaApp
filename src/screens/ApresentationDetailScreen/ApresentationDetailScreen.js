@@ -272,11 +272,6 @@ class ApresentationDetailScreen extends Component {
                     style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
                   />
                 }
-                menuRight={
-                  <View style={{ paddingRight: 12 }}>
-                    <ShoppingBagIcon value={this.props.cartItems.length} onPress={() => { this.showCart() }} />
-                  </View>
-                }
               />
 
               {Components.renderIf(this.state.apresentation,
@@ -293,7 +288,7 @@ class ApresentationDetailScreen extends Component {
               {Components.renderIf(this.props.generics.length > 0,
                 <View style={{ marginBottom: 16 }}>
                   <View style={styles.containerLabel}>
-                    <Text style={styles.label}>{"Selecione a fabricante"}</Text>
+                    <Text style={styles.label}>{"Genéricos e similares"}</Text>
                   </View>
 
                   <FlatList

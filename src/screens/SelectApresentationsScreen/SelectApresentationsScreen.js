@@ -14,19 +14,24 @@ import { Header } from "../../layout/Header";
 import { BottomBarV2 } from "../../layout/Bar";
 import { ActionSheet } from "../../layout/ActionSheet";
 
-import { Icon } from '../../components/Icon';
-import { Loading } from '../../components/Loading';
-import { MenuItem } from '../../components/MenuItem';
-import { ButtonDefault } from "../../components/ButtonDefault"
+import { Icon } from "../../components/Icon";
+import { Loading } from "../../components/Loading";
+import { MenuItem } from "../../components/MenuItem";
+import { ButtonDefault } from "../../components/ButtonDefault";
 
 import { Components, CartUtils } from "../../helpers";
 import styles from "./styles";
 
 import { connect } from "react-redux";
 import { addItemToCartV2, removeItemToCartV2 } from "../../actions/carts";
-import { getDosages, clearDosages, clearProduct, clearError } from "../../actions/products";
+import {
+  getDosages,
+  clearDosages,
+  clearProduct,
+  clearError
+} from "../../actions/products";
 
-import { orderBy, groupBy, keys } from 'lodash';
+import { orderBy, groupBy, keys } from "lodash";
 
 const imgDefault = require("../../assets/images/ic_default_medicine.png");
 
@@ -53,42 +58,20 @@ class SelectApresentationsScreen extends Component {
     return { header: null };
   };
 
-  componentWillMount() {
-    const { state: { params } } = this.props.navigation;
-    if (params) {
-      if (params.product) this.setState({ product: params.product });
-      if (params.item){
-        let item = params.item;
-        let product = item.product;
-        let dosage = item.dosage;
-        let packing = item.packing;
-        let generic = item.generic;
-        let quantity = item.quantity;
-        this.setState({ product, dosage, packing, generic, quantity  });
-      }
-    }
-  }
-
-  componentDidMount() {
-    this.props.dispatch(clearError());
-    this.props.dispatch(getDosages({ product: this.state.product }));
-  }
-
   componentWillReceiveProps = nextProps => {
     try {
-
       if (nextProps && nextProps.error) {
         let error = nextProps.error;
 
-        if (error.response && (error.response.status >= 400 && error.response.status <= 403)) {
+        if (error.response && (error.response.status >= 400 && error.response.status <= 403) ) {
           if (error.response.data.detail) {
-            Snackbar.show({ title: error.response.data.detail, duration: Snackbar.LENGTH_SHORT, });
+            Snackbar.show({ title: error.response.data.detail, duration: Snackbar.LENGTH_SHORT });
             return;
           }
           Snackbar.show({ title: nextProps.error.message, duration: Snackbar.LENGTH_SHORT });
         }
 
-        if (error.response && (error.response.status >= 500 && error.response.status <= 504)) {
+        if ( error.response && (error.response.status >= 500 && error.response.status <= 504)) {
           Snackbar.show({ title: "Erro ao conectar com o servidor!", duration: Snackbar.LENGTH_SHORT });
         }
 
@@ -97,10 +80,49 @@ class SelectApresentationsScreen extends Component {
         }
       }
 
+      if (nextProps && nextProps.dosages) {
+        if (nextProps.dosages !== this.props.dosages) {
+          let dosage = this.state.dosage;
+          let packing = this.state.packing;
+          let dosages = nextProps.dosages;
+
+          if (dosage && packing && dosages) {
+            let options = dosages[dosage];
+            let packings = groupBy(options[0].apresentacoes, "embalagem");
+            this.setState({ dosage, packings, show_dosage: false });
+          }
+        }
+      }
     } catch (error) {
-      Snackbar.show({ title: e.message, duration: Snackbar.LENGTH_SHORT });
+      Snackbar.show({ title: error.message, duration: Snackbar.LENGTH_SHORT });
     }
   };
+
+  componentWillMount() {
+    const {
+      state: { params }
+    } = this.props.navigation;
+    if (params) {
+      if (params.product) this.setState({ product: params.product });
+      if (params.item) {
+        let item = params.item;
+        let product = item.product;
+        let dosage = item.dosage;
+        let packing = item.packing;
+        let accept_generic = item.generic;
+        let quantity = item.quantity;
+        let apresentation = null;
+        if(item.apresentations.length > 0){
+          apresentation = item.apresentations[0];
+        }
+        this.setState({ product, dosage, packing, accept_generic, quantity, apresentation });
+      }
+    }
+  }
+
+  componentDidMount() {
+    this.props.dispatch(clearError());
+  }
 
   /** Private functions */
   onBack() {
@@ -109,7 +131,7 @@ class SelectApresentationsScreen extends Component {
 
   _addItemToCart() {
     this.props.dispatch(clearError());
-    let params = {}
+    let params = {};
     let packing = this.state.packing;
     let apresentations = this.state.packings[packing];
     let accept_generic = this.state.accept_generic;
@@ -120,41 +142,53 @@ class SelectApresentationsScreen extends Component {
       generic: this.state.accept_generic,
       product: this.state.product,
       quantity: this.state.quantity,
-      apresentations,
-    }
+      apresentations
+    };
 
-    if(accept_generic === false) {
+    if (accept_generic === false) {
       params.apresentations = [this.state.apresentation];
     }
 
     this.props.dispatch(addItemToCartV2(params));
+    this.props.dispatch(clearError());
+    this.props.dispatch(clearDosages());
     this.onBack();
   }
 
-  _onPressPlus(){
+  _onPressPlus() {
     let quantity = this.state.quantity;
     quantity += 1;
-    this.setState({ quantity })
+    this.setState({ quantity });
   }
 
-  _onPressMinus(){
+  _onPressMinus() {
     let quantity = this.state.quantity;
     quantity -= 1;
-    if(quantity <= 0) {
-      quantity = 1
+    if (quantity <= 0) {
+      quantity = 1;
     }
-    this.setState({ quantity })
+    this.setState({ quantity });
   }
 
   onPressSelectDosage = () => {
-    this.setState({ show_dosage: true, show_error_dosage: false,  packings: [], packing: ''})
-  }
+    this.setState({
+      show_dosage: true,
+      show_error_dosage: false,
+      packings: [],
+      packing: ""
+    });
+  };
 
-  selectDosage(dosage){
+  selectDosage(dosage) {
     try {
-      let options = this.props.dosages[dosage]
-      let packings = groupBy(options[0].apresentacoes, 'embalagem');
-      this.setState({dosage, packings, apresentation: null, show_dosage: false });
+      let options = this.props.dosages[dosage];
+      let packings = groupBy(options[0].apresentacoes, "embalagem");
+      this.setState({
+        dosage,
+        packings,
+        apresentation: null,
+        show_dosage: false
+      });
     } catch (error) {
       console.log(error);
     }
@@ -162,28 +196,41 @@ class SelectApresentationsScreen extends Component {
 
   _renderDosageItem = ({ item }) => {
     return (
-      <TouchableOpacity style={{ width: '100%', paddingVertical: 14}} onPress={() => { this.selectDosage(item) } }>
+      <TouchableOpacity
+        style={{ width: "100%", paddingVertical: 14 }}
+        onPress={() => {
+          this.selectDosage(item);
+        }}
+      >
         <View>
-          <Text style={[styles.label, {fontSize: 14, textAlign: 'center'}]}>{item}</Text>
+          <Text style={[styles.label, { fontSize: 14, textAlign: "center" }]}>
+            {item}
+          </Text>
         </View>
       </TouchableOpacity>
-    )
-  }
-  
+    );
+  };
+
   renderDosageDialog = () => {
-    let options = keys(this.props.dosages)
+    let options = keys(this.props.dosages);
     return (
       <ActionSheet
-        callback={buttonIndex => { this.setState({ show_dosage: false }); }}
+        callback={buttonIndex => {
+          this.setState({ show_dosage: false });
+        }}
         content={
           <View style={[styles.dialog]}>
             <Text style={[styles.titleDialog]}>{"Dosagem"}</Text>
             <FlatList
               refreshing={false}
-              keyboardShouldPersistTaps={'always'}
+              keyboardShouldPersistTaps={"always"}
               data={options}
-              style={{ paddingTop: 16, paddingHorizontal: 16, paddingBottom: 24 }}
-              renderItem={ this._renderDosageItem }
+              style={{
+                paddingTop: 16,
+                paddingHorizontal: 16,
+                paddingBottom: 24
+              }}
+              renderItem={this._renderDosageItem}
               keyExtractor={(item, index) => item.toString()}
             />
           </View>
@@ -193,43 +240,57 @@ class SelectApresentationsScreen extends Component {
   };
 
   onPressSelectPacking = () => {
-    this.setState({ show_packing: true, show_dosage: false, show_error_dosage: false})
-  }
+    this.setState({
+      show_packing: true,
+      show_dosage: false,
+      show_error_dosage: false
+    });
+  };
 
-  selectPacking(packing){
-    let has_generic = this.props.generic;
+  selectPacking(packing) {
     let packings = this.state.packings[packing];
-    let accept_generic = this.state.accept_generic;
-
-    if(packings){
+    if (packings) {
       let apresentation = packings[0];
-      this.setState({packing, apresentation, show_packing: false });
+      this.setState({ packing, apresentation, show_packing: false });
     }
   }
 
   _renderPackingItem = ({ item }) => {
     return (
-        <TouchableOpacity style={{ width: '100%', paddingVertical: 14}} onPress={() => { this.selectPacking(item) } }>
-          <View>
-            <Text style={[styles.label, {fontSize: 14, textAlign: 'center'}]}>{item}</Text>
-          </View>
-        </TouchableOpacity>
-    )
-  }
-  
+      <TouchableOpacity
+        style={{ width: "100%", paddingVertical: 14 }}
+        onPress={() => {
+          this.selectPacking(item);
+        }}
+      >
+        <View>
+          <Text style={[styles.label, { fontSize: 14, textAlign: "center" }]}>
+            {item}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
   renderPackingDialog = () => {
     let packings = keys(this.state.packings);
     return (
       <ActionSheet
-        callback={buttonIndex => { this.setState({ show_packing: false }); }}
+        callback={buttonIndex => {
+          this.setState({ show_packing: false });
+        }}
         content={
           <View style={[styles.dialog]}>
             <Text style={[styles.titleDialog]}>{"Embalagem"}</Text>
             <FlatList
               refreshing={false}
-              keyboardShouldPersistTaps={'always'}
+              keyboardShouldPersistTaps={"always"}
               data={packings}
-              style={{ paddingTop: 16, paddingHorizontal: 16, paddingBottom: 24 }}
+              style={{
+                paddingTop: 16,
+                paddingHorizontal: 16,
+                paddingBottom: 24
+              }}
               renderItem={this._renderPackingItem}
               keyExtractor={(item, index) => item.toString()}
             />
@@ -239,147 +300,257 @@ class SelectApresentationsScreen extends Component {
     );
   };
 
-  selectApresentation(apresentation){
+  selectApresentation(apresentation) {
     this.setState({ apresentation });
   }
 
   getPhoto(apresentation) {
-    if (apresentation.imagem && apresentation.imagem !== null && apresentation.imagem !== {}) {
-      return { uri: apresentation.imagem }
+    if (
+      apresentation.imagem &&
+      apresentation.imagem !== null &&
+      apresentation.imagem !== {}
+    ) {
+      return { uri: apresentation.imagem };
     }
     return imgDefault;
   }
 
-  _renderGenericItem = ({item}) => {
-    let apresentation_id = this.state.apresentation.id;
-    return(
-      <TouchableOpacity style={[styles.ctnGeneric, item.id === apresentation_id ? styles.ctnGenericSelected : {} ]} onPress={()=>{ this.selectApresentation(item) }}>
-        <Image style={[styles.imgGeneric]} resizeMode="contain" source={this.getPhoto(item)} />
-        <Text style={[ styles.btnTextDefault, {fontSize: 10, textAlign: 'center'}]}>{item.fabricante}</Text>
-      </TouchableOpacity>
-    )
-  }
+  _renderGenericItem = ({ item }) => {
+    let apresentation = this.state.apresentation;
+    if(apresentation){
 
-  renderView(){
+      return (
+        <TouchableOpacity
+          style={[
+            styles.ctnGeneric,
+            item.id === apresentation.id ? styles.ctnGenericSelected : {}
+          ]}
+          onPress={() => {
+            this.selectApresentation(item);
+          }}
+        >
+          <Image
+            style={[styles.imgGeneric]}
+            resizeMode="contain"
+            source={this.getPhoto(item)}
+          />
+          <Text
+            style={[styles.btnTextDefault, { fontSize: 10, textAlign: "center" }]}
+          >
+            {item.fabricante}
+          </Text>
+        </TouchableOpacity>
+      );
+    }
+  };
+
+  renderView() {
     let dosage = this.state.dosage;
     let packing = this.state.packing;
     let has_generic = this.props.generic;
     let accept_generic = this.state.accept_generic;
-    
+
     let packings = this.state.packings[packing];
     let apresentations = [];
 
-    if(packings)
-      apresentations = packings;
+    if (packings) apresentations = packings;
 
-    if (has_generic === false)
-      accept_generic = false;
+    if (has_generic === false) accept_generic = false;
 
-    if(dosage){
-      if(packing){
-        return(
+    if (dosage) {
+      if (packing) {
+        return (
           <View>
-            <View style={{ width: "100%", marginBottom: 24, paddingHorizontal: 24 }}>
+            <View
+              style={{ width: "100%", marginBottom: 24, paddingHorizontal: 24 }}
+            >
               <Text style={styles.label}>{"Embalagem"}</Text>
-              <TouchableOpacity style={styles.checkbox} onPress={() => {this.onPressSelectPacking()}} >
-                  <Text style={styles.checkboxText}>{packing}</Text>
-                <Icon name="chevron-down" color={"#000"} size={20}/>
+              <TouchableOpacity
+                style={styles.checkbox}
+                onPress={() => {
+                  this.onPressSelectPacking();
+                }}
+              >
+                <Text style={styles.checkboxText}>{packing}</Text>
+                <Icon name="chevron-down" color={"#000"} size={20} />
               </TouchableOpacity>
             </View>
 
-            {Components.renderIf(has_generic === true,
+            {Components.renderIf(
+              has_generic === true,
               <View>
-                <View style={{ width: "100%", marginBottom: 24, paddingHorizontal: 24 }}>
-                  <Text style={[ styles.label ]}>{"Aceita genéricos ou similares?"}</Text>
-                  <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <View
+                  style={{
+                    width: "100%",
+                    marginBottom: 24,
+                    paddingHorizontal: 24
+                  }}
+                >
+                  <Text style={[styles.label]}>
+                    {"Aceita genéricos ou similares?"}
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between"
+                    }}
+                  >
                     <ButtonDefault
                       text="Sim"
-                      style={[ (accept_generic === true)? styles.btnSelected : styles.btnDefault ]}
-                      textStyle={[(accept_generic === true)? styles.btnTextSelected: styles.btnTextDefault ]}
-                      onPress={() => {this.setState({ accept_generic: true })}}
+                      style={[
+                        accept_generic === true
+                          ? styles.btnSelected
+                          : styles.btnDefault
+                      ]}
+                      textStyle={[
+                        accept_generic === true
+                          ? styles.btnTextSelected
+                          : styles.btnTextDefault
+                      ]}
+                      onPress={() => {
+                        this.setState({ accept_generic: true });
+                      }}
                     />
                     <ButtonDefault
                       text="Não"
-                      style={[ (accept_generic === false)? styles.btnSelected : styles.btnDefault ]}
-                      textStyle={[(accept_generic === false)? styles.btnTextSelected: styles.btnTextDefault ]}
-                      onPress={() => {this.setState({ accept_generic: false })}}
+                      style={[
+                        accept_generic === false
+                          ? styles.btnSelected
+                          : styles.btnDefault
+                      ]}
+                      textStyle={[
+                        accept_generic === false
+                          ? styles.btnTextSelected
+                          : styles.btnTextDefault
+                      ]}
+                      onPress={() => {
+                        this.setState({ accept_generic: false });
+                      }}
                     />
                   </View>
                 </View>
 
-                {Components.renderIf(accept_generic === false,
+                {Components.renderIf(
+                  accept_generic === false,
                   <View style={{ width: "100%", marginBottom: 24 }}>
-                    <Text style={[ styles.label,{ marginLeft: 24} ]}>{"Selecione a fabricante"}</Text>
+                    <Text style={[styles.label, { marginLeft: 24 }]}>
+                      {"Selecione a fabricante"}
+                    </Text>
                     <FlatList
-                      style={{marginLeft: 24}}
+                      style={{ marginLeft: 24 }}
                       horizontal={true}
                       data={apresentations}
-                      keyExtractor={ (item, index) => index.toString() }
+                      keyExtractor={(item, index) => index.toString()}
                       renderItem={this._renderGenericItem}
-                      />
+                    />
                   </View>
                 )}
               </View>
             )}
-
           </View>
-        )
-      }else{
-        return(
+        );
+      } else {
+        return (
           <View>
-            <View style={{ width: "100%", marginBottom: 24, paddingHorizontal: 24 }}>
+            <View
+              style={{ width: "100%", marginBottom: 24, paddingHorizontal: 24 }}
+            >
               <Text style={styles.label}>{"Embalagem"}</Text>
-              <TouchableOpacity style={styles.checkbox} onPress={() => {this.onPressSelectPacking()}} >
-                  <Text style={styles.placeholder}>{"Escolha uma opção"}</Text>
-                <Icon name="chevron-down" color={"#000"} size={20}/>
+              <TouchableOpacity
+                style={styles.checkbox}
+                onPress={() => {
+                  this.onPressSelectPacking();
+                }}
+              >
+                <Text style={styles.placeholder}>{"Escolha uma opção"}</Text>
+                <Icon name="chevron-down" color={"#000"} size={20} />
               </TouchableOpacity>
             </View>
-            <View style={{ width: "100%", marginBottom: 24, paddingHorizontal: 24 }}>
-              <Text style={[styles.label, styles.labelDisabled]}>{"Aceita genéricos ou similares?"}</Text>
-              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View
+              style={{ width: "100%", marginBottom: 24, paddingHorizontal: 24 }}
+            >
+              <Text style={[styles.label, styles.labelDisabled]}>
+                {"Aceita genéricos ou similares?"}
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between"
+                }}
+              >
                 <ButtonDefault
                   text="Sim"
-                  style={{ width: '48%', backgroundColor: "rgba(0,0,0,0.04)", borderColor: 'transparent' }}
-                  textStyle={{ color: 'rgba(0,0,0,0.40)' }}
+                  style={{
+                    width: "48%",
+                    backgroundColor: "rgba(0,0,0,0.04)",
+                    borderColor: "transparent"
+                  }}
+                  textStyle={{ color: "rgba(0,0,0,0.40)" }}
                 />
                 <ButtonDefault
                   text="Não"
-                  style={{ width: '48%', backgroundColor: "rgba(0,0,0,0.04)", borderColor: 'transparent' }}
-                  textStyle={{ color: 'rgba(0,0,0,0.40)' }}
+                  style={{
+                    width: "48%",
+                    backgroundColor: "rgba(0,0,0,0.04)",
+                    borderColor: "transparent"
+                  }}
+                  textStyle={{ color: "rgba(0,0,0,0.40)" }}
                 />
               </View>
             </View>
           </View>
-        )
+        );
       }
-    }else{
-    return(
-      <TouchableOpacity onPress={() => { this.setState({ show_error_dosage: true })}} >
-        <View style={{ width: "100%", marginBottom: 24, paddingHorizontal: 24 }}>
-          <Text style={[styles.label, styles.labelDisabled]}>{"Embalagem"}</Text>
-          <View style={[styles.checkbox, styles.checkboxDisabled]}>
-            <Text/>
-            <Icon name="chevron-down" color={"#000"} size={20}/>
+    } else {
+      return (
+        <TouchableOpacity
+          onPress={() => {
+            this.setState({ show_error_dosage: true });
+          }}
+        >
+          <View
+            style={{ width: "100%", marginBottom: 24, paddingHorizontal: 24 }}
+          >
+            <Text style={[styles.label, styles.labelDisabled]}>
+              {"Embalagem"}
+            </Text>
+            <View style={[styles.checkbox, styles.checkboxDisabled]}>
+              <Text />
+              <Icon name="chevron-down" color={"#000"} size={20} />
+            </View>
           </View>
-        </View>
-        <View style={{ width: "100%", marginBottom: 24, paddingHorizontal: 24 }}>
-          <Text style={[styles.label, styles.labelDisabled]}>{"Aceita genéricos ou similares?"}</Text>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <ButtonDefault
-              text="Sim"
-              style={{ width: '48%', backgroundColor: "rgba(0,0,0,0.04)", borderColor: 'transparent' }}
-              textStyle={{ color: 'rgba(0,0,0,0.40)' }}
-            />
-            <ButtonDefault
-              text="Não"
-              style={{ width: '48%', backgroundColor: "rgba(0,0,0,0.04)", borderColor: 'transparent' }}
-              textStyle={{ color: 'rgba(0,0,0,0.40)' }}
-            />
+          <View
+            style={{ width: "100%", marginBottom: 24, paddingHorizontal: 24 }}
+          >
+            <Text style={[styles.label, styles.labelDisabled]}>
+              {"Aceita genéricos ou similares?"}
+            </Text>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <ButtonDefault
+                text="Sim"
+                style={{
+                  width: "48%",
+                  backgroundColor: "rgba(0,0,0,0.04)",
+                  borderColor: "transparent"
+                }}
+                textStyle={{ color: "rgba(0,0,0,0.40)" }}
+              />
+              <ButtonDefault
+                text="Não"
+                style={{
+                  width: "48%",
+                  backgroundColor: "rgba(0,0,0,0.04)",
+                  borderColor: "transparent"
+                }}
+                textStyle={{ color: "rgba(0,0,0,0.40)" }}
+              />
+            </View>
           </View>
-        </View>
-      </TouchableOpacity>
-    )
-  }
+        </TouchableOpacity>
+      );
+    }
   }
 
   render() {
@@ -411,44 +582,69 @@ class SelectApresentationsScreen extends Component {
         {Components.renderIfElse(
           this.props.loading === true,
           <Loading />,
-          <ScrollView  style={{}} keyboardShouldPersistTaps={'always'}>
-            <View style={{ width: "100%", marginBottom: 24, paddingHorizontal: 24, marginTop: 16 }}>
+          <ScrollView style={{}} keyboardShouldPersistTaps={"always"}>
+            <View
+              style={{
+                width: "100%",
+                marginBottom: 24,
+                paddingHorizontal: 24,
+                marginTop: 16
+              }}
+            >
               <Text style={styles.label}>{"Dosagem"}</Text>
-              <TouchableOpacity style={styles.checkbox} onPress={() => {this.onPressSelectDosage()}} >
-                {Components.renderIfElse(dosage,
+              <TouchableOpacity
+                style={styles.checkbox}
+                onPress={() => {
+                  this.onPressSelectDosage();
+                }}
+              >
+                {Components.renderIfElse(
+                  dosage,
                   <Text style={styles.checkboxText}>{dosage}</Text>,
                   <Text style={styles.placeholder}>{"Escolha uma opção"}</Text>
                 )}
-                <Icon name="chevron-down" color={"#000"} size={20}/>
+                <Icon name="chevron-down" color={"#000"} size={20} />
               </TouchableOpacity>
-              {Components.renderIf(show_error_dosage,
-                <Text style={[styles.label, styles.labelError]} uppercase={false}>{"Selecione a dosagem"}</Text>
+              {Components.renderIf(
+                show_error_dosage,
+                <Text
+                  style={[styles.label, styles.labelError]}
+                  uppercase={false}
+                >
+                  {"Selecione a dosagem"}
+                </Text>
               )}
             </View>
 
             {this.renderView()}
 
-            {Components.renderIf(show_dosage, this.renderDosageDialog() )}
-            {Components.renderIf(show_packing, this.renderPackingDialog() )}
+            {Components.renderIf(show_dosage, this.renderDosageDialog())}
+            {Components.renderIf(show_packing, this.renderPackingDialog())}
 
-            <View style={[{ marginBottom: 120 }]}/>
+            <View style={[{ marginBottom: 120 }]} />
           </ScrollView>
         )}
 
-        {Components.renderIf(dosage && packing,
+        {Components.renderIf(
+          dosage && packing,
           <BottomBarV2
             buttonTitle="Adicionar"
             quantity={quantity}
-            onPressPlus={() => { this._onPressPlus() }}
-            onPressMinus={() => { this._onPressMinus() }}
-            onButtonPress={() => { this._addItemToCart() }}
+            onPressPlus={() => {
+              this._onPressPlus();
+            }}
+            onPressMinus={() => {
+              this._onPressMinus();
+            }}
+            onButtonPress={() => {
+              this._addItemToCart();
+            }}
           />
         )}
       </View>
     );
   }
 }
-
 
 function mapStateToProps(state) {
   return {
@@ -467,4 +663,3 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(SelectApresentationsScreen);
-
