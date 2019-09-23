@@ -3,7 +3,7 @@ export default EStyleSheet.create({
     infoContainer: {
         flexDirection: "row",
         alignItems: "center",
-        marginBottom: 16
+        marginBottom: 8
     },
     infoTextBold: {
         fontFamily: "Roboto-Medium",
@@ -35,5 +35,28 @@ export default EStyleSheet.create({
         fontFamily: 'Roboto-Regular',
         fontSize: 12,
         color: '#E91E63'
+    },
+    row: {
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    footer: {
+        backgroundColor: "#F8F8F8",
+        position: "absolute",
+        left: 0,
+        right: 0,
+        bottom: 0,
+        paddingHorizontal: 24,
+        paddingVertical: 24
+    },
+    footerTxt: {
+        fontFamily: 'Roboto-Regular',
+        fontSize: 12,
+        color: 'rgba(0,0,0,0.40)'
+    },
+    footerTxtBold: {
+        fontFamily: 'Roboto-Bold',
+        fontSize: 18,
+        color: 'rgba(0,0,0,0.80)'
     }
 });

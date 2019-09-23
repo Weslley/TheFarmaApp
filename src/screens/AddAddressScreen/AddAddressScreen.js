@@ -436,13 +436,12 @@ class AddAddressScreen extends Component {
           </ScrollView>
         </KeyboardAvoidingView>
 
-        {Components.renderIf(this.props.isLoading === true,
+        {Components.renderIf(this.props.loading === true,
           <View style={{ flex: 1, backgroundColor: "rgba(255,255,255,0.8)", position: 'absolute', top: 0, bottom: 0, right: 0, left: 0 }}>
             <Loading />
           </View>
         )}
-
-      </View >
+      </View>
     );
   }
 }
@@ -462,7 +461,7 @@ function mapStateToProps(state) {
     districts: state.districts.districts,
 
     addresses: state.addresses.addresses,
-    isLoading: state.addresses.isLoading,
+    loading: state.addresses.loading,
     error: state.addresses.error,
     success: state.addresses.success,
   };

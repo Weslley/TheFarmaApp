@@ -20,9 +20,10 @@ export const StatusPedido = [
 ]
 
 export const TipoMedicamento = [
-  [0, "Ético"],
-  [1, "Genérico"],
-  [2, "Similar"]
+  [0, "Genérico"],
+  [1, "Similar"],
+  [2, "Ético"],
+  [3, "Não medicamento"]
 ]
 
 export const estados = [

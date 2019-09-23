@@ -32,3 +32,14 @@ export const center = ( string, width, padding ) => {
 	else
 		return string;
 }
+
+export const truncate = ( string, length ) => {
+	try {
+		if(string.length > length)
+			return `${string.slice(0, length)}...`
+		else
+			return string
+	} catch (error) {
+		return string	
+	}
+}

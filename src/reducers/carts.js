@@ -18,9 +18,7 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case INSERT_PRODUCT_INTO_CART:
       cItems = [...state.cartItems];
-      cartItem = cItems.find(
-        item => item.id === action.params.apresentation.id
-      );
+      cartItem = cItems.find(item => item.id === action.params.apresentation.id);
       if (cartItem) {
         cartItem.quantity += 1;
       } else {
@@ -32,12 +30,8 @@ export default (state = INITIAL_STATE, action) => {
 
     case REMOVE_PRODUCT_INTO_CART:
       cItems = [...state.cartItems];
-      index = cItems.findIndex(
-        item => item.id === action.params.apresentation.id
-      );
-      cartItem = cItems.find(
-        item => item.id === action.params.apresentation.id
-      );
+      index = cItems.findIndex(item => item.id === action.params.apresentation.id);
+      cartItem = cItems.find(item => item.id === action.params.apresentation.id);
 
       if (cartItem) {
         --cartItem.quantity;
@@ -54,7 +48,7 @@ export default (state = INITIAL_STATE, action) => {
         cartItem = cItems.find(
           item =>
             item.dosage === action.params.dosage &&
-            item.generic === action.params.generic &&
+            item.generic === action.params.generic && 
             item.product.nome === action.params.product.nome
         );
 

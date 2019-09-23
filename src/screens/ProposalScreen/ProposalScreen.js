@@ -1,14 +1,9 @@
 import React, { Component } from "react";
-import {
-  View,
-  FlatList,
-  Platform,
-  ScrollView,
-  TouchableOpacity,
-  KeyboardAvoidingView
-} from "react-native";
+import { View, FlatList, Platform, ScrollView, TouchableOpacity, KeyboardAvoidingView } from "react-native";
+
 import { Text, Button } from "native-base";
 import { TextInputMask } from "react-native-masked-text";
+
 import Snackbar from "react-native-snackbar";
 import LinearGradient from "react-native-linear-gradient";
 import Communications from "react-native-communications";
@@ -18,16 +13,16 @@ import { updateOrder } from "../../actions/orders";
 import { getDrugstore } from "../../actions/drugstores";
 
 import { Header } from "../../layout/Header";
-import { BottomBar } from "../../layout/Bar";
 import { ActionSheet } from "../../layout/ActionSheet";
 
 import { Icon } from "../../components/Icon";
 import { MenuItem } from "../../components/MenuItem";
 import { ButtonCustom } from "../../components/ButtonCustom";
-import { ProposalApresentation } from "../../components/Product/";
+import { ButtonGradient } from "../../components/ButtonDefault";
+import { ProposalApresentation, ProposalApresentationV2 } from "../../components/Product/";
 
-import { Components } from "../../helpers";
 import styles from "./styles";
+import { Components, CurrencyUtils } from "../../helpers";
 
 class ProposalScreen extends Component {
   constructor(props) {
@@ -333,28 +328,18 @@ class ProposalScreen extends Component {
 
     if (!this.state.onScrollList) {
       return (
-        <View style={{ marginTop: 16 }}>
+        <View style={{ marginTop: 8 }}>
           <View style={styles.infoContainer}>
-            <Icon
-              name="place"
-              size={18}
-              color={"#000"}
-              style={{ marginRight: 8 }}
-            />
+            <Icon name="place" size={18} color={"#000"} style={{ marginRight: 8 }} />
             <Text style={styles.infoTextBold}>
               {this.props.proposal.farmacia.distancia}
               <Text style={styles.infoText}>{" do endereço indicado"}</Text>
             </Text>
           </View>
-
+          
           {Components.renderIf(delivery,
             <View style={styles.infoContainer}>
-              <Icon
-                name="clock-o"
-                size={18}
-                color={"#000"}
-                style={{ marginRight: 8 }}
-              />
+              <Icon name="clock-o" size={18} color={"#000"} style={{ marginRight: 8 }}/>
               <Text style={styles.infoTextBold}>
                 {this.props.proposal.farmacia.tempo_entrega}
                 <Text style={[styles.infoText, { marginBottom: 0 }]}>
@@ -364,10 +349,13 @@ class ProposalScreen extends Component {
             </View>
           )}
 
-          <TouchableOpacity style={styles.infoContainer} onPress={() => { this._showDrugstore(); }}>
-            <Icon name="info" size={18} color={"#000"} style={{ marginRight: 8 }} />
-            <Text style={styles.infoTextBold}>{"Sobre nós"}</Text>
-          </TouchableOpacity>
+          <View style={styles.infoContainer}>
+            <Icon name="alert-circled" size={18} color={"#000"} style={{ marginRight: 8 }} />
+            <Text style={styles.infoText}>
+              {"Aberto até as "} 
+              <Text style={styles.infoTextBold}>{this.props.proposal.farmacia.horario_funcionamento}</Text>
+            </Text>
+          </View>
         </View>
       );
     } else {
@@ -377,124 +365,102 @@ class ProposalScreen extends Component {
 
   _renderItem = ({ item }) => {
     try {
-      return(<ProposalApresentation apresentation={item.apresentacao} proposalItem={item} />)
+      item.possui = false;
+      return(<ProposalApresentationV2 apresentation={item.apresentacao} proposalItem={item} />)
     } catch (error) {
       return null;
     }
   };
 
-  getLabelValorTotal() {
+  render() {
+    let proposal = this.props.proposal;
+    let farmacia = proposal.farmacia || {};
+
     let order = this.props.order;
     let delivery = order.delivery;
 
-    if (delivery === true){
-      return "Total com frete"
-    }
-
-    return "Total"
-  }
-
-  render() {
     return (
-      <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+      <View style={{ flex: 1, backgroundColor: "#F8F8F8" }}>
         <KeyboardAvoidingView
           style={{ flex: 1 }}
           behavior={Platform.OS === "ios" ? "padding" : null}
           enabled
         >
           <ScrollView>
-            <Header
-              title={this.props.proposal.farmacia.nome_fantasia}
-              subtitle={`Fazemos entrega até ${
-                this.props.proposal.farmacia.horario_funcionamento
-                }`}
-              menuLeft={
-                <MenuItem
-                  icon="md-arrow-back"
-                  style={{
-                    paddingLeft: 24,
-                    paddingVertical: 12,
-                    paddingRight: 12
-                  }}
-                  onPress={() => {
-                    this.onBack();
-                  }}
-                />
-              }
-              menuRight={
-                <View style={{ flexDirection: "row" }}>
+            <View style={{ backgroundColor: "#FFFFFF", borderColor: "#CCCCCC",borderBottomWidth: 0.7 }}>
+              <Header
+                separator={false}
+                title={farmacia.nome_fantasia}
+                menuLeft={
                   <MenuItem
-                    icon="call"
-                    onPress={() => {
-                      this._callPhone();
-                    }}
+                    icon="md-arrow-back"
+                    style={{ paddingLeft: 24, paddingVertical: 12, paddingRight: 12 }}
+                    onPress={() => { this.onBack(); }}
+                  />
+                }
+                menuRight={
+                  <MenuItem
+                    icon="info"
+                    onPress={() => { this._showDrugstore(); }}
                     style={{ paddingVertical: 12, paddingHorizontal: 12 }}
                   />
-                  <MenuItem
-                    icon="marker"
-                    onPress={() => {
-                      this._callMap();
-                    }}
-                    style={{ paddingVertical: 12, paddingHorizontal: 12 }}
-                  />
-                </View>
-              }
-              footer={this._renderHeaderFooter()}
-            />
+                }
+                footer={this._renderHeaderFooter()}
+              />
+            </View>
 
-            {Components.renderIf(
-              !this.props.proposal.possui_todos_itens &&
-              !this.state.onScrollList,
-              <View
-                style={{
-                  backgroundColor: "#FF1967",
-                  marginTop: 4,
-                  paddingVertical: 14,
-                  paddingHorizontal: 24
-                }}
-              >
-                <Text
-                  style={{
-                    fontFamily: "Roboto-Regular",
-                    fontSize: 16,
-                    color: "#FFFFFF"
-                  }}
-                >
-                  {"Essa farmacia não tem todos os itens"}
+            {/*
+            {Components.renderIf(!proposal.possui_todos_itens && !this.state.onScrollList,
+              <View style={{ backgroundColor: "#FF1967", paddingVertical: 8, paddingHorizontal: 24 }}>
+                <Text style={{ fontFamily: "Roboto-Regular", fontSize: 14, color: "#FFFFFF" }}>
+                  {"Esta farmácia não possue todos os itens"}
                 </Text>
               </View>
             )}
+            */}
 
-            {Components.renderIf(
-              this.props.proposal && this.props.proposal.itens,
+            {Components.renderIf(proposal && proposal.itens,
               <FlatList
-                style={{ paddingHorizontal: 24, paddingBottom: 90 }}
-                data={this.props.proposal.itens}
-                keyExtractor={(item, index) => index.toString()}
+                data={ proposal.itens }
                 renderItem={this._renderItem}
+                keyExtractor={(item, index) => index.toString()}
+                style={{ paddingHorizontal: 24, backgroundColor: "#FFFFFF" }}
               />
             )}
+            <View style={[{ marginBottom: 180 }]} />
           </ScrollView>
 
-          <BottomBar
-            label={this.getLabelValorTotal()}
-            proposal={true}
-            buttonTitle="Comprar"
-            price={this.props.proposal.valor_total_com_frete}
-            onButtonPress={() => {
-              this._showPaymentDialog();
-            }}
-          />
+          {/* BottomBar */}
+          <View style={styles.footer}>
 
-          {Components.renderIf(
-            this.state.showPaymentDialog,
-            this._renderPaymentDialog()
-          )}
+            {Components.renderIf(delivery,
+              <View style={[styles.row,{marginBottom: 8}]}>
+                <Text style={styles.footerTxt}>{"Subtotal"}</Text>
+                <Text style={styles.footerTxt}>{ CurrencyUtils.toMoney(proposal.valor_total)}</Text>
+              </View>
+            )}
 
-          {Components.renderIf(
-            this.state.showTrocoDialog,
-            this._renderTrocoDialog()
-          )}
+            {Components.renderIf(delivery,
+              <View style={[styles.row,{marginBottom: 8}]}>
+                <Text style={styles.footerTxt}>{"Taxa de entrega"}</Text>
+                <Text style={styles.footerTxt}>{ CurrencyUtils.toMoney(proposal.valor_frete)}</Text>
+              </View>
+            )}
+
+            <View style={[styles.row,{marginBottom: 16}]}>
+              <Text style={styles.footerTxtBold}>{"Total"}</Text>
+              <Text style={styles.footerTxtBold}>{ CurrencyUtils.toMoney(proposal.valor_total_com_frete)}</Text>
+            </View>
+
+            <ButtonGradient
+              text="Comprar"
+              onPress={() => { this._showPaymentDialog(); }}
+            />
+          </View>
+
+          {Components.renderIf(this.state.showPaymentDialog, this._renderPaymentDialog())}
+          {Components.renderIf(this.state.showTrocoDialog, this._renderTrocoDialog())}
+
         </KeyboardAvoidingView>
       </View>
     );

@@ -33,5 +33,16 @@ export default EStyleSheet.create({
   row: {
     flexDirection: "row",
     justifyContent: "space-between"
+  },
+  footer: {
+    backgroundColor: "$background",
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    borderColor: "#CCCCCC",
+    borderTopWidth: 0.7,
   }
 });

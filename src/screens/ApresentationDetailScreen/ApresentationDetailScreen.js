@@ -331,7 +331,7 @@ class ApresentationDetailScreen extends Component {
                 <Text style={styles.tableLabel} uppercase>
                   {"Quantidade"}
                 </Text>
-                <Text style={styles.tableValue}>{this.state.apresentation.quantidade_rec}</Text>
+                <Text style={styles.tableValue}>{this.state.apresentation.quantidade_embalagem}</Text>
               </View>
 
               <View style={[styles.table, { marginBottom: 120 }]}>

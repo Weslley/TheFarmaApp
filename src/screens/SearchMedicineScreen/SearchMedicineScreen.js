@@ -67,7 +67,8 @@ class SearchMedicineScreen extends Component {
 
       if (nextProps && nextProps.selected && nextProps.action==='GET_DOSAGES_SUCCESS') {
         let product = nextProps.selected;
-        if(keys(nextProps.dosages).length > 0){
+        let lkeys = keys(nextProps.dosages)
+        if(lkeys.length > 0 && lkeys[0]!==""){
           this.props.navigation.navigate({
             key: "SelectApresentations1",
             routeName: "SelectApresentations",

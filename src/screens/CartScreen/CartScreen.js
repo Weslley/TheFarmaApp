@@ -7,24 +7,24 @@ import Permissions from "react-native-permissions";
 import RNGooglePlaces from "react-native-google-places";
 
 import { connect } from "react-redux";
-import { clearApresentations } from "../../actions/apresentations";
-import { selectProduct, clearDosages, clearProduct, clearError, getDosages } from "../../actions/products";
+
 import { createOrderV2 } from "../../actions/orders";
-import { addItemToCart, removeItemToCart, addItemToCartV2, removeItemToCartV2, cleanCart } from "../../actions/carts";
+import { clearApresentations } from "../../actions/apresentations";
 import { getLocation, getGeocodeAddress, updateLocation } from "../../actions/locations";
+import { selectProduct, clearDosages, clearError, getDosages } from "../../actions/products";
+import { addItemToCart, removeItemToCart, addItemToCartV2, removeItemToCartV2, cleanCart } from "../../actions/carts";
 
 import { Header } from "../../layout/Header";
-import { BottomBar } from "../../layout/Bar";
 import { ActionSheet } from "../../layout/ActionSheet";
 
 import { MenuItem } from '../../components/MenuItem';
 import { ButtonCustom } from "../../components/ButtonCustom";
+import { ButtonDefault, ButtonGradient } from "../../components/ButtonDefault";
 import { GooglePlaces } from "../../components/GooglePlaces";
 import { ProductDescriptionV2, ProductDescription } from "../../components/Product";
 import { LocationListItem } from "../../components/LocationListItem";
 
 import { Components } from "../../helpers";
-
 import styles from "./styles";
 
 class CartScreen extends Component {
@@ -270,17 +270,19 @@ class CartScreen extends Component {
   render() {
     let cItems = this.props.cartItems;
     return (
-      <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+      <View style={{ flex: 1, backgroundColor: "#F8F8F8" }}>
         <NavigationEvents onWillFocus = { payload => this.props.dispatch(clearError()) } />
         {Components.renderIfElse(this.state.show_places,
           <GooglePlaces
             renderPlaceItem={this._renderPlaceItem}
             onBackPress={() => { this.setState({ show_places: false }) }}
           />,
-          <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+          <View style={{ flex: 1, backgroundColor: "#F8F8F8" }}>
 
+          <View style={{ backgroundColor: "#FFFFFF", borderColor: "#CCCCCC",borderBottomWidth: 0.7 }}>
             <Header
               title={"Cestinha"}
+              separator={false}
               menuLeft={
                 <MenuItem
                   icon="md-arrow-back"
@@ -296,36 +298,40 @@ class CartScreen extends Component {
                 />
               }
             />
+          </View>
 
             {Components.renderIfElse(this.state.cartItems.length > 0,
-              <ScrollView style={{ paddingHorizontal: 24 }}>
+              <ScrollView style={{}}>
                 <FlatList
-                  style={{ paddingBottom: 90 }}
+                  style={{ paddingHorizontal: 24, backgroundColor: "#FFFFFF" }}
                   data={this.state.cartItems}
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={this._renderItem} />
+                  <View style={[{ marginBottom: 180 }]} />
               </ScrollView>,
               <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginBottom: 90 }}>
                 <Text style={{ fontFamily: 'Roboto-Regular', fontSize: 14, color: 'rgba(0,0,0,0.48)', textAlign: 'center' }}>{"Cestinha vazia"}</Text>
               </View>
             )}
 
-            {Components.renderIfElse(cItems.length > 0,
-              <BottomBar
-                buttonTitle="Consultar os Preços"
-                buttonStyle={{ width: '100%' }}
-                onButtonPress={() => { this._showDeliveryDialog() }}
-              />,
-              <BottomBar
-                buttonTitle="Adicionar Itens"
-                buttonStyle={{ width: '100%' }}
-                onButtonPress={() => { this._showSearchMedicine() }}
+            {/* BottomBar */}
+            <View style={styles.footer}>
+              <ButtonDefault
+                text="Adicionar outro item"
+                style={{ backgroundColor: "#FFF", borderColor: "rgba(0,0,0,0.16)", marginBottom: 8 }}
+                textStyle={{ color: '#000' }}
+                onPress={() => { this._showSearchMedicine() }}
               />
-            )}
 
-            {Components.renderIf(this.state.show_delivery_dialog,
-              this._renderDeliveryDialog()
-            )}
+              {Components.renderIfElse(cItems.length > 0,
+                <ButtonGradient 
+                  text="Consultar os Preços"
+                  onPress={() => { this._showDeliveryDialog() }}
+                />
+              )}
+            </View>
+
+            {Components.renderIf(this.state.show_delivery_dialog, this._renderDeliveryDialog() )}
 
           </View>
         )}

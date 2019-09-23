@@ -28,7 +28,7 @@ class BottomBarV2 extends Component {
           {Components.renderIfElse(this.props.showActions, 
             <View style={styles.actions}>
               <TouchableOpacity style={[{}, { marginRight: 8 }]} onPress={this.props.onPressMinus}>
-                <Icon name="minus" size={24} color={"#000"} style={styles.icon} />
+                <Icon name="minus" size={24} color={"rgba(0,0,0,0.60)"} style={styles.icon} />
               </TouchableOpacity>
 
               <Text style={[styles.quantity, {color: "#000000"}]}>

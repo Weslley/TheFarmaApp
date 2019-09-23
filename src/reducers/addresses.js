@@ -11,7 +11,7 @@ import {
 const INITIAL_STATE = {
   addresses: [],
   address: null,
-  isLoading: false,
+  loading: false,
   success: false,
   error: null,
 };
@@ -30,7 +30,7 @@ export default (state = INITIAL_STATE, action) => {
     case UPDATE_ADDRESS:
     case REMOVE_ADDRESS:
     case LIST_ADDRESS_NEXT_PAGE:
-      return { ...state, isLoading: true, success: false };
+      return { ...state, loading: true, success: false };
 
     case LIST_ADDRESS_SUCCESS:
     case LIST_ADDRESS_NEXT_PAGE_SUCCESS:
@@ -42,7 +42,7 @@ export default (state = INITIAL_STATE, action) => {
           address = action.data[0]
         }
       }
-      return { ...state, isLoading: false, addresses: action.data, address: address };
+      return { ...state, loading: false, addresses: action.data, address: address, success: true };
 
     case SAVE_ADDRESS_SUCCESS:
     case UPDATE_ADDRESS_SUCCESS:
@@ -63,7 +63,7 @@ export default (state = INITIAL_STATE, action) => {
     case UPDATE_ADDRESS_ERROR:
     case REMOVE_ADDRESS_ERROR:
     case LIST_ADDRESS_NEXT_PAGE_ERROR:
-      return { ...state, error: action.error, isLoading: false };
+      return { ...state, error: action.error, loading: false };
 
     case CLEAR_ERROR:
       return { ...state, error: null, success: false };

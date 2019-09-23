@@ -1,4 +1,4 @@
 import ButtonDefault from "./ButtonDefault";
-import styles from "./styles";
+import ButtonGradient from "./ButtonGradient";
 
-export { ButtonDefault, styles };
+export { ButtonDefault, ButtonGradient };

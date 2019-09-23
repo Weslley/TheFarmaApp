@@ -148,9 +148,9 @@ class WelcomeScreen extends Component {
     //Envia FCM Token ao servidor
     this.checkPermission();
     this.createNotificationListeners();
-    setTimeout(() => {
-      this.sendFcmToken();
-    }, 1000);
+    setTimeout(() => { this.sendFcmToken(); }, 1000);
+
+    //this.props.navigation.navigate({ routeName: "ListProposals" });
   }
 
   componentWillUnmount() {

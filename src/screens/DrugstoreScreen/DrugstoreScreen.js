@@ -110,17 +110,15 @@ class DrugstoreScreen extends Component {
             menuRight={
               <View style={{ flexDirection: "row" }}>
                 <MenuItem
-                  icon="call"
-                  onPress={() => {
-                    this._callPhone();
-                  }}
+                  icon="call-o"
+                  iconSize={20}
+                  onPress={() => { this._callPhone(); }}
                   style={{ paddingVertical: 12, paddingHorizontal: 12 }}
                 />
                 <MenuItem
-                  icon="marker"
-                  onPress={() => {
-                    this._callMap();
-                  }}
+                  icon="place"
+                  iconSize={20}
+                  onPress={() => { this._callMap(); }}
                   style={{ paddingVertical: 12, paddingHorizontal: 12 }}
                 />
               </View>
@@ -150,9 +148,7 @@ class DrugstoreScreen extends Component {
           {this.getAddress()}
 
           <View style={[styles.row, { paddingBottom: 0 }]}>
-            <Text style={[styles.label, { marginBottom: 24 }]}>
-              {"Horários"}
-            </Text>
+            <Text style={[styles.label, { marginBottom: 24 }]}>{"Horários"}</Text>
           </View>
 
           <FlatList
@@ -172,17 +168,9 @@ class DrugstoreScreen extends Component {
               this._callPhone();
             }}
           >
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                paddingHorizontal: 16
-              }}
-            >
-              <Icon name="call" size={24} color={"#000"} />
-              <Text style={styles.buttonText} uppercase={false}>
-                {"Chamar"}
-              </Text>
+            <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 16 }}>
+              <Icon name="call-o" size={24} color={"#000"} />
+              <Text style={styles.buttonText} uppercase={false}>{"Chamar"}</Text>
             </View>
           </Button>
 
@@ -190,21 +178,11 @@ class DrugstoreScreen extends Component {
             style={[styles.button, styles.buttonDirection]}
             bordered
             dark
-            onPress={() => {
-              this._callMap();
-            }}
+            onPress={() => { this._callMap(); }}
           >
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                paddingHorizontal: 16
-              }}
-            >
+            <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 16 }}>
               <Icon name="navigate" size={24} color={"#000"} />
-              <Text style={styles.buttonText} uppercase={false}>
-                {"Direção"}
-              </Text>
+              <Text style={styles.buttonText} uppercase={false}> {"Direção"}</Text>
             </View>
           </Button>
         </View>

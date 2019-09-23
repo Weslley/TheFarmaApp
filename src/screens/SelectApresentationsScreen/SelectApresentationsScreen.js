@@ -621,7 +621,7 @@ class SelectApresentationsScreen extends Component {
             {Components.renderIf(show_dosage, this.renderDosageDialog())}
             {Components.renderIf(show_packing, this.renderPackingDialog())}
 
-            <View style={[{ marginBottom: 120 }]} />
+            <View style={[{ marginBottom: 180 }]} />
           </ScrollView>
         )}
 

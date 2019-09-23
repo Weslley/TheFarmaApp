@@ -46,13 +46,13 @@ class ApresentationDetailDescription extends Component {
         <TouchableOpacity onPress={this.props.onPress}>{this.getPrice()}</TouchableOpacity>
         {Components.renderIfElse(this.props.showActions, <View style={styles.Actions}>
           <TouchableOpacity style={[styles.Button, { marginRight: 8 }]} onPress={this.props.onPressMinus}>
-            <Icon name="minus" size={24} color={"#000"} style={styles.Icon} />
+            <Icon name="minus" size={24} color={"rgba(0,0,0,0.60)"} style={styles.Icon} />
           </TouchableOpacity>
           <Text style={styles.Quantity}>
             {this.props.apresentation.quantity || 0}
           </Text>
           <TouchableOpacity style={styles.Button} onPress={this.props.onPressPlus}>
-            <Icon name="plus" size={24} color={"#000"} style={styles.Icon} />
+            <Icon name="plus" size={24} color={"#00C7BD"} style={styles.Icon} />
           </TouchableOpacity>
         </View>, <View />)}
       </View>

@@ -10,9 +10,7 @@ export default EStyleSheet.create({
     marginRight: 16
   },
   Image: {},
-  container1: {
-    flex: 2
-  },
+  container1: { flex: 2 },
   ProductName: {
     width: "100%",
     fontFamily: "Roboto-Bold",
@@ -30,7 +28,8 @@ export default EStyleSheet.create({
     fontFamily: "Roboto-Bold",
     fontSize: 10,
     width: "100%",
-    marginBottom: 9
+    marginBottom: 4,
+    color: "rgba(0,0,0,0.40)",
   },
   Price: {
     fontFamily: "Roboto-Medium",
@@ -78,10 +77,53 @@ export default EStyleSheet.create({
   },
   dosage: {
     fontSize: 10,
-    fontFamily: "Roboto-Regular",
-
     width: "100%",
     marginBottom: 4,
-    color: 'rgba(0,0,0,0.40)'
+    color: 'rgba(0,0,0,0.40)',
+    fontFamily: "Roboto-Regular",
+  },
+  txtDisable:{
+    color: 'rgba(0,0,0,0.40)',
+    textDecorationLine: 'line-through'
+  },
+  priceV2: {
+    fontFamily: 'Roboto-Bold',
+    fontSize: 16,
+    color: 'rgba(0,0,0,0.87)'
+  },
+  tag: {
+    backgroundColor: 'rgba(56,191,192,0.16);',
+    borderRadius: 4,
+    paddingVertical: 5,
+    paddingHorizontal: 7,
+    alignItems: "center"
+  },
+  tagText: {
+    fontSize: 11,
+    color: "#009688",
+    fontFamily: 'Roboto-Regular',
+    textAlign: 'center',
+  },
+  tagDanger: {
+    backgroundColor: 'rgba(240,22,109,0.16);'
+  },
+  tagDangerText: {
+    color: '#F0166D',
+  },
+  tagWarning: {
+    backgroundColor: 'rgba(245,166,35,0.16);'
+  },
+  tagWarningText: {
+    color: '#F57223',
+  },
+  tagDisable: {
+    backgroundColor: 'rgba(0,0,0,0.04);'
+  },
+  tagDisableText: {
+    color: 'rgba(0,0,0,0.40);'
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   }
 });

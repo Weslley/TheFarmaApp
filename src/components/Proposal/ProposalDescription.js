@@ -91,8 +91,7 @@ class ProposalDescription extends Component {
             justifyContent: "space-between"
           }}
         >
-          {Components.renderIfElse(
-            proposal.possui_todos_itens,
+          {Components.renderIfElse(proposal.possui_todos_itens,
             <View style={styles.TagContainer}>
               <Text style={styles.TagText}>{"Estoque completo"}</Text>
             </View>,

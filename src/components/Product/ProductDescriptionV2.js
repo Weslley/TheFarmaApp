@@ -9,6 +9,10 @@ import styles from "./styles";
 
 const imgDefault = require("./images/ic_default_medicine.png");
 class ProductDescriptionV2 extends Component {
+  static defaultProps = {
+    style: {},
+  };
+  
   constructor(props) {
     super(props);
     this.state = {};
@@ -32,7 +36,7 @@ class ProductDescriptionV2 extends Component {
   render() {
     let cartItem = this.props.item;
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.style]}>
 
         <TouchableOpacity style={styles.ImageContainer} onPress={this.props.onPress}>
           {this.getPhoto()}
@@ -50,7 +54,7 @@ class ProductDescriptionV2 extends Component {
 
             <View style={styles.Actions}>
               <TouchableOpacity style={[styles.Button, { marginRight: 8 }]} onPress={this.props.onPressMinus}>
-                <Icon name="minus" size={24} color={"#000000"} style={styles.Icon} />
+                <Icon name="minus" size={24} color={"rgba(0,0,0,0.60)"} style={styles.Icon} />
               </TouchableOpacity>
 
               <Text style={styles.Quantity}>{cartItem.quantity || 1}</Text>

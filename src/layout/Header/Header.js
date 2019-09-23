@@ -6,10 +6,11 @@ import styles from "./styles";
 
 class Header extends Component {
   static defaultProps = {
-    separator: true,
     style: {},
+    separator: true,
+    footerStyle: {},
+    titleStyle: { letterSpacing: -1 },
     actionsStyle: { backgroundColor: "transparent" },
-    titleStyle: { letterSpacing: -1 }
   }
 
   constructor(props) {
@@ -49,14 +50,11 @@ class Header extends Component {
           )}
         </TouchableOpacity>
 
-        {Components.renderIf(
-          this.props.footer,
-          <View>{this.props.footer}</View>
+        {Components.renderIf(this.props.footer,
+          <View style={this.props.footerStyle}>{this.props.footer}</View>
         )}
 
-        {Components.renderIf(this.props.separator,
-          <View style={styles.separator} />
-        )}
+        {Components.renderIf(this.props.separator, <View style={styles.separator} /> )}
       </View>
     );
   }
