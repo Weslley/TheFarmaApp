@@ -42,7 +42,7 @@ export default EStyleSheet.create({
     bottom: 0,
     paddingHorizontal: 16,
     paddingVertical: 16,
-    borderColor: "#CCCCCC",
+    borderColor: "#F3F3F3",
     borderTopWidth: 0.7,
   }
 });

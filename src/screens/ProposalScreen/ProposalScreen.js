@@ -365,7 +365,6 @@ class ProposalScreen extends Component {
 
   _renderItem = ({ item }) => {
     try {
-      item.possui = false;
       return(<ProposalApresentationV2 apresentation={item.apresentacao} proposalItem={item} />)
     } catch (error) {
       return null;

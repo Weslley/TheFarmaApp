@@ -29,6 +29,13 @@ class ApresentationDetailDescription extends Component {
   }
 
   render() {
+    let apresentation = this.props.apresentation;
+    let quantity = apresentation.quantity || 0;
+    let colorMinus = "rgba(0,0,0,0.80)";
+    if(quantity === 0){
+      colorMinus = "rgba(0,0,0,0.24)"
+    }
+
     return <View style={{}}>
       <TouchableOpacity onPress={this.props.onPress}>
         <Text style={[styles.Maker, { fontSize: 12, marginBottom: 8 }]} uppercase>
@@ -45,15 +52,17 @@ class ApresentationDetailDescription extends Component {
       <View style={[styles.Footer, { marginTop: 16, marginBottom: 16 }]}>
         <TouchableOpacity onPress={this.props.onPress}>{this.getPrice()}</TouchableOpacity>
         {Components.renderIfElse(this.props.showActions, <View style={styles.Actions}>
+
           <TouchableOpacity style={[styles.Button, { marginRight: 8 }]} onPress={this.props.onPressMinus}>
-            <Icon name="minus" size={24} color={"rgba(0,0,0,0.60)"} style={styles.Icon} />
+            <Icon name="minus" size={24} color={colorMinus} style={styles.Icon} />
           </TouchableOpacity>
-          <Text style={styles.Quantity}>
-            {this.props.apresentation.quantity || 0}
-          </Text>
+
+          <Text style={styles.Quantity}>{quantity}</Text>
+
           <TouchableOpacity style={styles.Button} onPress={this.props.onPressPlus}>
             <Icon name="plus" size={24} color={"#00C7BD"} style={styles.Icon} />
           </TouchableOpacity>
+          
         </View>, <View />)}
       </View>
     </View>;

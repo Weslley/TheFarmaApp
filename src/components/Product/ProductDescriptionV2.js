@@ -54,7 +54,7 @@ class ProductDescriptionV2 extends Component {
 
             <View style={styles.Actions}>
               <TouchableOpacity style={[styles.Button, { marginRight: 8 }]} onPress={this.props.onPressMinus}>
-                <Icon name="minus" size={24} color={"rgba(0,0,0,0.60)"} style={styles.Icon} />
+                <Icon name="minus" size={24} color={"rgba(0,0,0,0.80)"} style={styles.Icon} />
               </TouchableOpacity>
 
               <Text style={styles.Quantity}>{cartItem.quantity || 1}</Text>
