@@ -1,5 +1,5 @@
-export const SERVER_API = 'https://api.thefarma.com.br/';//'http://192.168.1.23:8000';
-export const GOOGLE_MAPS_API = 'AIzaSyD5PNukb409Y7b2a-5PNjw6SAkIUuNc1vw';
+export const SERVER_API = 'https://api.thefarma.com.br/';
+export const GOOGLE_MAPS_API = '';
 export const SUPPORT_LINK = "https://api.whatsapp.com/send?1=pt_BR&phone=5586981287694&text=Olá,%20TheFarma";
 export const USER_APPLE = {
     id: 119,
@@ -13,5 +13,3 @@ export const USER_APPLE = {
     email: 'teste@teste.com',
     token: '0b969ee8afc8725972f908473136639c8291045e'
 }
-
-//export const GOOGLE_MAPS_API = AIzaSyB0NXLhPEWY18-95ksYHG9p0TaJYWY3Ui4;
