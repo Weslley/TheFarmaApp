@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>mdpi/icons/row/chat</title>
+    <desc>Created with Sketch.</desc>
+    <g id="icons/row/chat" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="simple-chat">
+            <rect id="Shape" x="0" y="0" width="16" height="16"></rect>
+            <path d="M2.5,2 C1.675781,2 1,2.675781 1,3.5 L1,8.5 C1,9.324219 1.675781,10 2.5,10 L3.992188,10 L3.992188,12 L6.664063,10 L9.5,10 C10.324219,10 11,9.324219 11,8.5 L11,3.5 C11,2.675781 10.324219,2 9.5,2 L2.5,2 Z M2.5,3 L9.5,3 C9.78125,3 10,3.21875 10,3.5 L10,8.5 C10,8.78125 9.78125,9 9.5,9 L6.328125,9 L4.992188,10 L4.992188,9 L2.5,9 C2.21875,9 2,8.78125 2,8.5 L2,3.5 C2,3.21875 2.21875,3 2.5,3 Z M12,5 L12,6 L13.5,6 C13.78125,6 14,6.21875 14,6.5 L14,11.5 C14,11.78125 13.78125,12 13.5,12 L11.003906,12 L11.003906,13 L9.671875,12 L6.5,12 C6.300781,12 6.128906,11.878906 6.046875,11.707031 L5.242188,12.3125 C5.511719,12.726563 5.972656,13 6.5,13 L9.335938,13 L12.003906,15 L12.003906,13 L13.5,13 C14.324219,13 15,12.324219 15,11.5 L15,6.5 C15,5.675781 14.324219,5 13.5,5 L12,5 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path>
+        </g>
+    </g>
+</svg>

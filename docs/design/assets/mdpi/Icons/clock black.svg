@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>mdpi/Icons/clock black</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Icons/clock-black" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M11.99,2 C6.47,2 2,6.48 2,12 C2,17.52 6.47,22 11.99,22 C17.52,22 22,17.52 22,12 C22,6.48 17.52,2 11.99,2 L11.99,2 Z" id="Path" fill-opacity="0.797073143" fill="#000000"></path>
+        <polygon id="Shape" fill="#FFFFFF" points="12.5 7 11 7 11 13 16.25 16.15 17 14.92 12.5 12.25"></polygon>
+    </g>
+</svg>
